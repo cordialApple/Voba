@@ -1,9 +1,10 @@
-﻿namespace Voba;
-
-public partial class AppShell : Shell
+﻿namespace Voba
 {
-    public AppShell()
+    public partial class AppShell : Shell
     {
-        InitializeComponent();
+        public AppShell()
+        {
+            InitializeComponent();
+        }
     }
 }
