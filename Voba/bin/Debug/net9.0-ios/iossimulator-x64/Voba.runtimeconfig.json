@@ -4,11 +4,11 @@
     "includedFrameworks": [
       {
         "name": "Microsoft.NETCore.App",
-        "version": "9.0.13"
+        "version": "9.0.14"
       },
       {
         "name": "Microsoft.iOS",
-        "version": "26.0.9785"
+        "version": "26.2.9000"
       }
     ],
     "configProperties": {
@@ -20,9 +20,7 @@
       "System.Diagnostics.Tracing.EventSource.IsSupported": false,
       "System.Globalization.Invariant": false,
       "System.Globalization.Hybrid": true,
-      "System.Linq.Enumerable.IsSizeOptimized": true,
       "System.Net.Http.UseNativeHttpHandler": true,
-      "System.Net.SocketsHttpHandler.Http3Support": false,
       "System.Reflection.NullabilityInfoContext.IsSupported": false,
       "System.Resources.ResourceManager.AllowCustomResourceTypes": false,
       "System.Resources.UseSystemResourceKeys": false,
