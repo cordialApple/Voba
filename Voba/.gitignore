@@ -1,0 +1,4 @@
+Secrets.local.cs
+bin/
+obj/
+*.user
