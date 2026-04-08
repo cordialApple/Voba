@@ -63,6 +63,12 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.13" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="RestSharp" Version="110.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
 	</ItemGroup>
 
 </Project>
