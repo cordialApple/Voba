@@ -28,6 +28,7 @@ namespace Voba
 
 #endif
             builder.Services.AddSingleton<Voba.Services.IAiChatService, Voba.Services.SemanticKernelChatService>();
+            builder.Services.AddTransient<Voba.AI.Pipeline.Handlers.GemmaIdeationHandler>();
             builder.Services.AddTransient<MainPage>();
 
             return builder.Build();

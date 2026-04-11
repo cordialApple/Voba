@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "C:\\dev\\Voba\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\services\\iaichatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\services\\iaichatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\services\\semantickernelchatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\services\\semantickernelchatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\dev\\Voba\\Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\mainpage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\mainpage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\mainpage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\mainpage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\models\\recipeconcept.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\models\\recipeconcept.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\ai\\pipeline\\handlers\\gemmaideationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\ai\\pipeline\\handlers\\gemmaideationhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|c:\\dev\\voba\\voba\\ai\\pipeline\\recipepipelinehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1987D7E3-40C9-4141-96B7-BA2FAC4F1F7A}|Voba\\Voba.csproj|solutionrelative:voba\\ai\\pipeline\\recipepipelinehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,82 +34,82 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
+              "Title": "GemmaIdeationHandler.cs",
+              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\AI\\Pipeline\\Handlers\\GemmaIdeationHandler.cs",
+              "RelativeDocumentMoniker": "Voba\\AI\\Pipeline\\Handlers\\GemmaIdeationHandler.cs",
+              "ToolTip": "C:\\dev\\Voba\\Voba\\AI\\Pipeline\\Handlers\\GemmaIdeationHandler.cs",
+              "RelativeToolTip": "Voba\\AI\\Pipeline\\Handlers\\GemmaIdeationHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T15:25:08.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RecipePipelineHandler.cs",
+              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\AI\\Pipeline\\RecipePipelineHandler.cs",
+              "RelativeDocumentMoniker": "Voba\\AI\\Pipeline\\RecipePipelineHandler.cs",
+              "ToolTip": "C:\\dev\\Voba\\Voba\\AI\\Pipeline\\RecipePipelineHandler.cs",
+              "RelativeToolTip": "Voba\\AI\\Pipeline\\RecipePipelineHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T15:20:17.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RecipeConcept.cs",
+              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\Models\\RecipeConcept.cs",
+              "RelativeDocumentMoniker": "Voba\\Models\\RecipeConcept.cs",
+              "ToolTip": "C:\\dev\\Voba\\Voba\\Models\\RecipeConcept.cs",
+              "RelativeToolTip": "Voba\\Models\\RecipeConcept.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAABAwB0AAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T15:16:35.51Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MauiProgram.cs",
               "DocumentMoniker": "C:\\dev\\Voba\\Voba\\MauiProgram.cs",
               "RelativeDocumentMoniker": "Voba\\MauiProgram.cs",
               "ToolTip": "C:\\dev\\Voba\\Voba\\MauiProgram.cs",
               "RelativeToolTip": "Voba\\MauiProgram.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB0AAABzAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-06T21:21:07.421Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IAiChatService.cs",
-              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\Services\\IAiChatService.cs",
-              "RelativeDocumentMoniker": "Voba\\Services\\IAiChatService.cs",
-              "ToolTip": "C:\\dev\\Voba\\Voba\\Services\\IAiChatService.cs",
-              "RelativeToolTip": "Voba\\Services\\IAiChatService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-06T19:55:01.567Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "SemanticKernelChatService.cs",
-              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\Services\\SemanticKernelChatService.cs",
-              "RelativeDocumentMoniker": "Voba\\Services\\SemanticKernelChatService.cs",
-              "ToolTip": "C:\\dev\\Voba\\Voba\\Services\\SemanticKernelChatService.cs",
-              "RelativeToolTip": "Voba\\Services\\SemanticKernelChatService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-06T19:59:51.117Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "App.g.i.cs",
-              "DocumentMoniker": "C:\\dev\\Voba\\Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs",
-              "RelativeDocumentMoniker": "Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs",
-              "ToolTip": "C:\\dev\\Voba\\Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs",
-              "RelativeToolTip": "Voba\\obj\\Debug\\net9.0-windows10.0.19041.0\\win10-x64\\Platforms\\Windows\\App.g.i.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-06T21:14:57.499Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "MainPage.xaml.cs",
               "DocumentMoniker": "C:\\dev\\Voba\\Voba\\MainPage.xaml.cs",
               "RelativeDocumentMoniker": "Voba\\MainPage.xaml.cs",
               "ToolTip": "C:\\dev\\Voba\\Voba\\MainPage.xaml.cs",
               "RelativeToolTip": "Voba\\MainPage.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAcwJ8AAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-06T21:07:36.065Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "MainPage.xaml",
               "DocumentMoniker": "C:\\dev\\Voba\\Voba\\MainPage.xaml",
               "RelativeDocumentMoniker": "Voba\\MainPage.xaml",
               "ToolTip": "C:\\dev\\Voba\\Voba\\MainPage.xaml",
               "RelativeToolTip": "Voba\\MainPage.xaml",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAEIAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAADQAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-06T21:04:07.236Z",
               "EditorCaption": ""

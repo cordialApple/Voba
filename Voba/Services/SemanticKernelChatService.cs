@@ -1,32 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Voba.Services
 {
     public class SemanticKernelChatService : IAiChatService
     {
         private readonly Kernel _kernel;
+        private readonly IChatCompletionService _chatCompletion;
+        private readonly ChatHistory _chatHistory;
 
+        // The Kernel is automatically injected here by MauiProgram.cs
         public SemanticKernelChatService(Kernel kernel)
         {
             _kernel = kernel;
+
+            // Extract the chat service that we configured to use Ollama
+            _chatCompletion = _kernel.GetRequiredService<IChatCompletionService>();
+
+            // Initialize an empty chat history (this allows the AI to remember the conversation)
+            _chatHistory = new ChatHistory();
+
+            // Optional: You can add a system prompt right here to govern the whole session
+            // _chatHistory.AddSystemMessage("You are a helpful culinary assistant.");
         }
 
-        public async Task<string> GetResponseAsync(string prompt)
+        public async Task<string> GetResponseAsync(string userInput)
         {
-            try
-            {
-                var result = await _kernel.InvokePromptAsync(prompt);
-                return result.ToString();
-            }
-            catch (Exception ex)
-            {
-                return $"Error: {ex.Message}";
-            }
+            // 1. Add the user's new message to the history
+            _chatHistory.AddUserMessage(userInput);
+
+            // 2. Send the entire history to Gemma 3:1b via Ollama
+            var response = await _chatCompletion.GetChatMessageContentAsync(_chatHistory, kernel: _kernel);
+
+            // 3. THE FIX: Safely extract the content, providing a fallback if it is null
+            string safeResponse = response.Content ?? "Error: The model returned an empty response.";
+
+            // 4. Add Gemma's safe response to the history so it remembers it next time
+            _chatHistory.AddAssistantMessage(safeResponse);
+
+            return safeResponse;
         }
     }
 }
