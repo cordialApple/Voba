@@ -2,3 +2,4 @@ Secrets.local.cs
 bin/
 obj/
 *.user
+diagrams/

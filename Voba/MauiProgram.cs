@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Voba.Interfaces;
+using Voba.Repositories;
+using Voba.Services;
 
 namespace Voba
 {
@@ -17,8 +20,19 @@ namespace Voba
                 });
 
 // MongoDB Client Setup
-             var mongoClient = new MongoClient(Secrets.MongoConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(Secrets.MongoDatabaseName);
+    builder.Services.AddSingleton<IMongoClient>(sp =>
+    new MongoClient(Secrets.MongoConnectionString));
+
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+    sp.GetRequiredService<IMongoClient>()
+      .GetDatabase(Secrets.MongoDatabaseName));
+
+// Auth / security
+builder.Services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
+
+// Repositories
+builder.Services.AddSingleton<IUserRepository>(sp =>
+    new UserRepository(sp.GetRequiredService<IMongoDatabase>()));
 
 #if DEBUG
     		builder.Logging.AddDebug();
