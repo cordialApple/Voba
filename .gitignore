@@ -1,5 +1,5 @@
 Secrets.local.cs
-bin/
-obj/
+**/obj/
+**/bin/
 *.user
 diagrams/
