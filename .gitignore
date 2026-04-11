@@ -1,16 +1,15 @@
-# User-specific files
+
 .vs/
 .vscode/
 *.suo
 *.user
 
-# Build folders (The heavy stuff)
 bin/
 obj/
 
-# MAUI specific
 Generated Files/
 
-# OS generated files
 .DS_Store
 Thumbs.db
+
+Voba/ApiSettings.cs
