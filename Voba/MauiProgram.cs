@@ -30,9 +30,15 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 // Auth / security
 builder.Services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
-// Repositories
+// RepositoryFactory for DI & future swappability
 builder.Services.AddSingleton<IUserRepository>(sp =>
-    new UserRepository(sp.GetRequiredService<IMongoDatabase>()));
+    RepositoryFactory.CreateUserRepository(sp.GetRequiredService<IMongoDatabase>()));
+
+builder.Services.AddSingleton<IGroceryListRepository>(sp =>
+    RepositoryFactory.CreateGroceryListRepository(sp.GetRequiredService<IMongoDatabase>()));
+
+builder.Services.AddSingleton<IAuthDataRepository>(sp =>
+    RepositoryFactory.CreateAuthDataRepository(sp.GetRequiredService<IMongoDatabase>()));
 
 #if DEBUG
     		builder.Logging.AddDebug();
