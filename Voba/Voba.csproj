@@ -62,9 +62,11 @@
 	<ItemGroup>
 		<PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.13" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.17.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
 		<PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
 	</ItemGroup>
 
 </Project>
