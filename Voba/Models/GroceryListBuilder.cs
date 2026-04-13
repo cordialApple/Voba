@@ -2,7 +2,7 @@ namespace Voba.Models
 {
     public class GroceryListBuilder
     {
-        private string _userId;
+        private string _userId = string.Empty;
         private decimal _budget;
         private List<Ingredient> _items = new();
         private decimal _estimatedCost;

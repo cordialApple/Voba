@@ -7,9 +7,9 @@ namespace Voba.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; private set; }
+        public string Id { get; private set; } = string.Empty;
 
-        private string _email;
+        private string _email = string.Empty;
         public string Email
         {
             get => _email;
@@ -23,7 +23,7 @@ namespace Voba.Models
             }
         }
 
-        private string _username;
+        private string _username = string.Empty;
         public string Username
         {
             get => _username;

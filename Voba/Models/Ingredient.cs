@@ -7,9 +7,9 @@ namespace Voba.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; private set; }
+        public string Id { get; private set; } = string.Empty;
 
-        private string _name;
+        private string _name = string.Empty;
         public string Name
         {
             get => _name;
