@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Voba")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+f205c21229b76b89ce373380546450202df04dd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+0c655d7f552b1661c5d9471ea7ca410fa6c2f1f6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Voba")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Voba")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

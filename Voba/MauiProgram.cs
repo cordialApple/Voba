@@ -19,7 +19,7 @@ namespace Voba
 
             builder.Services.AddKernel()
             .AddOllamaChatCompletion(
-                modelId: "gemma3:1b", 
+                modelId: "gemma3:4b", 
                 endpoint: new Uri("http://localhost:11434")
             );
 
@@ -29,6 +29,7 @@ namespace Voba
 #endif
             builder.Services.AddSingleton<Voba.Services.IAiChatService, Voba.Services.SemanticKernelChatService>();
             builder.Services.AddTransient<Voba.AI.Pipeline.Handlers.GemmaIdeationHandler>();
+            builder.Services.AddTransient<Voba.AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
             builder.Services.AddTransient<MainPage>();
 
             return builder.Build();

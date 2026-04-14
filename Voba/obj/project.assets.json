@@ -35849,7 +35849,7 @@
       ]
     },
     "Microsoft.Maui.Controls.Build.Tasks/9.0.120": {
-      "sha512": "r9BcM8eZYd93AS42DaQ2O/rgBw24YtWScnY0NAc97IbGktu9+jcSYqPJzi8kgA7vjdAqhQMdjzoH5hQk2qoC0g==",
+      "sha512": "ArHyEFG00KrQITbDnvEz3W6b2+qQuNXEDvTbEOwq0u7D94W7LaaltzX01KvmyTaboaMAOPeJmLNF4aCWc+krgw==",
       "type": "package",
       "path": "microsoft.maui.controls.build.tasks/9.0.120",
       "files": [
@@ -36528,7 +36528,7 @@
       ]
     },
     "Microsoft.Maui.Resizetizer/9.0.120": {
-      "sha512": "npXjLP1/MjSY4bThiZXJGPAyermhMoDpEiaos9O0oSAC+jp0ykbCtzaUds/wrR6CbG24wongDJu9bilo1RR1RQ==",
+      "sha512": "/Jz6niEsmnHHTEKEiBz18ohTEFYNbA9ce3IVH1THefIDEaQ+wbQq6Dq7mUzDNg9OI/qtUJ5+1vGcFad2X9q2Wg==",
       "type": "package",
       "path": "microsoft.maui.resizetizer/9.0.120",
       "files": [
@@ -40089,11 +40089,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\Voba\\Voba\\Voba.csproj",
+      "projectUniqueName": "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj",
       "projectName": "Voba",
-      "projectPath": "C:\\dev\\Voba\\Voba\\Voba.csproj",
+      "projectPath": "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj",
       "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\Voba\\Voba\\obj\\",
+      "outputPath": "C:\\source\\repos\\Voba\\Voba\\Voba\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [

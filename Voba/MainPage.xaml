@@ -40,37 +40,108 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Voba.MainPage">
 
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Label Text="Voba Recipe Ideation" FontSize="24" FontAttributes="Bold" />
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
 
-        <Entry x:Name="BudgetInput" 
-               Placeholder="Target Budget (e.g., 15.00)" 
-               Keyboard="Numeric" />
-               
-        <Entry x:Name="ServingsInput" 
-               Placeholder="Serving Size (e.g., 2)" 
-               Keyboard="Numeric" />
-               
-        <Entry x:Name="DietInput" 
-               Placeholder="Dietary Restrictions (e.g., Gluten-Free, Vegan)" />
+            <Label Text="Voba Recipe Ideation" FontSize="24" FontAttributes="Bold" />
 
-        <Button x:Name="TestButton" 
-                Text="Generate Ideas" 
-                Clicked="OnTestButtonClicked" 
-                HeightRequest="50" />
+            <Entry x:Name="BudgetInput"
+                   Placeholder="Target Budget (e.g., 15.00)"
+                   Keyboard="Numeric" />
 
-        <ActivityIndicator x:Name="LoadingSpinner" 
-                           IsRunning="False" 
-                           IsVisible="False" 
-                           Color="Blue" />
+            <Entry x:Name="ServingsInput"
+                   Placeholder="Serving Size (e.g., 2)"
+                   Keyboard="Numeric" />
 
-        <Border Stroke="LightGray" Padding="15" StrokeThickness="1">
-            <ScrollView HeightRequest="300">
-                <Label x:Name="ResponseLabel" 
-                       Text="Waiting for input..." 
-                       TextColor="Gray" />
-            </ScrollView>
-        </Border>
-    </VerticalStackLayout>
+            <!-- Lifestyle diet dropdown -->
+            <Label Text="Lifestyle Diet" />
+            <FlexLayout Wrap="Wrap" Direction="Row">
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkVegan" />
+                    <Label Text="Vegan" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkVegetarian" />
+                    <Label Text="Vegetarian" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkKeto" />
+                    <Label Text="Keto" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkPaleo" />
+                    <Label Text="Paleo" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkGlutenFree" />
+                    <Label Text="Gluten-Free" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkDairyFree" />
+                    <Label Text="Dairy-Free" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkHalal" />
+                    <Label Text="Halal" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Margin="0,0,16,8">
+                    <CheckBox x:Name="ChkKosher" />
+                    <Label Text="Kosher" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </FlexLayout>
+
+            <!-- Allergies free-text -->
+            <Label Text="Allergies (comma-separated, e.g. nuts, soy)" />
+            <Entry x:Name="AllergyInput" Placeholder="nuts, shellfish, eggs..." />
+
+            <Button x:Name="TestButton"
+                    Text="Generate Ideas"
+                    Clicked="OnTestButtonClicked"
+                    HeightRequest="50" />
+
+            <ActivityIndicator x:Name="LoadingSpinner"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="Blue" />
+
+            <!-- Prompt debug panel — hidden until a request fires -->
+            <Label x:Name="PromptDebugHeader"
+                   Text="▶ PROMPT SENT TO GEMMA"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   TextColor="Gray"
+                   IsVisible="False" />
+
+            <Border x:Name="PromptDebugBorder"
+                    Stroke="#AAAAAA"
+                    StrokeThickness="1"
+                    Padding="15"
+                    IsVisible="False">
+                <ScrollView HeightRequest="200">
+                    <Label x:Name="PromptDebugLabel"
+                           FontFamily="Courier New"
+                           FontSize="11"
+                           TextColor="DarkSlateGray" />
+                </ScrollView>
+            </Border>
+
+            <!-- Response panel -->
+            <Label x:Name="ResponseHeader"
+                   Text="◀ GEMMA RESPONSE"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   TextColor="Gray"
+                   IsVisible="False" />
+
+            <Border Stroke="LightGray" Padding="15" StrokeThickness="1">
+                <ScrollView HeightRequest="300">
+                    <Label x:Name="ResponseLabel"
+                           Text="Waiting for input..."
+                           TextColor="Gray" />
+                </ScrollView>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

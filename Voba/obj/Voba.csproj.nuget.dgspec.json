@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dev\\Voba\\Voba\\Voba.csproj": {}
+    "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj": {}
   },
   "projects": {
-    "C:\\dev\\Voba\\Voba\\Voba.csproj": {
+    "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dev\\Voba\\Voba\\Voba.csproj",
+        "projectUniqueName": "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj",
         "projectName": "Voba",
-        "projectPath": "C:\\dev\\Voba\\Voba\\Voba.csproj",
+        "projectPath": "C:\\source\\repos\\Voba\\Voba\\Voba\\Voba.csproj",
         "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\Voba\\Voba\\obj\\",
+        "outputPath": "C:\\source\\repos\\Voba\\Voba\\Voba\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
