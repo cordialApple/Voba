@@ -42,13 +42,14 @@ Connects to Ollama at `http://localhost:11434` by default.
 
 ---
 
-## Project structure
+## Project Structure
 
+```text
 Voba/
 ├── AI/
-│   ├── Interpreter/        # Dietary restriction → rule string translation
-│   └── Pipeline/Handlers/  # GemmaIdeationHandler, GemmaFullRecipeHandler
-├── Models/                 # RecipeGenerationContext, RecipeOption
-├── Services/               # SemanticKernelChatService
-├── MainPage.xaml(.cs)      # Test UI (to be replaced)
-└── MauiProgram.cs          # DI registration
+│   ├── Interpreter/
+│   └── Pipeline/Handlers/
+├── Models/
+├── Services/
+├── MainPage.xaml(.cs)
+└── MauiProgram.cs
