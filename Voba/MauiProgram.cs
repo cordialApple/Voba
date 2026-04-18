@@ -29,6 +29,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 
 // Auth / security
 builder.Services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
+builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
 
 // RepositoryFactory for DI & future swappability
 builder.Services.AddSingleton<IUserRepository>(sp =>
