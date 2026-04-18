@@ -18,13 +18,18 @@ namespace Voba.AI.Interpreter
     /// </summary>
     public class AndExpression : IRestrictionExpression
     {
+        // Holds the list of rules (like allergies or diets) that Gemma found.
         private readonly List<IRestrictionExpression> _expressions;
 
+        // Used when Gemma finds more than one rule for a user. 
+        // For example, if Gemma sees "vegan and allergic to dairy", both rules are passed here.
         public AndExpression(List<IRestrictionExpression> expressions)
         {
             _expressions = expressions;
         }
 
+        // Gets the text from every rule and joins them together.
+        // Puts each warning on a new line (\n) so the UI team can easily display them in a list on the screen.
         public string Interpret() =>
             string.Join("\n", _expressions.Select(e => e.Interpret()));
     }

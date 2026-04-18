@@ -8,11 +8,6 @@ namespace Voba.AI.Interpreter
     ///
     /// Takes a short allergen name (e.g. "seafood", "nuts") and expands it
     /// into every specific ingredient Gemma must avoid.
-    ///
-    /// This replaces the hardcoded FORBIDDEN rules previously written
-    /// directly into the GemmaIdeationHandler prompt — those rules only
-    /// covered "seafood" and "fish". This class covers all common allergens
-    /// and is trivially extensible.
     /// </summary>
     public class AllergyExpression : IRestrictionExpression
     {
@@ -58,16 +53,24 @@ namespace Voba.AI.Interpreter
                             "pre-packaged potato products",
             };
 
+        // Holds the raw allergen string extracted by the Gemma AI model (e.g., "dairy", "peanuts")
         private readonly string _allergen;
 
+        // Constructor called when the Gemma parser builds the expression tree for the meal filters
         public AllergyExpression(string allergen) => _allergen = allergen;
 
+        // Resolves the AI-extracted allergen into a formatted string for the UI team
         public string Interpret()
         {
+            // Checks if the allergen Gemma flagged maps to a broader ingredient list.
+            // E.g., If Gemma outputs "dairy", 'forbidden' expands to "milk, cheese, whey".
+            // If Gemma detects a niche allergy not in the dictionary, it falls back to using the raw AI output.
             string forbidden = _expansions.TryGetValue(_allergen, out string? expansion)
                 ? expansion
                 : _allergen;
 
+            // Formats the final warning string for the MAUI front-end to bind to a critical UI alert.
+            // Uppercasing the AI-detected allergen ensures it immediately catches the user's eye in the recipe view.
             return $"ALLERGY — treat as DEADLY: {_allergen.ToUpper()} — " +
                    $"FORBIDDEN: {forbidden}.";
         }

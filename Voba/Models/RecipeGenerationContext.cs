@@ -2,6 +2,7 @@
 
 namespace Voba.Models
 {
+    // Data model for the completed recipe ready for the MAUI front-end to display
     public class FullRecipe
     {
         public string Title { get; set; } = string.Empty;
@@ -14,10 +15,8 @@ namespace Voba.Models
         public decimal TargetBudget { get; set; }
         public List<string> DietaryRestrictions { get; set; } = new();
 
-        // Changed to RecipeOption
         public List<RecipeOption> ProposedOptions { get; set; } = new();
-
-        // Changed to RecipeOption
+  
         public RecipeOption? SelectedOption { get; set; }
 
         public FullRecipe? FinalRecipe { get; set; }

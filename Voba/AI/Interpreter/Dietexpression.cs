@@ -7,13 +7,15 @@ namespace Voba.AI.Interpreter
     /// TERMINAL EXPRESSION — Lifestyle Diet (Interpreter pattern).
     ///
     /// Recognises named diets and maps each to a precise forbidden-ingredient
-    /// rule that Gemma 3:1b can follow reliably.
+    /// rule that Gemma 3:4b can follow reliably.
     ///
     /// Adding a new diet means adding one entry to _dietRules — no prompt
     /// logic, no handler code, and no other class changes.
     /// </summary>
     public class DietExpression : IRestrictionExpression
     {
+        // Maps common diet names from the Gemma AI to a strict list of rules.
+        // Ignores upper and lower case differences, so "Vegan" matches "vegan".
         private static readonly Dictionary<string, string> _dietRules =
             new(StringComparer.OrdinalIgnoreCase)
             {
@@ -46,10 +48,15 @@ namespace Voba.AI.Interpreter
 
         private readonly string _diet;
 
+        // Called when the Gemma parser builds the expression tree for a user's meal plan.
         public DietExpression(string diet) => _diet = diet;
 
+        // Turns the AI-extracted diet into a formatted string for the MAUI front-end team to display.
         public string Interpret()
         {
+            // Checks if the diet Gemma found matches a known rule in the dictionary.
+            // If it matches, it returns the detailed forbidden list.
+            // If Gemma finds a rare diet not in the dictionary, it falls back to a general safety warning.
             return _dietRules.TryGetValue(_diet, out string? rule)
                 ? rule
                 : $"DIET: {_diet} — strictly comply with all standard rules of this diet.";

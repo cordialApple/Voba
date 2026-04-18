@@ -20,8 +20,6 @@ namespace Voba.Services
             // Initialize an empty chat history (this allows the AI to remember the conversation)
             _chatHistory = new ChatHistory();
 
-            // Optional: You can add a system prompt right here to govern the whole session
-            // _chatHistory.AddSystemMessage("You are a helpful culinary assistant.");
         }
 
         public async Task<string> GetResponseAsync(string userInput)
@@ -29,10 +27,10 @@ namespace Voba.Services
             // 1. Add the user's new message to the history
             _chatHistory.AddUserMessage(userInput);
 
-            // 2. Send the entire history to Gemma 3:1b via Ollama
+            // 2. Send the entire history to Gemma 3:4b via Ollama
             var response = await _chatCompletion.GetChatMessageContentAsync(_chatHistory, kernel: _kernel);
 
-            // 3. THE FIX: Safely extract the content, providing a fallback if it is null
+            // 3. Safely extract the content, providing a fallback if it is null
             string safeResponse = response.Content ?? "Error: The model returned an empty response.";
 
             // 4. Add Gemma's safe response to the history so it remembers it next time

@@ -62,19 +62,28 @@ Write ONLY numbered step-by-step cooking instructions.
 - Include temperatures, timings, and key techniques.
 - Do NOT repeat the ingredient list.".Trim();
 
+            // Prepares the conversation history object required by the Semantic Kernel.
             var history = new ChatHistory();
+
+            // Inserts the compiled recipe prompt into the history for the Gemma AI to read.
             history.AddUserMessage(prompt);
 
+            // Sends the prompt to the local Gemma model via Semantic Kernel and waits for the generated instructions.
             var response = await _chatCompletion.GetChatMessageContentAsync(history, kernel: _kernel);
 
+            // Packages the final output into the data model expected by the MAUI front-end team.
             context.FinalRecipe = new FullRecipe
             {
                 Title = recipe.Name,
+
+                // Grabs the raw text from Gemma, using a safe fallback string if the AI fails to return content.
                 Instructions = response.Content ?? "Could not generate instructions."
             };
 
+            // Signals to the Chain of Responsibility pipeline that this specific handler successfully finished its job.
             context.IsHandled = true;
 
+            // Passes the completed context along to the next handler in the chain.
             await base.HandleAsync(context);
         }
     }
