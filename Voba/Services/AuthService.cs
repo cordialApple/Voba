@@ -39,41 +39,45 @@ namespace Voba.Services
             return ServiceResult<User>.Ok(user);
         }
 
-        /// <summary>Authenticates the user and returns a JWT on success.</summary>
-        public async Task<ServiceResult<string>> LoginAsync(string email, string password)
+        /// <summary>Authenticates the user and returns an access token and refresh token on success.</summary>
+        public async Task<ServiceResult<AuthTokens>> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetByEmailAsync(email);
             if (user is null)
-                return ServiceResult<string>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
+                return ServiceResult<AuthTokens>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
 
             var authData = await _authDataRepository.GetByUserIdAsync(user.Id);
             if (authData is null)
-                return ServiceResult<string>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
+                return ServiceResult<AuthTokens>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
 
             if (!authData.VerifyPassword(password, _passwordHasher))
-                return ServiceResult<string>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
+                return ServiceResult<AuthTokens>.Fail(ErrorCodes.Unauthorized, "Invalid email or password.");
 
-            var token = _jwtService.GenerateToken(user);
-
-            // Store a refresh token so the client can request a new JWT later
+            var accessToken = _jwtService.GenerateToken(user);
             var refreshToken = Guid.NewGuid().ToString("N");
             authData.SetRefreshToken(refreshToken, DateTime.UtcNow.AddDays(7));
             await _authDataRepository.UpdateAsync(authData);
 
-            return ServiceResult<string>.Ok(token);
+            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, refreshToken));
         }
 
-        /// <summary>Issues a new JWT from a valid refresh token.</summary>
-        public async Task<ServiceResult<string>> RefreshTokenAsync(string refreshToken)
+        /// <summary>Issues a new token pair from a valid refresh token.</summary>
+        public async Task<ServiceResult<AuthTokens>> RefreshTokenAsync(string refreshToken)
         {
-            // Refresh token lookup requires scanning — acceptable at current scale
-            // Future: add a dedicated index or token collection if volume demands it
-            var allUsers = await _userRepository.GetByEmailAsync(string.Empty);
-            // Not feasible to scan all users by email; look up by refresh token via auth data
-            // For now, this is a placeholder — the real implementation needs
-            // IAuthDataRepository.GetByRefreshTokenAsync which can be added in a future step
+            var authData = await _authDataRepository.GetByRefreshTokenAsync(refreshToken);
+            if (authData is null || authData.TokenExpiry < DateTime.UtcNow)
+                return ServiceResult<AuthTokens>.Fail(ErrorCodes.Unauthorized, "Invalid or expired refresh token.");
 
-            return ServiceResult<string>.Fail(ErrorCodes.NotFound, "Refresh token not found.");
+            var user = await _userRepository.GetByIdAsync(authData.UserId);
+            if (user is null)
+                return ServiceResult<AuthTokens>.Fail(ErrorCodes.NotFound, "User not found.");
+
+            var accessToken = _jwtService.GenerateToken(user);
+            var newRefreshToken = Guid.NewGuid().ToString("N");
+            authData.SetRefreshToken(newRefreshToken, DateTime.UtcNow.AddDays(7));
+            await _authDataRepository.UpdateAsync(authData);
+
+            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, newRefreshToken));
         }
 
         /// <summary>Invalidates the refresh token for the given user.</summary>
