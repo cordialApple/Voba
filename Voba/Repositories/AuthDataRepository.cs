@@ -19,6 +19,9 @@ namespace Voba.Repositories
         {
             var userIndex = Builders<AuthData>.IndexKeys.Ascending(ad => ad.UserId);
             _collection.Indexes.CreateOne(new CreateIndexModel<AuthData>(userIndex));
+
+            var refreshTokenIndex = Builders<AuthData>.IndexKeys.Ascending(ad => ad.RefreshToken);
+            _collection.Indexes.CreateOne(new CreateIndexModel<AuthData>(refreshTokenIndex));
         }
 
         /// <summary>Returns the auth data for the given user, or null if not found.</summary>
@@ -41,6 +44,13 @@ namespace Voba.Repositories
             var filter = Builders<AuthData>.Filter.Eq(ad => ad.Id, data.Id);
             var result = await _collection.ReplaceOneAsync(filter, data);
             return result.ModifiedCount > 0;
+        }
+
+        /// <summary>Returns the auth data matching the refresh token, or null if not found.</summary>
+        public async Task<AuthData?> GetByRefreshTokenAsync(string refreshToken)
+        {
+            var filter = Builders<AuthData>.Filter.Eq(ad => ad.RefreshToken, refreshToken);
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
     }
 }

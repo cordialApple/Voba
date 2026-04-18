@@ -12,5 +12,8 @@ namespace Voba.Interfaces
 
         /// <summary>Replaces the auth data document matched by Id. Returns true if a document was updated.</summary>
         Task<bool> UpdateAsync(AuthData data);
+
+        /// <summary>Returns the auth data matching the refresh token, or null if not found.</summary>
+        Task<AuthData?> GetByRefreshTokenAsync(string refreshToken);
     }
 }
