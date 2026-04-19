@@ -39,12 +39,18 @@ foreach (var ingredientName in cleanedIngredientPrompt)
 
     var estimatedCostValue = ingredientInformation.EstimatedCost?.Value ?? 0;
     var estimatedCostUnit = ingredientInformation.EstimatedCost?.Unit ?? "unknown unit";
+    var normalizedEstimatedCost = estimatedCostValue / 100m;
 
-    totalEstimatedCost += estimatedCostValue;
+    if (normalizedEstimatedCost > 0 && normalizedEstimatedCost < 0.01m)
+    {
+        normalizedEstimatedCost = 0.01m;
+    }
+
+    totalEstimatedCost += normalizedEstimatedCost;
 
     Console.WriteLine(
-        $"{ingredientName} -> {ingredientInformation.Name} (ID: {ingredientInformation.Id}) = {estimatedCostValue} {estimatedCostUnit}");
+        $"{ingredientName} -> {ingredientInformation.Name} (ID: {ingredientInformation.Id}) = ${normalizedEstimatedCost:F2} (raw: {estimatedCostValue} {estimatedCostUnit})");
 }
 
 Console.WriteLine();
-Console.WriteLine($"Total Estimated Cost: {totalEstimatedCost}");
+Console.WriteLine($"Total Estimated Cost: ${totalEstimatedCost:F2}");
