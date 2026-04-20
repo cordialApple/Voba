@@ -16,3 +16,4 @@ Thumbs.db
 
 #Secrets and Settings
 Voba/ApiSettings.cs 
+Voba/AppSettings.cs
