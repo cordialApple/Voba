@@ -72,6 +72,12 @@
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.74.0-alpha" NoWarn="NU1605" />
     <PackageReference Include="OllamaSharp" Version="5.4.25" ExcludeAssets="analyzers" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	<PackageReference Include="RestSharp" Version="110.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
 	</ItemGroup>
 
 </Project>
