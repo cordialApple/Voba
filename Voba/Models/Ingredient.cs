@@ -23,6 +23,7 @@ namespace Voba.Models
 
         public decimal Quantity { get; set; }
         public string Unit { get; set; }
+        public decimal EstimatedCost { get; set; }
 
         public Ingredient(string name, decimal quantity, string unit)
         {
