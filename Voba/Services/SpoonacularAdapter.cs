@@ -9,7 +9,10 @@ namespace Voba.Services
         public List<Ingredient> AdaptIngredients(SpoonacularRecipeDetail detail)
         {
             return detail.Ingredients
-                .Select(i => new Ingredient(i.Name, i.Amount, i.Unit))
+                .Select(i => new Ingredient(i.Name, i.Amount, i.Unit)
+                {
+                    EstimatedCost = i.EstimatedCost
+                })
                 .ToList();
         }
 
@@ -21,7 +24,10 @@ namespace Voba.Services
                 .ForUser(userId)
                 .WithBudget(budget)
                 .WithItems(detail.Ingredients.Select(i =>
-                    new Ingredient(i.Name, i.Amount, i.Unit)))
+                    new Ingredient(i.Name, i.Amount, i.Unit)
+                    {
+                        EstimatedCost = i.EstimatedCost
+                    }))
                 .WithEstimatedCost(detail.TotalCost)
                 .Build();
         }
