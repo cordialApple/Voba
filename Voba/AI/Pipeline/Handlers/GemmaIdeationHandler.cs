@@ -30,31 +30,37 @@ namespace Voba.AI.Pipeline.Handlers
             IRestrictionExpression expression = RestrictionParser.Parse(context.DietaryRestrictions);
             string ruleBlock = expression.Interpret();
 
-            // 2. Builds a strict instruction prompt for the Gemma model.
+            // 2. Build the optional cuisine line — blank means no constraint.
+            string cuisineLine = string.IsNullOrWhiteSpace(context.CuisinePreference)
+                ? "Cuisine: Any — feel free to suggest diverse styles."
+                : $"Cuisine: {context.CuisinePreference.Trim()} — ALL 5 recipes MUST be {context.CuisinePreference.Trim()} cuisine.";
+
+            // 3. Builds a strict instruction prompt for the Gemma model.
             // Forces the AI to return exactly 5 ideas in a clean JSON format so the app can parse it easily.
             string prompt = $@"
             STRICT RULES — READ FIRST:
             {ruleBlock}
-
+ 
             You are a chef. Generate exactly 5 recipe ideas that STRICTLY obey ALL rules above.
             Budget: ${context.TargetBudget}. Servings: {context.ServingSize}.
-
+            {cuisineLine}
+ 
             Every single ingredient in every recipe MUST comply with the rules above.
             Do NOT include any FORBIDDEN ingredient under any circumstances.
-
+ 
             Reply ONLY with a raw JSON array — no markdown, no explanation, no extra text.
             [{{""Name"":""Dish Name"",""Ingredients"":[""ingredient 1"",""ingredient 2""],""EstimatedCost"":0.00}}]".Trim();
 
             // Saves the prompt for debugging AI output later.
             context.DebugPrompt = prompt;
 
-            // 3. Sends the prompt to the local Gemma model and gets the raw JSON back.
+            // 4. Sends the prompt to the local Gemma model and gets the raw JSON back.
             var candidates = await CallGemmaAsync(prompt);
 
-            // 4. Pulls out the exact list of banned ingredients from the rule block.
+            // 5. Pulls out the exact list of banned ingredients from the rule block.
             var forbiddenPhrases = GetForbiddenPhrases(ruleBlock);
 
-            // 5. The Cull: Aggressively deletes any AI recipe that accidentally includes a forbidden ingredient.
+            // 6. The Cull: Aggressively deletes any AI recipe that accidentally includes a forbidden ingredient.
             var passing = candidates
                 .Where(c => !HasForbiddenIngredient(c, forbiddenPhrases)) // Keep only safe recipes
                 .GroupBy(c => c.Name) // Prevent exact duplicates from showing up

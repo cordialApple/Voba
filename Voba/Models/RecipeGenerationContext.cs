@@ -15,8 +15,12 @@ namespace Voba.Models
         public decimal TargetBudget { get; set; }
         public List<string> DietaryRestrictions { get; set; } = new();
 
+        // Free-text cuisine preference entered by the user (e.g. "Italian", "Thai").
+        // Null or empty means no cuisine preference — Gemma may suggest any style.
+        public string? CuisinePreference { get; set; }
+
         public List<RecipeOption> ProposedOptions { get; set; } = new();
-  
+
         public RecipeOption? SelectedOption { get; set; }
 
         public FullRecipe? FinalRecipe { get; set; }

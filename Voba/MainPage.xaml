@@ -1,41 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 
-<!--
-
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Voba.MainPage">
-
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Label Text="Gemma 3:1b Connection Test" FontSize="24" FontAttributes="Bold" />
-
-        <Editor x:Name="PromptInput" 
-                Text="Say 'Hello, Voba is connected!' and nothing else." 
-                HeightRequest="60" />
-
-        <Button x:Name="TestButton" 
-                Text="Send to Localhost" 
-                Clicked="OnTestButtonClicked" 
-                HeightRequest="50" />
-
-        <ActivityIndicator x:Name="LoadingSpinner" 
-                           IsRunning="False" 
-                           IsVisible="False" 
-                           Color="Blue" />
-
-        <Border Stroke="LightGray" Padding="15" StrokeThickness="1">
-            <ScrollView HeightRequest="300">
-                <Label x:Name="ResponseLabel" 
-                       Text="Waiting for response..." 
-                       TextColor="Gray" />
-            </ScrollView>
-        </Border>
-    </VerticalStackLayout>
-
-</ContentPage>
-    
--->
-    
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Voba.MainPage">
@@ -53,8 +17,8 @@
                    Placeholder="Serving Size (e.g., 2)"
                    Keyboard="Numeric" />
 
-            <!-- Lifestyle diet dropdown -->
-            <Label Text="Lifestyle Diet" />
+            <!-- Lifestyle diet checkboxes -->
+            <Label Text="Lifestyle Diet" FontAttributes="Bold" />
             <FlexLayout Wrap="Wrap" Direction="Row">
                 <HorizontalStackLayout Margin="0,0,16,8">
                     <CheckBox x:Name="ChkVegan" />
@@ -91,8 +55,13 @@
             </FlexLayout>
 
             <!-- Allergies free-text -->
-            <Label Text="Allergies (comma-separated, e.g. nuts, soy)" />
+            <Label Text="Allergies (comma-separated, e.g. nuts, soy)" FontAttributes="Bold" />
             <Entry x:Name="AllergyInput" Placeholder="nuts, shellfish, eggs..." />
+
+            <!-- Cuisine preference free-text -->
+            <Label Text="Cuisine (optional, e.g. Italian, Thai, Mexican)" FontAttributes="Bold" />
+            <Entry x:Name="CuisineInput"
+                   Placeholder="Leave blank for any cuisine..." />
 
             <Button x:Name="TestButton"
                     Text="Generate Ideas"
