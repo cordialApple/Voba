@@ -24,7 +24,7 @@ using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using OpenAPIDateConverter = spoonacular.Client.OpenAPIDateConverter;
 
-namespace spoonacular.Model
+namespace spoonacular.Models
 {
     /// <summary>
     /// GetDishPairingForWine200Response

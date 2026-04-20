@@ -16,7 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using spoonacular.Client;
-using spoonacular.Model;
+using spoonacular.Models;
 
 namespace spoonacular.Api
 {

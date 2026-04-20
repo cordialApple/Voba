@@ -23,14 +23,24 @@ namespace Voba
                 endpoint: new Uri("http://localhost:11434")
             );
 
+            // Spoonacular Service
+            builder.Services.AddSingleton<Spoonacular.SpoonacularService>();
+
+            // Pipeline Handlers
+            // Registered as Transient so each page resolution gets a fresh chain.
+            // Chain order: Ideation → Pricing → FullRecipe
+            builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaIdeationHandler>();
+            builder.Services.AddTransient<AI.Pipeline.Handlers.SpoonacularPricingHandler>();
+            builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
+
+            //Gemma AI Services
+            builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
+            builder.Services.AddTransient<MainPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 
 #endif
-            builder.Services.AddSingleton<Voba.Services.IAiChatService, Voba.Services.SemanticKernelChatService>();
-            builder.Services.AddTransient<Voba.AI.Pipeline.Handlers.GemmaIdeationHandler>();
-            builder.Services.AddTransient<Voba.AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
-            builder.Services.AddTransient<MainPage>();
 
             return builder.Build();
         }

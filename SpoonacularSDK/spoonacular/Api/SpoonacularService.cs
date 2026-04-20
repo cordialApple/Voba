@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using spoonacular.Api;
 using spoonacular.Client;
-using spoonacular.Model;
+using spoonacular.Models;
 
-namespace Voba.api
+namespace spoonacular.api
 {
     public class SpoonacularService
     {

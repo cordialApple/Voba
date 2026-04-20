@@ -1,7 +1,8 @@
-﻿using Azure.Core;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Voba.AI.Pipeline.Handlers;
 using Voba.Models;
@@ -14,17 +15,24 @@ public partial class MainPage : ContentPage
     private readonly IAiChatService _aiService;
     private readonly GemmaIdeationHandler _ideationHandler;
 
-    public MainPage(IAiChatService aiService, GemmaIdeationHandler ideationHandler, GemmaFullRecipeHandler fullRecipeHandler)
+    // Chain: GemmaIdeationHandler → SpoonacularPricingHandler → GemmaFullRecipeHandler
+    public MainPage(
+        IAiChatService aiService,
+        GemmaIdeationHandler ideationHandler,
+        SpoonacularPricingHandler pricingHandler,
+        GemmaFullRecipeHandler fullRecipeHandler)
     {
         InitializeComponent();
         _aiService = aiService;
         _ideationHandler = ideationHandler;
-        _ideationHandler.SetNext(fullRecipeHandler);
+
+        _ideationHandler
+            .SetNext(pricingHandler)
+            .SetNext(fullRecipeHandler);
     }
 
     private async void OnTestButtonClicked(object sender, EventArgs e)
     {
-        // ── Reset UI ──────────────────────────────────────────────────────
         TestButton.IsEnabled = false;
         LoadingSpinner.IsRunning = true;
         LoadingSpinner.IsVisible = true;
@@ -42,7 +50,6 @@ public partial class MainPage : ContentPage
             decimal budget = decimal.TryParse(BudgetInput.Text, out var b) ? b : 15.00m;
             int servings = int.TryParse(ServingsInput.Text, out var s) ? s : 2;
 
-            // ── Dietary restrictions ──────────────────────────────────────
             var restrictions = new List<string>();
 
             var dietMap = new Dictionary<CheckBox, string>
@@ -63,18 +70,15 @@ public partial class MainPage : ContentPage
                     restrictions.Add(dietName);
             }
 
-            // Allergies free-text (comma-separated)
             if (!string.IsNullOrWhiteSpace(AllergyInput.Text))
             {
-                var allergyEntries = AllergyInput.Text
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(a => a.Trim())
-                    .Where(a => !string.IsNullOrWhiteSpace(a));
-
-                restrictions.AddRange(allergyEntries);
+                restrictions.AddRange(
+                    AllergyInput.Text
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(a => a.Trim())
+                        .Where(a => !string.IsNullOrWhiteSpace(a)));
             }
 
-            // ── Cuisine preference (free-text, optional) ──────────────────
             string? cuisinePreference = string.IsNullOrWhiteSpace(CuisineInput.Text)
                 ? null
                 : CuisineInput.Text.Trim();
@@ -87,10 +91,8 @@ public partial class MainPage : ContentPage
                 CuisinePreference = cuisinePreference
             };
 
-            // ── Run pipeline ──────────────────────────────────────────────
             await _ideationHandler.HandleAsync(context);
 
-            // ── Show prompt that was sent to Gemma ────────────────────────
             if (!string.IsNullOrWhiteSpace(context.DebugPrompt))
             {
                 PromptDebugLabel.Text = context.DebugPrompt;
@@ -98,7 +100,6 @@ public partial class MainPage : ContentPage
                 PromptDebugBorder.IsVisible = true;
             }
 
-            // ── Show model response ───────────────────────────────────────
             ResponseHeader.IsVisible = true;
 
             if (context.ProposedOptions.Count > 0)

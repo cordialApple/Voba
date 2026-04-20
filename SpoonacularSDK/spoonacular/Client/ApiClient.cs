@@ -30,7 +30,7 @@ using RestSharp.Serializers;
 using RestSharpMethod = RestSharp.Method;
 using FileIO = System.IO.File;
 using Polly;
-using spoonacular.Model;
+using spoonacular.Models;
 
 namespace spoonacular.Client
 {
