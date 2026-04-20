@@ -1,6 +1,0 @@
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.csproj.AssemblyReference.cache
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.GeneratedMSBuildEditorConfig.editorconfig
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.AssemblyInfoInputs.cache
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.AssemblyInfo.cs
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.csproj.CoreCompileInputs.cache
-C:\dev\Voba\VobaIngredientConsoleTest\obj\Debug\net9.0\VobaIngredientConsoleTest.sourcelink.json
