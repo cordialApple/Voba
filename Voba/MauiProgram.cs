@@ -42,6 +42,12 @@ builder.Services.AddSingleton<IGroceryListRepository>(sp =>
 builder.Services.AddSingleton<IAuthDataRepository>(sp =>
     RepositoryFactory.CreateAuthDataRepository(sp.GetRequiredService<IMongoDatabase>()));
 
+// Service layer — orchestration, strategies, and adapters
+builder.Services.AddSingleton<SpoonacularAdapter>();
+builder.Services.AddSingleton<IPriceStrategy, CheapestFirstStrategy>();
+builder.Services.AddSingleton<IRecipeService, RecipeService>();
+builder.Services.AddSingleton<GroceryService>();
+
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
