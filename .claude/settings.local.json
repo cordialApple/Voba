@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/randl/Documents/GitHub/**)",
+      "Read(//c//**)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet add *)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(Remove-Item \"C:/Users/randl/Documents/GitHub/Voba/Voba/Services/FakeAiChatService.cs\")",
+      "Bash(dotnet restore *)"
+    ]
+  }
+}
