@@ -61,24 +61,25 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Models\RecipeConcept.cs" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
+		<PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.74.0-alpha" />
 	</ItemGroup>
 
+	<!-- Data layer -->
 	<ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.13" />
-
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.74.0-alpha" NoWarn="NU1605" />
-    <PackageReference Include="OllamaSharp" Version="5.4.25" ExcludeAssets="analyzers" />
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	<PackageReference Include="RestSharp" Version="110.2.0" />
+		<PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+		<PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.17.0" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.6" />
 	</ItemGroup>
 
+	<!-- Spoonacular local SDK (SpoonacularSDK sibling folder) -->
 	<ItemGroup>
-	  <ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
+		<ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
