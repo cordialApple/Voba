@@ -145,7 +145,7 @@ public partial class Recipe : ContentPage
 
     private void BuildInstructions(string? raw)
     {
-        if (string.IsNullOrWhiteSpace(raw)) { ShowErrorCard("Instructions could not be generated."); return; }
+        if (string.IsNullOrWhiteSpace(raw)) { ShowErrorCard(""); return; }
         var steps = ParseNumberedSteps(raw);
         if (steps.Count == 0) { ShowErrorCard(raw.Trim()); return; }
 
@@ -158,16 +158,34 @@ public partial class Recipe : ContentPage
 
     private static List<(int Number, string Text)> ParseNumberedSteps(string raw)
     {
-        var result = new List<(int, string)>();
+        var result = new List<(int Number, string Text)>();
+
         foreach (var line in raw.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             var trimmed = line.Trim();
-            var match = System.Text.RegularExpressions.Regex.Match(trimmed, @"^(\d+)\.\s+(.+)$");
-            if (match.Success
-                && int.TryParse(match.Groups[1].Value, out int num)
-                && match.Groups[2].Value is { Length: > 0 } stepText)
-                result.Add((num, stepText));
+
+            int dotIndex = trimmed.IndexOf('.');
+
+            if (dotIndex > 0 && dotIndex < trimmed.Length - 1)
+            {
+                string numberPart = trimmed.Substring(0, dotIndex);
+
+                if (int.TryParse(numberPart, out int num))
+                {
+
+                    if (char.IsWhiteSpace(trimmed[dotIndex + 1]))
+                    {
+                        string stepText = trimmed.Substring(dotIndex + 1).TrimStart();
+
+                        if (stepText.Length > 0)
+                        {
+                            result.Add((num, stepText));
+                        }
+                    }
+                }
+            }
         }
+
         return result;
     }
 
@@ -254,28 +272,20 @@ public partial class Recipe : ContentPage
     {
         ServingSize = 4,
         TargetBudget = 25.00m,
-        CuisinePreference = "Italian",
-        DietaryRestrictions = ["Vegetarian"],
+        CuisinePreference = "",
+        DietaryRestrictions = [""],
         SelectedOption = new RecipeOption
         {
-            Name = "Creamy Mushroom Risotto",
+            Name = "",
             EstimatedCost = 4.63m,
             TotalCost = 18.50m,
             Ingredients = []
         },
         FinalRecipe = new FullRecipe
         {
-            Title = "Creamy Mushroom Risotto",
+            Title = "",
             Instructions =
-                "1. Heat the olive oil and butter in a large pan over medium heat.\n" +
-                "2. Add the onion and cook for 5 minutes until softened.\n" +
-                "3. Stir in the garlic and mushrooms and cook for 4 minutes.\n" +
-                "4. Add the Arborio rice and stir for 2 minutes.\n" +
-                "5. Pour in the white wine and stir until absorbed.\n" +
-                "6. Add warm stock one ladle at a time, stirring constantly.\n" +
-                "7. Continue for 18 to 20 minutes until the rice is creamy.\n" +
-                "8. Stir in the Parmesan and season generously.\n" +
-                "9. Rest for 2 minutes then serve with fresh parsley."
+                ""
         }
     };
 }

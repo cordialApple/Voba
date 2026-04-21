@@ -14,14 +14,14 @@ public partial class Forum : ContentPage
         _ideationHandler = ideationHandler;
         _pricingHandler = pricingHandler;
 
-        // Chain: Ideation → Pricing only.
-        // Full recipe is triggered later on RecipeSelect when the user picks a card.
+        // Chain: Ideation > Pricing only.
+        // Full recipe is triggered later on RecipeSelect when the user picks.
         _ideationHandler.SetNext(_pricingHandler);
     }
 
     private async void OnGenerateClicked(object sender, EventArgs e)
     {
-        // ── Validation ────────────────────────────────────────────────────
+        // Validation 
         if (string.IsNullOrWhiteSpace(BudgetInput.Text) ||
             string.IsNullOrWhiteSpace(ServingsInput.Text))
         {
@@ -40,7 +40,7 @@ public partial class Forum : ContentPage
             decimal budget = decimal.TryParse(BudgetInput.Text, out var b) ? b : 15.00m;
             int servings = int.TryParse(ServingsInput.Text, out var s) ? s : 2;
 
-            // ── Restrictions ──────────────────────────────────────────────
+            // Restrictions 
             var restrictions = new List<string>();
 
             var dietMap = new Dictionary<CheckBox, string>
@@ -72,12 +72,10 @@ public partial class Forum : ContentPage
                 ServingSize = servings,
                 TargetBudget = budget,
                 DietaryRestrictions = restrictions,
-                CuisinePreference = string.IsNullOrWhiteSpace(CuisineInput.Text)
-                                           ? null
-                                           : CuisineInput.Text.Trim()
+                CuisinePreference = string.IsNullOrWhiteSpace(CuisineInput.Text) ? null : CuisineInput.Text.Trim()
             };
 
-            // ── Run pipeline ──────────────────────────────────────────────
+            // Run pipeline
             await _ideationHandler.HandleAsync(context);
 
             if (context.ProposedOptions.Count == 0)
@@ -87,7 +85,7 @@ public partial class Forum : ContentPage
                 return;
             }
 
-            // ── Navigate to RecipeSelect, passing context ─────────────────
+            // Navigate to RecipeSelect, passing context
             await Shell.Current.GoToAsync(nameof(RecipeSelect),
                 new Dictionary<string, object> { ["Context"] = context });
         }
