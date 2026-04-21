@@ -1,41 +1,46 @@
-using Voba.Models;
-using Voba.Services;
-using Voba.Repositories;
+using Voba.Interfaces;
 
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
 {
-    public SignUp()
+    private readonly IAuthService _authService;
+
+    public SignUp(IAuthService authService)
     {
         InitializeComponent();
+        _authService = authService;
     }
 
     private async void OnSignUpClicked(object sender, EventArgs e)
     {
-        string username = UsernameEntry.Text;
-        string password = PasswordEntry.Text;
-        string confirmPassword = ConfirmPasswordEntry.Text;
-        if (password != confirmPassword)
+        var username = UsernameEntry.Text?.Trim() ?? string.Empty;
+        var password = PasswordEntry.Text ?? string.Empty;
+        var confirmPassword = ConfirmPasswordEntry.Text ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
-            await DisplayAlert("Error", "Passwords do not match. Please try again.", "OK");
+            await DisplayAlert("Sign up", "Please fill in all fields.", "OK");
             return;
         }
-        var hasher = new BcryptPasswordHasher();
-        var userRepo = new UserRepository();
-        var authRepo = new AuthDataRepository();
-        var JwtService = new JwtService();
-        var hasher = new AuthService();
-        var user = new AuthData(username,authRepo,,JwtService);
-        user.SetPassword(password,hasher);
-        bool isSignUpSuccessful = await CreateUser(username, password); // when method is implemented
-        if (isSignUpSuccessful)
+
+        if (password != confirmPassword)
         {
-            await Shell.Current.GoToAsync("//Home");
+            await DisplayAlert("Sign up", "Passwords do not match.", "OK");
+            return;
         }
-        else
+
+        try
         {
-            await DisplayAlert("Sign Up Failed", "An error occurred while creating your account. Please try again.", "OK");
+            var result = await _authService.RegisterAsync(username, username, password);
+            if (result.Success)
+                await Shell.Current.GoToAsync($"//{nameof(Home)}");
+            else
+                await DisplayAlert("Sign up failed", result.ErrorMessage ?? "Unable to create account.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Sign up failed", ex.Message, "OK");
         }
     }
 }

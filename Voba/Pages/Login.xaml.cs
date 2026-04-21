@@ -1,32 +1,44 @@
-using Voba.Models;
+using Voba.Interfaces;
 
 namespace Voba.Pages;
 
 public partial class Login : ContentPage
 {
-    public Login()
+    private readonly IAuthService _authService;
+
+    public Login(IAuthService authService)
     {
         InitializeComponent();
+        _authService = authService;
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        string username = UsernameEntry.Text;
-        string password = PasswordEntry.Text;
-        var user = new AuthData(username);
-        bool isLoginCorrect = user.VerifyPassword(password,hasher); //await passwordCheck(username, password); // when method is implemented
-        if (isLoginCorrect)
+        var email = UsernameEntry.Text?.Trim() ?? string.Empty;
+        var password = PasswordEntry.Text ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
-            await Shell.Current.GoToAsync("//Home");
+            await DisplayAlert("Login", "Please enter your username and password.", "OK");
+            return;
         }
-        else
+
+        try
         {
-            await DisplayAlert("Login Failed", "Incorrect username or password. Please try again.", "OK");
+            var result = await _authService.LoginAsync(email, password);
+            if (result.Success)
+                await Shell.Current.GoToAsync($"//{nameof(Home)}");
+            else
+                await DisplayAlert("Login failed", result.ErrorMessage ?? "Incorrect username or password.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Login failed", ex.Message, "OK");
         }
     }
 
     private async void OnSignUpClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("SignUp");
+        await Shell.Current.GoToAsync(nameof(SignUp));
     }
 }

@@ -76,7 +76,12 @@ builder.Services.AddSingleton<IGroceryService, GroceryService>();
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
             builder.Services.AddTransient<Pages.Login>();
             builder.Services.AddTransient<Pages.SignUp>();
+            builder.Services.AddTransient<Pages.Home>();
+            builder.Services.AddTransient<Pages.Hub>();
+            builder.Services.AddTransient<Pages.Forum>();
+            builder.Services.AddTransient<Pages.Recipe>();
             builder.Services.AddTransient<Pages.RecipeSelect>();
+            builder.Services.AddTransient<Pages.SavedRecipes>();
 
 #if DEBUG
             builder.Logging.AddDebug();

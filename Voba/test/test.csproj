@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Voba</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+  </ItemGroup>
+
+  <!-- Shared source files linked from the main project -->
+  <ItemGroup>
+    <Compile Include="..\Secrets.local.cs" />
+    <Compile Include="..\Models\User.cs" />
+    <Compile Include="..\Models\AuthData.cs" />
+    <Compile Include="..\Models\Ingredient.cs" />
+    <Compile Include="..\Models\GroceryList.cs" />
+    <Compile Include="..\Models\GroceryListBuilder.cs" />
+    <Compile Include="..\Models\Recipe.cs" />
+    <Compile Include="..\Models\RecipeGenerationContext.cs" />
+    <Compile Include="..\Models\Recipeoption.cs" />
+    <Compile Include="..\Interfaces\IPasswordHasher.cs" />
+    <Compile Include="..\Interfaces\IUserRepository.cs" />
+    <Compile Include="..\Interfaces\IRecipeRepository.cs" />
+    <Compile Include="..\Interfaces\IIngredientRepository.cs" />
+    <Compile Include="..\Interfaces\IGroceryListRepository.cs" />
+    <Compile Include="..\Interfaces\IAuthDataRepository.cs" />
+    <Compile Include="..\Interfaces\IJwtService.cs" />
+    <Compile Include="..\Interfaces\IAuthService.cs" />
+    <Compile Include="..\Interfaces\IGroceryService.cs" />
+    <Compile Include="..\Interfaces\IRecipeService.cs" />
+    <Compile Include="..\Interfaces\IPriceStrategy.cs" />
+    <Compile Include="..\Interfaces\ISpoonacularService.cs" />
+    <Compile Include="..\Repositories\UserRepository.cs" />
+    <Compile Include="..\Repositories\RecipeRepository.cs" />
+    <Compile Include="..\Repositories\IngredientRepository.cs" />
+    <Compile Include="..\Services\ServiceResult.cs" />
+  </ItemGroup>
+
+</Project>

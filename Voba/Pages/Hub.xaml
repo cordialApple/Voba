@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.Hub"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── Top bar ── -->
+        <Grid Grid.Row="0"
+              Padding="28,52,28,0"
+              ColumnDefinitions="*,Auto">
+
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="VOBA"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       CharacterSpacing="5"
+                       TextColor="#8ba888" />
+                <Label x:Name="GreetingLabel"
+                       Text="What would you like to do?"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#2e4d2c" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- ── Choice cards centred ── -->
+        <VerticalStackLayout Grid.Row="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="18"
+                             Padding="28,0"
+                             WidthRequest="340">
+
+            <!-- New Recipe card -->
+            <Border BackgroundColor="#2e4d2c"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent"
+                    Padding="28,32">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="New Recipe"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#f1ebe1" />
+
+                    <Label Text="Generate a new AI-powered recipe tailored to your budget, diet, and cuisine."
+                           FontSize="14"
+                           TextColor="#a8c4a6"
+                           LineBreakMode="WordWrap"
+                           LineHeight="1.5" />
+
+                    <Button Text="CREATE RECIPE"
+                            BackgroundColor="#8ba888"
+                            TextColor="#f1ebe1"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            CharacterSpacing="1.5"
+                            CornerRadius="8"
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Padding="20,0"
+                            Clicked="OnNewRecipeClicked" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Saved Recipes card -->
+            <Border BackgroundColor="#ffffff"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="#ddd6ce"
+                    StrokeThickness="1"
+                    Padding="28,32">
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Saved Recipes"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#2e4d2c" />
+
+                    <Label Text="Browse and revisit recipes you have saved from previous sessions."
+                           FontSize="14"
+                           TextColor="#8a8078"
+                           LineBreakMode="WordWrap"
+                           LineHeight="1.5" />
+
+                    <Button Text="VIEW SAVED"
+                            BackgroundColor="Transparent"
+                            TextColor="#8ba888"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            CharacterSpacing="1.5"
+                            BorderColor="#8ba888"
+                            BorderWidth="1"
+                            CornerRadius="8"
+                            HeightRequest="44"
+                            HorizontalOptions="Start"
+                            Padding="20,0"
+                            Clicked="OnSavedRecipesClicked" />
+
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+
+        <!-- ── Sign out ── -->
+        <Label Grid.Row="2"
+               Text="Sign out"
+               FontSize="13"
+               TextColor="#b0a898"
+               TextDecorations="Underline"
+               HorizontalOptions="Center"
+               Margin="0,0,0,32">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSignOutTapped" />
+            </Label.GestureRecognizers>
+        </Label>
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.SavedRecipes"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
+
+    <VerticalStackLayout Padding="28,52,28,28" Spacing="0">
+
+        <!-- Top bar -->
+        <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,36">
+            <Button Grid.Column="0"
+                    Text="Back"
+                    BackgroundColor="Transparent"
+                    TextColor="#8ba888"
+                    FontSize="14"
+                    Padding="0"
+                    BorderWidth="0"
+                    Clicked="OnBackClicked" />
+            <Label Grid.Column="1"
+                   Text="Saved Recipes"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#2e4d2c"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Empty state -->
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="12"
+                             Margin="0,80,0,0">
+            <Label Text="No saved recipes yet"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#2e4d2c"
+                   HorizontalOptions="Center" />
+            <Label Text="Recipes you save will appear here"
+                   FontSize="14"
+                   TextColor="#8a8078"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+    </VerticalStackLayout>
+
+</ContentPage>

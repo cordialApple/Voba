@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(Get-Content \"C:\\\\Users\\\\randl\\\\Documents\\\\GitHub\\\\Voba\\\\Voba\\\\Pages\\\\Login.xaml.cs\")",
+      "Bash(dotnet run *)"
+    ]
+  }
+}
