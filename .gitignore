@@ -1,0 +1,19 @@
+
+#IDE and Editor Folders
+.vs/
+.vscode/
+*.suo
+*.user
+
+#Build Folders
+[Oo]bj/
+[Bb]in/
+Generated Files/
+
+#OS Generated Files
+.DS_Store
+Thumbs.db
+
+#Secrets and Settings
+SpoonacularSDK/spoonacular/ApiSettings.cs
+Voba/ApiSettings.cs

@@ -5,12 +5,13 @@
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("Login", typeof(Login));
-            Routing.RegisterRoute("SavedRecipes", typeof(SavedRecipes));
-            Routing.RegisterRoute("Forum", typeof(Forum));
-            Routing.RegisterRoute("Recipe", typeof(Recipe));
-            Routing.RegisterRoute("Home", typeof(Home));
-            Routing.RegisterRoute("RecipeSelect", typeof(RecipeSelect));
+            Routing.RegisterRoute("Login", typeof(ContentPage));
+            Routing.RegisterRoute("SavedRecipes", typeof(ContentPage));
+            Routing.RegisterRoute("Forum", typeof(ContentPage));
+            Routing.RegisterRoute("Recipe", typeof(ContentPage));
+            Routing.RegisterRoute("Home", typeof(ContentPage));
+            Routing.RegisterRoute("RecipeSelect", typeof(ContentPage));
+            Routing.RegisterRoute("SignUp", typeof(ContentPage));
         }
     }
 }
