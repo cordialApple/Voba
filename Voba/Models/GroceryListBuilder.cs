@@ -36,8 +36,6 @@ namespace Voba.Models
             if (string.IsNullOrWhiteSpace(_userId))
                 throw new InvalidOperationException("UserId is required.");
 
-            // GroceryList budget must be positive — zero means no active shopping intent.
-            // Note: User.Budget allows zero (user exists but hasn't set a budget yet).
             if (_budget <= 0)
                 throw new InvalidOperationException("Budget must be positive.");
 

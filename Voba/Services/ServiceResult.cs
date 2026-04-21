@@ -7,11 +7,9 @@ namespace Voba.Services
         public string? ErrorCode { get; init; }
         public string? ErrorMessage { get; init; }
 
-        /// <summary>Creates a successful result containing the given data.</summary>
         public static ServiceResult<T> Ok(T data) =>
             new() { Data = data, Success = true };
 
-        /// <summary>Creates a failed result with the given error code and message.</summary>
         public static ServiceResult<T> Fail(string code, string message) =>
             new() { Success = false, ErrorCode = code, ErrorMessage = message };
     }

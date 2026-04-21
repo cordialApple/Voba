@@ -27,7 +27,6 @@ namespace Voba.Services
             };
         }
 
-        /// <summary>Generates a signed JWT for the given user.</summary>
         public string GenerateToken(User user)
         {
             var claims = new[]
@@ -47,7 +46,6 @@ namespace Voba.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        /// <summary>Returns true if the token signature and expiry are valid.</summary>
         public bool ValidateToken(string token)
         {
             try
@@ -61,7 +59,6 @@ namespace Voba.Services
             }
         }
 
-        /// <summary>Extracts the user Id from the token, or null if invalid.</summary>
         public string? GetUserIdFromToken(string token)
         {
             try

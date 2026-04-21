@@ -35,26 +35,10 @@ namespace Voba.Models
             }
         }
 
-        private decimal _budget;
-        public decimal Budget
+        public User(string email, string username)
         {
-            get => _budget;
-            set
-            {
-                if (value < 0)
-                    throw new ArgumentException("Budget cannot be negative.");
-                _budget = value;
-            }
-        }
-
-        public DateTime CreatedAt { get; private set; }
-
-        public User(string email, string username, decimal budget)
-        {
-            Email = email;
+            Email    = email;
             Username = username;
-            Budget = budget;
-            CreatedAt = DateTime.UtcNow;
         }
     }
 }

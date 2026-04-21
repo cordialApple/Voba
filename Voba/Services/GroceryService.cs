@@ -22,7 +22,6 @@ namespace Voba.Services
             _priceStrategy     = priceStrategy;
         }
 
-        /// <summary>Builds and saves a budget-optimized grocery list from a Spoonacular recipe.</summary>
         public async Task<ServiceResult<GroceryList>> CreateFromRecipeAsync(
             int recipeId, string userId, decimal budget)
         {

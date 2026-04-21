@@ -12,7 +12,6 @@ namespace Voba.Services
             _spoonacular = spoonacular;
         }
 
-        /// <summary>Returns recipe suggestions matching the given ingredients and fitting the budget.</summary>
         public async Task<ServiceResult<List<RecipeSuggestion>>> GetSuggestionsAsync(
             List<Ingredient> ingredients, decimal budget)
         {

@@ -5,7 +5,6 @@ namespace Voba.Services
 {
     public class CheapestFirstStrategy : IPriceStrategy
     {
-        /// <summary>Orders items cheapest first and includes them until the budget is reached.</summary>
         public List<Ingredient> Optimize(List<Ingredient> items, decimal budget)
         {
             var result  = new List<Ingredient>();

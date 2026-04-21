@@ -2,10 +2,6 @@ using Voba.Interfaces;
 
 namespace Voba.api
 {
-    /// <summary>
-    /// Offline Spoonacular stub — returns hardcoded recipes and costs without any network call or API key.
-    /// Swap registration to SpoonacularService when running with a live key (Vathana swaps on merge).
-    /// </summary>
     public class FakeSpoonacularService : ISpoonacularService
     {
         private static readonly List<SpoonacularSearchResult> _allResults = new()
@@ -70,14 +66,12 @@ namespace Voba.api
                 }, 6.10m),
         };
 
-        /// <summary>Returns a hardcoded list of up to <paramref name="number"/> recipes; query is ignored.</summary>
         public Task<List<SpoonacularSearchResult>?> SearchRecipesAsync(string query, int number = 5)
         {
             var results = _allResults.Take(number).ToList();
             return Task.FromResult<List<SpoonacularSearchResult>?>(results);
         }
 
-        /// <summary>Returns hardcoded recipe detail for the given ID, or null if the ID is not in the stub data.</summary>
         public Task<SpoonacularRecipeDetail?> GetRecipeByIdAsync(int recipeId)
         {
             _details.TryGetValue(recipeId, out var detail);

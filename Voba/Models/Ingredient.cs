@@ -22,8 +22,10 @@ namespace Voba.Models
         }
 
         public decimal Quantity { get; set; }
-        public string Unit { get; set; }
+        public string Unit { get; set; } = string.Empty;
         public decimal EstimatedCost { get; set; }
+        public int SpoonacularId { get; set; }
+        public DateTime LastUpdated { get; set; }
 
         public Ingredient(string name, decimal quantity, string unit)
         {

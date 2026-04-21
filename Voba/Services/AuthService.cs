@@ -22,14 +22,13 @@ namespace Voba.Services
             _jwtService         = jwtService;
         }
 
-        /// <summary>Registers a new user and returns the created user on success.</summary>
         public async Task<ServiceResult<User>> RegisterAsync(string email, string username, string password)
         {
             var existing = await _userRepository.GetByEmailAsync(email);
             if (existing is not null)
                 return ServiceResult<User>.Fail(ErrorCodes.ValidationError, "Email already registered.");
 
-            var user = new User(email, username, 0);
+            var user = new User(email, username);
             await _userRepository.SaveAsync(user);
 
             var authData = new AuthData(user.Id);
@@ -39,7 +38,6 @@ namespace Voba.Services
             return ServiceResult<User>.Ok(user);
         }
 
-        /// <summary>Authenticates the user and returns an access token and refresh token on success.</summary>
         public async Task<ServiceResult<AuthTokens>> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetByEmailAsync(email);
@@ -61,7 +59,6 @@ namespace Voba.Services
             return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, refreshToken));
         }
 
-        /// <summary>Issues a new token pair from a valid refresh token.</summary>
         public async Task<ServiceResult<AuthTokens>> RefreshTokenAsync(string refreshToken)
         {
             var authData = await _authDataRepository.GetByRefreshTokenAsync(refreshToken);
@@ -80,7 +77,6 @@ namespace Voba.Services
             return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, newRefreshToken));
         }
 
-        /// <summary>Invalidates the refresh token for the given user.</summary>
         public async Task<bool> LogoutAsync(string userId)
         {
             var authData = await _authDataRepository.GetByUserIdAsync(userId);

@@ -17,7 +17,6 @@ namespace Voba.Repositories
 
         private void EnsureIndexes()
         {
-            // Unique ascending index on Email — enforces no duplicate accounts
             var emailIndex = Builders<User>.IndexKeys.Ascending(u => u.Email);
             _collection.Indexes.CreateOne(new CreateIndexModel<User>(
                 emailIndex,
@@ -32,7 +31,6 @@ namespace Voba.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            // Normalize to match the lowercase-on-set convention in User.Email
             var filter = Builders<User>.Filter.Eq(u => u.Email, email.Trim().ToLowerInvariant());
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }

@@ -4,9 +4,6 @@ using Voba.Models;
 
 namespace Voba.Services
 {
-    /// <summary>
-    /// Decorator — caches GetSuggestionsAsync results for 10 minutes via IMemoryCache.
-    /// </summary>
     public class CachedRecipeService : IRecipeService
     {
         private readonly IRecipeService _inner;
@@ -19,7 +16,6 @@ namespace Voba.Services
             _cache = cache;
         }
 
-        /// <summary>Returns cached recipe suggestions; fetches and caches on miss.</summary>
         public async Task<ServiceResult<List<RecipeSuggestion>>> GetSuggestionsAsync(
             List<Ingredient> ingredients, decimal budget)
         {
