@@ -3,7 +3,7 @@ using Voba.Models;
 
 namespace Voba.Services
 {
-    public class GroceryService
+    public class GroceryService : IGroceryService
     {
         private readonly ISpoonacularService _spoonacular;
         private readonly SpoonacularAdapter _adapter;
