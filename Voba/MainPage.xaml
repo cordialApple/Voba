@@ -7,8 +7,12 @@
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20">
 
-            <Label Text="Voba Recipe Ideation" FontSize="24" FontAttributes="Bold" />
+            <!-- ── Title ─────────────────────────────────────────────────── -->
+            <Label Text="Voba Recipe Ideation"
+                   FontSize="24"
+                   FontAttributes="Bold" />
 
+            <!-- ── Inputs ─────────────────────────────────────────────────── -->
             <Entry x:Name="BudgetInput"
                    Placeholder="Target Budget (e.g., 15.00)"
                    Keyboard="Numeric" />
@@ -54,18 +58,18 @@
                 </HorizontalStackLayout>
             </FlexLayout>
 
-            <!-- Allergies free-text -->
+            <!-- Allergies -->
             <Label Text="Allergies (comma-separated, e.g. nuts, soy)" FontAttributes="Bold" />
             <Entry x:Name="AllergyInput" Placeholder="nuts, shellfish, eggs..." />
 
-            <!-- Cuisine preference free-text -->
+            <!-- Cuisine -->
             <Label Text="Cuisine (optional, e.g. Italian, Thai, Mexican)" FontAttributes="Bold" />
-            <Entry x:Name="CuisineInput"
-                   Placeholder="Leave blank for any cuisine..." />
+            <Entry x:Name="CuisineInput" Placeholder="Leave blank for any cuisine..." />
 
+            <!-- Generate button -->
             <Button x:Name="TestButton"
                     Text="Generate Ideas"
-                    Clicked="OnTestButtonClicked"
+                    Clicked="OnGenerateClicked"
                     HeightRequest="50" />
 
             <ActivityIndicator x:Name="LoadingSpinner"
@@ -73,7 +77,7 @@
                                IsVisible="False"
                                Color="Blue" />
 
-            <!-- Prompt debug panel — hidden until a request fires -->
+            <!-- ── Debug prompt panel ─────────────────────────────────────── -->
             <Label x:Name="PromptDebugHeader"
                    Text="▶ PROMPT SENT TO GEMMA"
                    FontSize="12"
@@ -94,21 +98,104 @@
                 </ScrollView>
             </Border>
 
-            <!-- Response panel -->
-            <Label x:Name="ResponseHeader"
-                   Text="◀ GEMMA RESPONSE"
-                   FontSize="12"
-                   FontAttributes="Bold"
-                   TextColor="Gray"
-                   IsVisible="False" />
+            <!-- ── Recipe cards (hidden until ideas are returned) ─────────── -->
+            <VerticalStackLayout x:Name="RecipeCardsPanel"
+                                 IsVisible="False"
+                                 Spacing="16">
 
-            <Border Stroke="LightGray" Padding="15" StrokeThickness="1">
-                <ScrollView HeightRequest="300">
-                    <Label x:Name="ResponseLabel"
-                           Text="Waiting for input..."
-                           TextColor="Gray" />
-                </ScrollView>
-            </Border>
+                <Label Text="◀ RECIPE IDEAS"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="Gray" />
+
+                <!-- Card 1 -->
+                <Border x:Name="Card1"
+                        Stroke="#CCCCCC"
+                        StrokeThickness="1"
+                        Padding="16"
+                        IsVisible="False">
+                    <VerticalStackLayout Spacing="8">
+                        <Label x:Name="Card1Title"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Label x:Name="Card1Ingredients"
+                               FontSize="13"
+                               TextColor="DarkSlateGray" />
+                        <Label x:Name="Card1Cost"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="SeaGreen" />
+                        <Label x:Name="Card1TotalCost"
+                               FontSize="13"
+                               TextColor="SeaGreen" />
+                        <Button x:Name="SelectBtn1"
+                                Text="Cook This Recipe"
+                                Clicked="OnSelectRecipe1Clicked"
+                                HeightRequest="44" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Card 2 -->
+                <Border x:Name="Card2"
+                        Stroke="#CCCCCC"
+                        StrokeThickness="1"
+                        Padding="16"
+                        IsVisible="False">
+                    <VerticalStackLayout Spacing="8">
+                        <Label x:Name="Card2Title"
+                               FontSize="16"
+                               FontAttributes="Bold" />
+                        <Label x:Name="Card2Ingredients"
+                               FontSize="13"
+                               TextColor="DarkSlateGray" />
+                        <Label x:Name="Card2Cost"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="SeaGreen" />
+                        <Label x:Name="Card2TotalCost"
+                               FontSize="13"
+                               TextColor="SeaGreen" />
+                        <Button x:Name="SelectBtn2"
+                                Text="Cook This Recipe"
+                                Clicked="OnSelectRecipe2Clicked"
+                                HeightRequest="44" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- ── Cooking instructions panel (hidden until recipe selected) -->
+            <VerticalStackLayout x:Name="InstructionsPanel"
+                                 IsVisible="False"
+                                 Spacing="12">
+
+                <BoxView HeightRequest="1"
+                         Color="#DDDDDD"
+                         Margin="0,8,0,8" />
+
+                <Label Text="◀ COOKING INSTRUCTIONS"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="Gray" />
+
+                <ActivityIndicator x:Name="InstructionsSpinner"
+                                   IsRunning="False"
+                                   IsVisible="False"
+                                   Color="Blue" />
+
+                <Label x:Name="InstructionsTitle"
+                       FontSize="18"
+                       FontAttributes="Bold" />
+
+                <Border Stroke="LightGray"
+                        StrokeThickness="1"
+                        Padding="16">
+                    <Label x:Name="InstructionsLabel"
+                           FontSize="14"
+                           LineBreakMode="WordWrap" />
+                </Border>
+
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

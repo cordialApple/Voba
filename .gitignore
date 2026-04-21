@@ -15,5 +15,5 @@ Generated Files/
 Thumbs.db
 
 #Secrets and Settings
-Voba/ApiSettings.cs 
-Voba/AppSettings.cs
+SpoonacularSDK/spoonacular/ApiSettings.cs
+Voba/ApiSettings.cs
