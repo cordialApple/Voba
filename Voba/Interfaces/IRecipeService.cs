@@ -3,7 +3,11 @@ using Voba.Services;
 
 namespace Voba.Interfaces
 {
-    public record RecipeSuggestion(int Id, string Title, decimal EstimatedCost, string? ImageUrl);
+    public record RecipeSuggestion(int Id, string Title, decimal EstimatedCost, string? ImageUrl)
+    {
+        // Populated when IAiChatService is wired in Step 35 (pending Andre/David branch merge).
+        public string? AiDescription { get; init; }
+    }
 
     public interface IRecipeService
     {
