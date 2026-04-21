@@ -62,6 +62,15 @@
 
 	<ItemGroup>
 	  <Compile Remove="Models\RecipeConcept.cs" />
+	  <Compile Remove="Pages\Hub.xaml.cs" />
+	  <Compile Remove="Pages\Login.xaml.cs" />
+	  <Compile Remove="Pages\SignUp.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Remove="Pages\Hub.xaml" />
+	  <MauiXaml Remove="Pages\Login.xaml" />
+	  <MauiXaml Remove="Pages\SignUp.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -94,12 +103,6 @@
 	  <MauiXaml Update="Pages\Home.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\Hub.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\Login.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Pages\Recipe.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -107,9 +110,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\SavedRecipes.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SignUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

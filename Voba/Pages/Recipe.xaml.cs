@@ -250,7 +250,7 @@ public partial class Recipe : ContentPage
         return card;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync($"{nameof(Hub)}");
+    private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync($"{nameof(Home)}");
     private async void OnStartCookingClicked(object sender, EventArgs e)
     {
         await AnimateButton(StartCookingButton);

@@ -1,3 +1,7 @@
+using Voba.Models;
+using Voba.Services;
+using Voba.Repositories;
+
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
@@ -9,28 +13,30 @@ public partial class SignUp : ContentPage
 
     private async void OnSignUpClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(NameEntry.Text) ||
-            string.IsNullOrWhiteSpace(EmailEntry.Text) ||
-            string.IsNullOrWhiteSpace(PasswordEntry.Text))
+        string username = UsernameEntry.Text;
+        string password = PasswordEntry.Text;
+        string confirmPassword = ConfirmPasswordEntry.Text;
+        if (password != confirmPassword)
         {
-            ErrorLabel.Text = "Please fill in all fields.";
-            ErrorLabel.IsVisible = true;
+            await DisplayAlert("Error", "Passwords do not match. Please try again.", "OK");
             return;
         }
 
-        ErrorLabel.IsVisible = false;
-
-        // TODO: wire up real registration — navigate to hub on success
-        await Shell.Current.GoToAsync(nameof(Hub));
-    }
-
-    private async void OnLoginTapped(object sender, TappedEventArgs e)
-    {
-        await Shell.Current.GoToAsync(nameof(Login));
-    }
-
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync($"//{nameof(Home)}");
+        var hasher = new BcryptPasswordHasher();
+        var userRepo = new UserRepository();
+        var authRepo = new AuthDataRepository();
+        var JwtService = new JwtService();
+        var hasher = new AuthService();
+        var user = new AuthData(username, authRepo,, JwtService);
+        user.SetPassword(password, hasher);
+        bool isSignUpSuccessful = await CreateUser(username, password); // when method is implemented
+        if (isSignUpSuccessful)
+        {
+            await Shell.Current.GoToAsync("//Home");
+        }
+        else
+        {
+            await DisplayAlert("Sign Up Failed", "An error occurred while creating your account. Please try again.", "OK");
+        }
     }
 }

@@ -45,8 +45,8 @@ public partial class Forum : ContentPage
 
             var dietMap = new Dictionary<CheckBox, string>
             {
-                { ChkVegan,       "Vegan"       },
-                { ChkVegetarian,  "Vegetarian"  },
+                { ChkVegan,       "Vegan"        },
+                { ChkVegetarian,  "Vegetarian"   },
                 { ChkKeto,        "Keto"         },
                 { ChkPaleo,       "Paleo"        },
                 { ChkGlutenFree,  "Gluten-Free"  },
@@ -104,6 +104,6 @@ public partial class Forum : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"//{nameof(Hub)}");
+        await Shell.Current.GoToAsync($"//{nameof(Home)}");
     }
 }

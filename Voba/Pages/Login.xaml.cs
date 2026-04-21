@@ -1,3 +1,5 @@
+using Voba.Models;
+
 namespace Voba.Pages;
 
 public partial class Login : ContentPage
@@ -9,28 +11,22 @@ public partial class Login : ContentPage
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        // Basic validation
-        if (string.IsNullOrWhiteSpace(EmailEntry.Text) ||
-            string.IsNullOrWhiteSpace(PasswordEntry.Text))
+        string username = UsernameEntry.Text;
+        string password = PasswordEntry.Text;
+        var user = new AuthData(username);
+        bool isLoginCorrect = user.VerifyPassword(password, hasher); //await passwordCheck(username, password); // when method is implemented
+        if (isLoginCorrect)
         {
-            ErrorLabel.Text = "Please enter your email and password.";
-            ErrorLabel.IsVisible = true;
-            return;
+            await Shell.Current.GoToAsync("//Home");
         }
-
-        ErrorLabel.IsVisible = false;
-
-        // TODO: wire up real auth — navigate to hub on success
-        await Shell.Current.GoToAsync(nameof(Hub));
+        else
+        {
+            await DisplayAlert("Login Failed", "Incorrect username or password. Please try again.", "OK");
+        }
     }
 
-    private async void OnSignUpTapped(object sender, TappedEventArgs e)
+    private async void OnSignUpClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(SignUp));
-    }
-
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync($"//{nameof(Home)}");
+        await Shell.Current.GoToAsync("SignUp");
     }
 }

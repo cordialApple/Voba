@@ -26,7 +26,7 @@ public partial class RecipeSelect : ContentPage
         _fullRecipeHandler = fullRecipeHandler;
     }
 
-    // ── Populate cards from context ───────────────────────────────────────
+    // Populate cards from context
 
     private void PopulateCards(RecipeGenerationContext context)
     {
@@ -56,7 +56,7 @@ public partial class RecipeSelect : ContentPage
         }
     }
 
-    // ── Select handlers ───────────────────────────────────────────────────
+    // Select handlers 
 
     private async void OnSelectRecipe1Clicked(object sender, EventArgs e)
     {
@@ -104,6 +104,6 @@ public partial class RecipeSelect : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"//{nameof(Hub)}");
+        await Shell.Current.GoToAsync($"//{nameof(Home)}");
     }
 }
