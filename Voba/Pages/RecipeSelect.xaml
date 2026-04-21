@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.RecipeSelect"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,52,28,52" Spacing="0">
+
+            <!-- ── Top bar ── -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,8">
+                <Button Grid.Column="0"
+                        Text="Back"
+                        BackgroundColor="Transparent"
+                        TextColor="#8ba888"
+                        FontSize="14"
+                        Padding="0"
+                        BorderWidth="0"
+                        Clicked="OnBackClicked" />
+                <Label Grid.Column="1"
+                       Text="Choose a Recipe"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#2e4d2c"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <Label Text="Select one to generate full cooking instructions"
+                   FontSize="14"
+                   TextColor="#8a8078"
+                   Margin="0,0,0,32" />
+
+            <!-- ── Card 1 ── -->
+            <Border x:Name="Card1"
+                    BackgroundColor="#ffffff"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="#ddd6ce"
+                    StrokeThickness="1"
+                    Padding="24,22"
+                    IsVisible="False"
+                    Margin="0,0,0,18">
+                <VerticalStackLayout Spacing="10">
+
+                    <Label x:Name="Card1Title"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#2e4d2c"
+                           LineBreakMode="WordWrap" />
+
+                    <BoxView HeightRequest="1" Color="#ede8e1" Margin="0,2,0,2" />
+
+                    <Label x:Name="Card1Ingredients"
+                           FontSize="13"
+                           TextColor="#6e7a6d"
+                           LineBreakMode="WordWrap"
+                           LineHeight="1.5" />
+
+                    <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="PER SERVING" FontSize="9"
+                                   CharacterSpacing="1.2" TextColor="#8ba888" FontAttributes="Bold" />
+                            <Label x:Name="Card1Cost"
+                                   FontSize="18" FontAttributes="Bold" TextColor="#2e4d2c" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="TOTAL" FontSize="9"
+                                   CharacterSpacing="1.2" TextColor="#8ba888" FontAttributes="Bold" />
+                            <Label x:Name="Card1TotalCost"
+                                   FontSize="18" FontAttributes="Bold" TextColor="#2e4d2c" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Button Text="SELECT THIS RECIPE"
+                            BackgroundColor="#8ba888"
+                            TextColor="#f1ebe1"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            CharacterSpacing="1.5"
+                            CornerRadius="8"
+                            HeightRequest="44"
+                            Margin="0,6,0,0"
+                            Clicked="OnSelectRecipe1Clicked" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Card 2 ── -->
+            <Border x:Name="Card2"
+                    BackgroundColor="#ffffff"
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="#ddd6ce"
+                    StrokeThickness="1"
+                    Padding="24,22"
+                    IsVisible="False"
+                    Margin="0,0,0,18">
+                <VerticalStackLayout Spacing="10">
+
+                    <Label x:Name="Card2Title"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#2e4d2c"
+                           LineBreakMode="WordWrap" />
+
+                    <BoxView HeightRequest="1" Color="#ede8e1" Margin="0,2,0,2" />
+
+                    <Label x:Name="Card2Ingredients"
+                           FontSize="13"
+                           TextColor="#6e7a6d"
+                           LineBreakMode="WordWrap"
+                           LineHeight="1.5" />
+
+                    <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="PER SERVING" FontSize="9"
+                                   CharacterSpacing="1.2" TextColor="#8ba888" FontAttributes="Bold" />
+                            <Label x:Name="Card2Cost"
+                                   FontSize="18" FontAttributes="Bold" TextColor="#2e4d2c" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="TOTAL" FontSize="9"
+                                   CharacterSpacing="1.2" TextColor="#8ba888" FontAttributes="Bold" />
+                            <Label x:Name="Card2TotalCost"
+                                   FontSize="18" FontAttributes="Bold" TextColor="#2e4d2c" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Button Text="SELECT THIS RECIPE"
+                            BackgroundColor="#8ba888"
+                            TextColor="#f1ebe1"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            CharacterSpacing="1.5"
+                            CornerRadius="8"
+                            HeightRequest="44"
+                            Margin="0,6,0,0"
+                            Clicked="OnSelectRecipe2Clicked" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Generating instructions overlay ── -->
+            <VerticalStackLayout x:Name="LoadingPanel"
+                                 IsVisible="False"
+                                 HorizontalOptions="Center"
+                                 Spacing="12"
+                                 Margin="0,24,0,0">
+                <ActivityIndicator IsRunning="True" Color="#8ba888" />
+                <Label Text="Generating your recipe..."
+                       FontSize="14"
+                       TextColor="#8a8078"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

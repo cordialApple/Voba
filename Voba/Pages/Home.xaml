@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.Home"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
+
+    <Grid RowDefinitions="*,Auto,*">
+
+        <!-- ── Brand block centred in top third ── -->
+        <VerticalStackLayout Grid.Row="0"
+                             VerticalOptions="End"
+                             HorizontalOptions="Center"
+                             Spacing="10"
+                             Padding="0,0,0,40">
+
+            <Label Text="VOBA"
+                   FontSize="52"
+                   FontAttributes="Bold"
+                   CharacterSpacing="10"
+                   TextColor="#2e4d2c"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Your personal recipe assistant"
+                   FontSize="16"
+                   TextColor="#6e9e6c"
+                   HorizontalOptions="Center"
+                   CharacterSpacing="0.5" />
+
+        </VerticalStackLayout>
+
+        <!-- ── Buttons centred in middle ── -->
+        <VerticalStackLayout Grid.Row="1"
+                             HorizontalOptions="Center"
+                             Spacing="14"
+                             WidthRequest="300">
+
+            <Button Text="LOG IN"
+                    BackgroundColor="#8ba888"
+                    TextColor="#f1ebe1"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    CharacterSpacing="2"
+                    CornerRadius="10"
+                    HeightRequest="52"
+                    Clicked="OnLoginClicked" />
+
+            <Button Text="SIGN UP"
+                    BackgroundColor="Transparent"
+                    TextColor="#8ba888"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    CharacterSpacing="2"
+                    BorderColor="#8ba888"
+                    BorderWidth="1.5"
+                    CornerRadius="10"
+                    HeightRequest="52"
+                    Clicked="OnSignUpClicked" />
+
+        </VerticalStackLayout>
+
+        <!-- ── Tagline pinned to bottom ── -->
+        <Label Grid.Row="2"
+               Text="Cook smarter. Eat better."
+               FontSize="13"
+               TextColor="#b0a898"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,36" />
+
+    </Grid>
+
+</ContentPage>

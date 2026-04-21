@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.Forum"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,52,28,52" Spacing="0">
+
+            <!-- ── Top bar ── -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,36">
+                <Button Grid.Column="0"
+                        Text="Back"
+                        BackgroundColor="Transparent"
+                        TextColor="#8ba888"
+                        FontSize="14"
+                        Padding="0"
+                        BorderWidth="0"
+                        Clicked="OnBackClicked" />
+                <Label Grid.Column="1"
+                       Text="New Recipe"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#2e4d2c"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <!-- ── Budget ── -->
+            <Label Text="BUDGET" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,24">
+                <Entry x:Name="BudgetInput"
+                       Placeholder="e.g. 15.00"
+                       Keyboard="Numeric"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- ── Serving size ── -->
+            <Label Text="SERVING SIZE" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,24">
+                <Entry x:Name="ServingsInput"
+                       Placeholder="e.g. 2"
+                       Keyboard="Numeric"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- ── Cuisine ── -->
+            <Label Text="CUISINE" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,24">
+                <Entry x:Name="CuisineInput"
+                       Placeholder="e.g. Italian, Thai (optional)"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- ── Allergies ── -->
+            <Label Text="ALLERGIES" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,28">
+                <Entry x:Name="AllergyInput"
+                       Placeholder="e.g. nuts, shellfish (comma separated)"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- ── Dietary restrictions (checkboxes) ── -->
+            <Label Text="DIETARY RESTRICTIONS" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,14" />
+
+            <Border BackgroundColor="#ffffff"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="#ddd6ce"
+                    StrokeThickness="1"
+                    Padding="20,16"
+                    Margin="0,0,0,32">
+                <FlexLayout Wrap="Wrap" Direction="Row">
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkVegan" Color="#8ba888" />
+                        <Label Text="Vegan" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkVegetarian" Color="#8ba888" />
+                        <Label Text="Vegetarian" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkKeto" Color="#8ba888" />
+                        <Label Text="Keto" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkPaleo" Color="#8ba888" />
+                        <Label Text="Paleo" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkGlutenFree" Color="#8ba888" />
+                        <Label Text="Gluten-Free" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkDairyFree" Color="#8ba888" />
+                        <Label Text="Dairy-Free" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkHalal" Color="#8ba888" />
+                        <Label Text="Halal" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Margin="0,0,24,12" Spacing="8">
+                        <CheckBox x:Name="ChkKosher" Color="#8ba888" />
+                        <Label Text="Kosher" FontSize="14" TextColor="#2e4d2c" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                </FlexLayout>
+            </Border>
+
+            <!-- ── Error ── -->
+            <Label x:Name="ErrorLabel"
+                   Text=""
+                   TextColor="#c0392b"
+                   FontSize="13"
+                   IsVisible="False"
+                   Margin="0,0,0,16" />
+
+            <!-- ── Generate button ── -->
+            <Button x:Name="GenerateButton"
+                    Text="GENERATE RECIPES"
+                    BackgroundColor="#8ba888"
+                    TextColor="#f1ebe1"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    CharacterSpacing="2"
+                    CornerRadius="10"
+                    HeightRequest="52"
+                    Clicked="OnGenerateClicked" />
+
+            <ActivityIndicator x:Name="Spinner"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="#8ba888"
+                               Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -3,12 +3,15 @@
     x:Class="Voba.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Voba"
+    xmlns:pages="clr-namespace:Voba.Pages"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#f1ebe1"
     Title="Voba">
 
+    <!-- Entry point — Home is the first page the user sees -->
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:Pages.Recipe}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate pages:Home}"
+        Route="Home" />
 
 </Shell>

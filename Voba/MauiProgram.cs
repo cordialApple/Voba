@@ -38,6 +38,12 @@ namespace Voba
 
             // Pages
             builder.Services.AddTransient<Pages.Recipe>();
+            builder.Services.AddTransient<Pages.RecipeSelect>();
+            builder.Services.AddTransient<Pages.SavedRecipes>();
+            builder.Services.AddTransient<Pages.Forum>();
+            builder.Services.AddTransient<Pages.SignUp>();
+            builder.Services.AddTransient<Pages.Login>();
+            builder.Services.AddTransient<Pages.Home>();
 
 #if DEBUG
             builder.Logging.AddDebug();

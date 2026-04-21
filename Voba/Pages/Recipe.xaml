@@ -36,7 +36,7 @@
                 ColumnDefinitions="Auto,*,Auto">
 
                 <Label Grid.Column="0"
-                       Text="🌿" FontSize="20" VerticalOptions="Center" />
+                       Text="" FontSize="20" VerticalOptions="Center" />
 
                 <Label Grid.Column="1"
                        Text="VOBA"
@@ -94,7 +94,7 @@
                         StrokeShape="RoundRectangle 10"
                         Stroke="Transparent" Padding="10,10">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="👥" FontSize="15" HorizontalOptions="Center" />
+                        <Label Text="" FontSize="15" HorizontalOptions="Center" />
                         <Label x:Name="ServingsLabel" Text="—"
                                FontSize="16" FontAttributes="Bold"
                                TextColor="#f1ebe1" HorizontalOptions="Center" />
@@ -109,7 +109,7 @@
                         StrokeShape="RoundRectangle 10"
                         Stroke="Transparent" Padding="10,10">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="💰" FontSize="15" HorizontalOptions="Center" />
+                        <Label Text="" FontSize="15" HorizontalOptions="Center" />
                         <Label x:Name="CostLabel" Text="—"
                                FontSize="16" FontAttributes="Bold"
                                TextColor="#f1ebe1" HorizontalOptions="Center" />
@@ -124,7 +124,7 @@
                         StrokeShape="RoundRectangle 10"
                         Stroke="Transparent" Padding="10,10">
                     <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="🎯" FontSize="15" HorizontalOptions="Center" />
+                        <Label Text="" FontSize="15" HorizontalOptions="Center" />
                         <Label x:Name="BudgetLabel" Text="—"
                                FontSize="16" FontAttributes="Bold"
                                TextColor="#f1ebe1" HorizontalOptions="Center" />
@@ -170,7 +170,7 @@
                                  Spacing="10">
 
                 <Button x:Name="StartCookingButton"
-                        Text="🍳   Start Cooking"
+                        Text="   Start Cooking"
                         BackgroundColor="#8ba888"
                         TextColor="#f1ebe1"
                         FontSize="14" FontAttributes="Bold"
@@ -179,7 +179,7 @@
                         Clicked="OnStartCookingClicked" />
 
                 <Button x:Name="SaveRecipeButton"
-                        Text="🔖   Save Recipe"
+                        Text="   Save Recipe"
                         BackgroundColor="Transparent"
                         TextColor="#8ba888"
                         FontSize="14" FontAttributes="Bold"
