@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages.SignUp"
+             BackgroundColor = "#f1ebe1">
+    <VerticalStackLayout
+                     Padding="30,0"
+                     Spacing="25"
+                     BackgroundColor="#8ba888">
+        <Label
+                         Text="Create an Account"
+                         Style="{StaticResource Headline}"
+                         SemanticProperties.HeadingLevel="Level1" />
+        <Label
+                         Text="Please fill in the details to create an account."
+                         Style="{StaticResource SubHeadline}"
+                         SemanticProperties.HeadingLevel="Level2"
+                         SemanticProperties.Description="Please fill in the details to create an account." />
+        <Entry
+                         x:Name="UsernameEntry"
+                         Placeholder="Username"
+                         HorizontalOptions="Fill" />
+        <Entry
+                         x:Name="PasswordEntry"
+                         Placeholder="Password"
+                         IsPassword="True"
+                         HorizontalOptions="Fill" />
+        <Entry
+                         x:Name="ConfirmPasswordEntry"
+                         Placeholder="Confirm Password"
+                         IsPassword="True"
+                         HorizontalOptions="Fill" />
+        <Button
+                         Text="Sign Up"
+                         Clicked="OnSignUpClicked"
+                         HorizontalOptions="Fill" />
+    </VerticalStackLayout>
+</ContentPage>
+                 

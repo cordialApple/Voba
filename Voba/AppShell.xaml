@@ -7,8 +7,8 @@
     Title="Voba">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Login"
+        ContentTemplate="{DataTemplate local:Pages.Login}"
+        Route="Login" />
 
 </Shell>

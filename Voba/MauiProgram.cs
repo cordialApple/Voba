@@ -35,7 +35,9 @@ namespace Voba
 
             //Gemma AI Services
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
-            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<Pages.Login>();
+            builder.Services.AddTransient<Pages.SignUp>();
+            builder.Services.AddTransient<Pages.RecipeSelect>();
 
 #if DEBUG
             builder.Logging.AddDebug();
