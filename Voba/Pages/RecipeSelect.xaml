@@ -5,7 +5,7 @@
              BackgroundColor="#f1ebe1">
     <Grid 
             Padding="20"
-            Spacing ="20"
+            RowSpacing="20"
             ColumnSpacing ="10">
             
             <Grid.ColumnDefinitions>

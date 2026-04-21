@@ -1,11 +1,11 @@
-namespace Voba.pages;
-{
-    public partial class SignUp : ConetnetPage
+namespace Voba.Pages;
+
+    public partial class SignUp : ContentPage
     {
         public SignUp()
         {
-            InitalizeCompetnet();
-        }
+            InitializeComponent();
+    }
 
         private async void OnSignUpClicked(object sender, EventArgs e)
         {
