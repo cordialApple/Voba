@@ -59,7 +59,7 @@ public partial class Forum : ContentPage
                         .Select(a => a.Trim())
                         .Where(a => !string.IsNullOrWhiteSpace(a)));
             }
-
+            // Pushes to recipe generation
             var context = new RecipeGenerationContext
             {
                 ServingSize = servings,
