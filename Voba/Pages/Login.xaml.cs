@@ -18,7 +18,7 @@ public partial class Login : ContentPage
         }
         else
         {
-            await Display.Alert("Login Failed", "Incorrect username or password. Please try again.", "OK");
+            await DisplayAlert("Login Failed", "Incorrect username or password. Please try again.", "OK");
         }
     }
 
