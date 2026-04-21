@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Voba.api;
 using Voba.Interfaces;
 using Voba.Repositories;
 using Voba.Services;
@@ -42,11 +44,22 @@ builder.Services.AddSingleton<IGroceryListRepository>(sp =>
 builder.Services.AddSingleton<IAuthDataRepository>(sp =>
     RepositoryFactory.CreateAuthDataRepository(sp.GetRequiredService<IMongoDatabase>()));
 
+// Service layer — external API
+builder.Services.AddSingleton<ISpoonacularService, SpoonacularService>();
+
 // Service layer — orchestration, strategies, and adapters
 builder.Services.AddSingleton<SpoonacularAdapter>();
 builder.Services.AddSingleton<IPriceStrategy, CheapestFirstStrategy>();
-builder.Services.AddSingleton<IRecipeService, RecipeService>();
-builder.Services.AddSingleton<GroceryService>();
+
+// Decorator: CachedRecipeService wraps RecipeService (10-minute IMemoryCache)
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<RecipeService>();
+builder.Services.AddSingleton<IRecipeService>(sp =>
+    new CachedRecipeService(
+        sp.GetRequiredService<RecipeService>(),
+        sp.GetRequiredService<IMemoryCache>()));
+
+builder.Services.AddSingleton<IGroceryService, GroceryService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
