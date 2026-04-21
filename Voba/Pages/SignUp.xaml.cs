@@ -1,3 +1,7 @@
+using Voba.Models;
+using Voba.Services;
+using Voba.Repositories;
+
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
@@ -17,6 +21,13 @@ public partial class SignUp : ContentPage
             await DisplayAlert("Error", "Passwords do not match. Please try again.", "OK");
             return;
         }
+        var hasher = new BcryptPasswordHasher();
+        var userRepo = new UserRepository();
+        var authRepo = new AuthDataRepository();
+        var JwtService = new JwtService();
+        var hasher = new AuthService();
+        var user = new AuthData(username,authRepo,,JwtService);
+        user.SetPassword(password,hasher);
         bool isSignUpSuccessful = await CreateUser(username, password); // when method is implemented
         if (isSignUpSuccessful)
         {

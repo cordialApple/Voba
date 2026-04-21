@@ -1,3 +1,5 @@
+using Voba.Models;
+
 namespace Voba.Pages;
 
 public partial class Login : ContentPage
@@ -11,7 +13,8 @@ public partial class Login : ContentPage
     {
         string username = UsernameEntry.Text;
         string password = PasswordEntry.Text;
-        bool isLoginCorrect = true; //await passwordCheck(username, password); // when method is implemented
+        var user = new AuthData(username);
+        bool isLoginCorrect = user.VerifyPassword(password,hasher); //await passwordCheck(username, password); // when method is implemented
         if (isLoginCorrect)
         {
             await Shell.Current.GoToAsync("//Home");
