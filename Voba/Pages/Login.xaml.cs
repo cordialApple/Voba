@@ -6,4 +6,24 @@ public partial class Login : ContentPage
     {
         InitializeComponent();
     }
+
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        string username = UsernameEntry.Text;
+        string password = PasswordEntry.Text;
+        bool isLoginCorrect = await passwordCheck(username, password); // when method is implemented
+        if (isLoginCorrect)
+        {
+            await Shell.Current.GoToAsync("//Home");
+        }
+        else
+        {
+            await Display.Alert("Login Failed", "Incorrect username or password. Please try again.", "OK");
+        }
+    }
+
+    private async void OnSignUpClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("SignUp");
+    }
 }
