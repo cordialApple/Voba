@@ -5,33 +5,39 @@
 			 Title="Login"
              BackgroundColor="#f1ebe1">
     <VerticalStackLayout
-		Padding="30,0"
+		Padding="0,100,0,0"
 		Spacing="25"
-        BackgroundColor="#8ba888">
+        BackgroundColor="#f1ebe1">
         <Label
-			Text="Welcome to Voba!"
+			Text="VOBA"
+            Padding="0,0,0,100"
+            CharacterSpacing="5"
+            TextColor="#856d4d"
 			Style="{StaticResource Headline}"
 			SemanticProperties.HeadingLevel="Level1" />
-        <Label
-			Text="Please log in to continue."
-			Style="{StaticResource SubHeadline}"
-			SemanticProperties.HeadingLevel="Level2"
-			SemanticProperties.Description="Please log in to continue." />
         <Entry
 			x:Name="UsernameEntry"
+            TextColor="#4b3621"
+            WidthRequest="500"
 			Placeholder="Username"
 			HorizontalOptions="Fill" />
         <Entry
 			x:Name="PasswordEntry"
+            TextColor="#4b3621"
+            WidthRequest="500"
 			Placeholder="Password"
 			IsPassword="True"
 			HorizontalOptions="Fill" />
         <Button
 			Text="Log In"
+            BackgroundColor="#8ba888"
+			WidthRequest="500"
 			Clicked="OnLoginClicked"
 			HorizontalOptions="Fill" />
         <Button 
 			Text ="Sign Up"
+            WidthRequest="500"
+            BackgroundColor="#8ba888"
 			Clicked="OnSignUpClicked"
 			HorizontalOptions="Fill" />
     </VerticalStackLayout>
