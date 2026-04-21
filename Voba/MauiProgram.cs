@@ -74,7 +74,9 @@ builder.Services.AddSingleton<IGroceryService, GroceryService>();
             builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
 
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
-            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<Pages.Login>();
+            builder.Services.AddTransient<Pages.SignUp>();
+            builder.Services.AddTransient<Pages.RecipeSelect>();
 
 #if DEBUG
             builder.Logging.AddDebug();
