@@ -33,9 +33,11 @@ namespace Voba
             builder.Services.AddTransient<AI.Pipeline.Handlers.SpoonacularPricingHandler>();
             builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
 
-            //Gemma AI Services
+            // Gemma AI Services
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
-            builder.Services.AddTransient<MainPage>();
+
+            // Pages
+            builder.Services.AddTransient<Pages.Recipe>();
 
 #if DEBUG
             builder.Logging.AddDebug();

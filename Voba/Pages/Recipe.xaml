@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Voba.Pages.Recipe"
+    Title=""
+    BackgroundColor="#f1ebe1">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ROOT: Full-height two-column desktop layout
+         Left  column (380px) = fixed sidebar  — meta, ingredients, actions
+         Right column (*)     = scrollable main area — numbered step cards
+    ═══════════════════════════════════════════════════════════════════ -->
+    <Grid ColumnDefinitions="380,*" RowDefinitions="*">
+
+        <!-- ░░░░░░░░░░░░░░░░░░  LEFT SIDEBAR  ░░░░░░░░░░░░░░░░░░ -->
+        <Grid
+            Grid.Column="0"
+            BackgroundColor="#2e4d2c"
+            RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+            <!-- Decorative background ellipse (non-interactive) -->
+            <Ellipse
+                Grid.Row="0" Grid.RowSpan="2"
+                Fill="#3d5c3b"
+                WidthRequest="340" HeightRequest="340"
+                HorizontalOptions="End" VerticalOptions="Start"
+                Margin="0,-130,-110,0"
+                Opacity="0.4"
+                InputTransparent="True" />
+
+            <!-- ── Top bar: logo + back ──────────────────────────── -->
+            <Grid
+                Grid.Row="0"
+                Padding="28,26,20,0"
+                ColumnDefinitions="Auto,*,Auto">
+
+                <Label Grid.Column="0"
+                       Text="🌿" FontSize="20" VerticalOptions="Center" />
+
+                <Label Grid.Column="1"
+                       Text="VOBA"
+                       FontSize="10" FontAttributes="Bold"
+                       CharacterSpacing="6"
+                       TextColor="#7aaa78"
+                       VerticalOptions="Center"
+                       Margin="8,0,0,0" />
+
+                <Button Grid.Column="2"
+                        x:Name="BackButton"
+                        Text="← Back"
+                        BackgroundColor="Transparent"
+                        TextColor="#7aaa78"
+                        FontSize="12"
+                        Padding="4,0"
+                        BorderWidth="0"
+                        VerticalOptions="Center"
+                        Clicked="OnBackClicked" />
+            </Grid>
+
+            <!-- ── Title + chip tags ────────────────────────────── -->
+            <VerticalStackLayout
+                Grid.Row="1"
+                Padding="28,22,28,0"
+                Spacing="10">
+
+                <Label Text="YOUR RECIPE"
+                       FontSize="9" FontAttributes="Bold"
+                       CharacterSpacing="4"
+                       TextColor="#6e9e6c" />
+
+                <Label x:Name="RecipeTitleLabel"
+                       Text="Loading…"
+                       FontSize="24" FontAttributes="Bold"
+                       TextColor="#f1ebe1"
+                       LineBreakMode="WordWrap"
+                       MaxLines="4" />
+
+                <FlexLayout x:Name="DietaryTagsLayout"
+                            Wrap="Wrap" Direction="Row"
+                            AlignItems="Center"
+                            Margin="0,4,0,0"
+                            IsVisible="False" />
+            </VerticalStackLayout>
+
+            <!-- ── Stats tiles ──────────────────────────────────── -->
+            <Grid Grid.Row="2"
+                  Padding="20,18,20,0"
+                  ColumnDefinitions="*,*,*"
+                  ColumnSpacing="8">
+
+                <Border Grid.Column="0"
+                        BackgroundColor="#3d5c3b"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent" Padding="10,10">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="👥" FontSize="15" HorizontalOptions="Center" />
+                        <Label x:Name="ServingsLabel" Text="—"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="#f1ebe1" HorizontalOptions="Center" />
+                        <Label Text="Servings" FontSize="8"
+                               CharacterSpacing="0.8" TextColor="#7aaa78"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BackgroundColor="#3d5c3b"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent" Padding="10,10">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="💰" FontSize="15" HorizontalOptions="Center" />
+                        <Label x:Name="CostLabel" Text="—"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="#f1ebe1" HorizontalOptions="Center" />
+                        <Label Text="Est. Cost" FontSize="8"
+                               CharacterSpacing="0.8" TextColor="#7aaa78"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2"
+                        BackgroundColor="#3d5c3b"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Transparent" Padding="10,10">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label Text="🎯" FontSize="15" HorizontalOptions="Center" />
+                        <Label x:Name="BudgetLabel" Text="—"
+                               FontSize="16" FontAttributes="Bold"
+                               TextColor="#f1ebe1" HorizontalOptions="Center" />
+                        <Label Text="Budget" FontSize="8"
+                               CharacterSpacing="0.8" TextColor="#7aaa78"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- ── Ingredients (scrollable) ─────────────────────── -->
+            <VerticalStackLayout Grid.Row="3" Padding="28,20,28,0" Spacing="10">
+
+                <Grid ColumnDefinitions="Auto,*">
+                    <BoxView Grid.Column="0"
+                             BackgroundColor="#8ba888"
+                             WidthRequest="3" HeightRequest="16"
+                             CornerRadius="2"
+                             VerticalOptions="Center"
+                             Margin="0,0,10,0" />
+                    <Label Grid.Column="1"
+                           Text="INGREDIENTS"
+                           FontSize="9" FontAttributes="Bold"
+                           CharacterSpacing="3"
+                           TextColor="#8ba888"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Scrollable ingredient list -->
+                <ScrollView VerticalScrollBarVisibility="Default">
+                    <Border BackgroundColor="#3d5c3b"
+                            StrokeShape="RoundRectangle 10"
+                            Stroke="Transparent">
+                        <VerticalStackLayout x:Name="IngredientsLayout" Spacing="0" />
+                    </Border>
+                </ScrollView>
+
+            </VerticalStackLayout>
+
+            <!-- ── CTA buttons pinned to sidebar bottom ─────────── -->
+            <VerticalStackLayout Grid.Row="4"
+                                 Padding="28,14,28,28"
+                                 Spacing="10">
+
+                <Button x:Name="StartCookingButton"
+                        Text="🍳   Start Cooking"
+                        BackgroundColor="#8ba888"
+                        TextColor="#f1ebe1"
+                        FontSize="14" FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="46"
+                        Clicked="OnStartCookingClicked" />
+
+                <Button x:Name="SaveRecipeButton"
+                        Text="🔖   Save Recipe"
+                        BackgroundColor="Transparent"
+                        TextColor="#8ba888"
+                        FontSize="14" FontAttributes="Bold"
+                        BorderColor="#5a7a58"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        HeightRequest="42"
+                        Clicked="OnSaveRecipeClicked" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- ░░░░░░░░░░░░░░░░░░  RIGHT CONTENT PANEL  ░░░░░░░░░░░░░░░░░░ -->
+        <ScrollView Grid.Column="1" BackgroundColor="#f1ebe1">
+            <VerticalStackLayout Padding="52,44,52,52" Spacing="28">
+
+                <!-- Section header -->
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <BoxView Grid.Column="0"
+                                 BackgroundColor="#8ba888"
+                                 WidthRequest="4" HeightRequest="20"
+                                 CornerRadius="2"
+                                 VerticalOptions="Center"
+                                 Margin="0,0,12,0" />
+                        <Label Grid.Column="1"
+                               Text="INSTRUCTIONS"
+                               FontSize="10" FontAttributes="Bold"
+                               CharacterSpacing="3.5"
+                               TextColor="#3d5c3b"
+                               VerticalOptions="Center" />
+                        <!-- Step count badge -->
+                        <Border Grid.Column="2"
+                                x:Name="StepCountBadge"
+                                BackgroundColor="#deeede"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                Padding="12,4"
+                                IsVisible="False">
+                            <Label x:Name="StepCountLabel"
+                                   Text=""
+                                   FontSize="11" FontAttributes="Bold"
+                                   TextColor="#3d5c3b" />
+                        </Border>
+                    </Grid>
+                    <BoxView BackgroundColor="#d9d0c4" HeightRequest="1" Margin="16,0,0,0" />
+                </VerticalStackLayout>
+
+                <!-- Numbered step cards (built in code-behind) -->
+                <VerticalStackLayout x:Name="StepsLayout" Spacing="14" />
+
+                <!-- Fallback: plain instructions when steps cannot be parsed -->
+                <Border x:Name="PlainInstructionsCard"
+                        BackgroundColor="#ffffff"
+                        StrokeShape="RoundRectangle 14"
+                        Stroke="#e0d9ce"
+                        StrokeThickness="1"
+                        Padding="32,24"
+                        IsVisible="False">
+                    <Label x:Name="InstructionsLabel"
+                           Text=""
+                           FontSize="15"
+                           TextColor="#3a3228"
+                           LineHeight="1.75"
+                           LineBreakMode="WordWrap" />
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>
