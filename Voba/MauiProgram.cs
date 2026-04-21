@@ -45,13 +45,15 @@ builder.Services.AddSingleton<IAuthDataRepository>(sp =>
     RepositoryFactory.CreateAuthDataRepository(sp.GetRequiredService<IMongoDatabase>()));
 
 // Service layer — external API
-builder.Services.AddSingleton<ISpoonacularService, SpoonacularService>();
+// FakeSpoonacularService: no API key, consistent output every run.
+// Swap to SpoonacularService when Vathana's branch merges.
+builder.Services.AddSingleton<ISpoonacularService, FakeSpoonacularService>();
 
 // Service layer — orchestration, strategies, and adapters
 builder.Services.AddSingleton<SpoonacularAdapter>();
 builder.Services.AddSingleton<IPriceStrategy, CheapestFirstStrategy>();
 
-// Decorator: CachedRecipeService wraps RecipeService (10-minute IMemoryCache)
+// Decorator: CachedRecipeService wraps RecipeService (IMemoryCache).
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<RecipeService>();
 builder.Services.AddSingleton<IRecipeService>(sp =>
