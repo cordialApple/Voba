@@ -1,1 +1,59 @@
 <?xml verision="1.0" encoding="utf-8" ?>
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Voba.Pages>
+        <Grid 
+            Padding="20"
+            Spacing ="20"
+            CollumnSpacing ="10">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <VerticalStackLayout
+                Grid.Row="0"
+                Grid.Column="0"
+                Spacing="5"
+                Grid.RowSpan ="2">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognize Command="OnTappedColumn1" />
+                    </VerticalStackLayout.GestureRecognizers>
+                <Label
+                    Text ="{Binding Recipe1Title}"/>
+                <Image
+                    Source ="BeefWell.jpg"
+                    HeightRequest="200"
+                    WidthRequest="200"/>
+                <Label
+                    Text="{Binding Recipe1Ingredients}" />
+             </VerticalStackLayout>
+
+            <VerticalStackLayout
+                Grid.Row="0"
+                Grid.Column="1"
+                Spacing="5"
+                Grid.RowSpan ="2">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognize Command="OnTappedColumn2" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Label
+                    Text="{Binding Recipe2Title}" />
+                <Image
+                    Source ="DurrBurg.png"
+                    HeightRequest="200"
+                    WidthRequest="200"/>
+                <Label
+                    Text="{Binding Recipe2Ingredients}" />
+                </VerticalStackLayout>
+
+        </Grid>
+</ContentPage>
+
+</CollectionView>

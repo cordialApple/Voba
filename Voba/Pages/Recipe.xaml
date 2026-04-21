@@ -4,3 +4,8 @@
                  x:Class="Voba.Pages.Recipe"
                  Title="Recipe">
     <ScrollView>
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20"
+            <Label
+                >>
