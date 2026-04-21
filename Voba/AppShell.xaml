@@ -8,10 +8,10 @@
     BackgroundColor="#f1ebe1"
     Title="Voba">
 
-    <!-- Entry point — Home is the first page the user sees -->
+    <!-- Entry point — Login is the first page the user sees -->
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate pages:Home}"
-        Route="Home" />
+        Title="Login"
+        ContentTemplate="{DataTemplate pages:Login}"
+        Route="Login" />
 
 </Shell>

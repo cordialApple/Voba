@@ -9,7 +9,6 @@ public partial class RecipeSelect : ContentPage
     private readonly GemmaFullRecipeHandler _fullRecipeHandler;
     private RecipeGenerationContext? _context;
 
-    // Shell passes the context object here via QueryProperty after Forum navigates
     public RecipeGenerationContext? Context
     {
         set
@@ -26,37 +25,40 @@ public partial class RecipeSelect : ContentPage
         _fullRecipeHandler = fullRecipeHandler;
     }
 
-    // Populate cards from context
-
     private void PopulateCards(RecipeGenerationContext context)
     {
         var options = context.ProposedOptions;
 
-        if (options.Count >= 1) FillCard(1, options[0]);
-        if (options.Count >= 2) FillCard(2, options[1]);
+        if (options.Count >= 1) FillCard(1, options[0], context.ServingSize);
+        if (options.Count >= 2) FillCard(2, options[1], context.ServingSize);
     }
 
-    private void FillCard(int number, RecipeOption recipe)
+    private void FillCard(int number, RecipeOption recipe, int servingSize)
     {
+        // Derive TotalCost from Gemma's EstimatedCost if Spoonacular didn't price it
+        if (recipe.TotalCost == 0 && recipe.EstimatedCost > 0)
+            recipe.TotalCost = Math.Round(recipe.EstimatedCost * servingSize, 2);
+
+        string perServing = recipe.EstimatedCost > 0 ? $"${recipe.EstimatedCost:F2}" : "—";
+        string total = recipe.TotalCost > 0 ? $"${recipe.TotalCost:F2}" : "—";
+
         if (number == 1)
         {
             Card1Title.Text = recipe.Name;
             Card1Ingredients.Text = string.Join(", ", recipe.Ingredients);
-            Card1Cost.Text = $"${recipe.EstimatedCost:F2}";
-            Card1TotalCost.Text = $"${recipe.TotalCost:F2}";
+            Card1Cost.Text = perServing;
+            Card1TotalCost.Text = total;
             Card1.IsVisible = true;
         }
         else
         {
             Card2Title.Text = recipe.Name;
             Card2Ingredients.Text = string.Join(", ", recipe.Ingredients);
-            Card2Cost.Text = $"${recipe.EstimatedCost:F2}";
-            Card2TotalCost.Text = $"${recipe.TotalCost:F2}";
+            Card2Cost.Text = perServing;
+            Card2TotalCost.Text = total;
             Card2.IsVisible = true;
         }
     }
-
-    // Select handlers 
 
     private async void OnSelectRecipe1Clicked(object sender, EventArgs e)
     {
@@ -78,7 +80,6 @@ public partial class RecipeSelect : ContentPage
         _context.IsHandled = false;
         _context.FinalRecipe = null;
 
-        // Disable both buttons and show loading
         Card1.IsEnabled = false;
         Card2.IsEnabled = false;
         LoadingPanel.IsVisible = true;
@@ -104,6 +105,6 @@ public partial class RecipeSelect : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"//{nameof(Home)}");
+        await Shell.Current.GoToAsync(nameof(Home));
     }
 }

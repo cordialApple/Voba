@@ -19,6 +19,6 @@ public partial class Hub : ContentPage
 
     private async void OnSignOutTapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync($"//{nameof(Home)}");
+        await Shell.Current.GoToAsync(nameof(Home));
     }
 }

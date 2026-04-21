@@ -37,6 +37,10 @@ public partial class Recipe : ContentPage
         ServingsLabel.Text = _context.ServingSize > 0
             ? _context.ServingSize.ToString() : "—";
 
+        // Derive TotalCost from Gemma's EstimatedCost if Spoonacular didn't price it
+        if (option != null && option.TotalCost == 0 && option.EstimatedCost > 0)
+            option.TotalCost = Math.Round(option.EstimatedCost * _context.ServingSize, 2);
+
         CostLabel.Text =
             option?.TotalCost > 0 ? $"${option.TotalCost:F2}" :
             option?.EstimatedCost > 0 ? $"${option.EstimatedCost:F2}" : "—";
@@ -163,25 +167,18 @@ public partial class Recipe : ContentPage
         foreach (var line in raw.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             var trimmed = line.Trim();
-
             int dotIndex = trimmed.IndexOf('.');
 
             if (dotIndex > 0 && dotIndex < trimmed.Length - 1)
             {
                 string numberPart = trimmed.Substring(0, dotIndex);
 
-                if (int.TryParse(numberPart, out int num))
+                if (int.TryParse(numberPart, out int num) &&
+                    char.IsWhiteSpace(trimmed[dotIndex + 1]))
                 {
-
-                    if (char.IsWhiteSpace(trimmed[dotIndex + 1]))
-                    {
-                        string stepText = trimmed.Substring(dotIndex + 1).TrimStart();
-
-                        if (stepText.Length > 0)
-                        {
-                            result.Add((num, stepText));
-                        }
-                    }
+                    string stepText = trimmed.Substring(dotIndex + 1).TrimStart();
+                    if (stepText.Length > 0)
+                        result.Add((num, stepText));
                 }
             }
         }
@@ -250,17 +247,21 @@ public partial class Recipe : ContentPage
         return card;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync($"{nameof(Home)}");
+    private async void OnBackClicked(object sender, EventArgs e) =>
+        await Shell.Current.GoToAsync(nameof(Home));
+
     private async void OnStartCookingClicked(object sender, EventArgs e)
     {
         await AnimateButton(StartCookingButton);
         await DisplayAlert("Let's Cook!", $"Starting step-by-step mode for \"{RecipeTitleLabel.Text}\".", "OK");
     }
+
     private async void OnSaveRecipeClicked(object sender, EventArgs e)
     {
         await AnimateButton(SaveRecipeButton);
         await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
     }
+
     private static async Task AnimateButton(Button btn)
     {
         btn.Opacity = 0.65;
@@ -284,8 +285,7 @@ public partial class Recipe : ContentPage
         FinalRecipe = new FullRecipe
         {
             Title = "",
-            Instructions =
-                ""
+            Instructions = ""
         }
     };
 }

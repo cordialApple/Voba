@@ -1,7 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.Extensions.Logging;
 
-
 namespace Voba
 {
     public static class MauiProgram
@@ -19,35 +18,29 @@ namespace Voba
 
             builder.Services.AddKernel()
             .AddOllamaChatCompletion(
-                modelId: "gemma3:4b", 
+                modelId: "gemma3:4b",
                 endpoint: new Uri("http://localhost:11434")
             );
 
-            // Spoonacular Service
-            builder.Services.AddSingleton<Spoonacular.SpoonacularService>();
-
             // Pipeline Handlers
-            // Registered as Transient so each page resolution gets a fresh chain.
-            // Chain order: Ideation → Pricing → FullRecipe
+            // Chain order: Ideation → FullRecipe (Spoonacular pricing removed)
             builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaIdeationHandler>();
-            builder.Services.AddTransient<AI.Pipeline.Handlers.SpoonacularPricingHandler>();
             builder.Services.AddTransient<AI.Pipeline.Handlers.GemmaFullRecipeHandler>();
 
             // Gemma AI Services
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();
 
             // Pages
-            builder.Services.AddTransient<Pages.Recipe>();
-            builder.Services.AddTransient<Pages.RecipeSelect>();
-            builder.Services.AddTransient<Pages.SavedRecipes>();
-            builder.Services.AddTransient<Pages.Forum>();
-            //builder.Services.AddTransient<Pages.SignUp>();
-            //builder.Services.AddTransient<Pages.Login>();
+            builder.Services.AddTransient<Pages.Login>();
+            builder.Services.AddTransient<Pages.SignUp>();
             builder.Services.AddTransient<Pages.Home>();
+            builder.Services.AddTransient<Pages.Forum>();
+            builder.Services.AddTransient<Pages.RecipeSelect>();
+            builder.Services.AddTransient<Pages.Recipe>();
+            builder.Services.AddTransient<Pages.SavedRecipes>();
 
 #if DEBUG
             builder.Logging.AddDebug();
-
 #endif
 
             return builder.Build();

@@ -7,13 +7,13 @@ public partial class Home : ContentPage
         InitializeComponent();
     }
 
-    private async void OnCreateNewTapped(object sender, EventArgs e)
+    private async void OnCreateNewTapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync("Forum");
+        await Shell.Current.GoToAsync(nameof(Forum));
     }
 
-    private async void OnSavedTapped(object sender, EventArgs e)
+    private async void OnSavedTapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync("SavedRecipes");
+        await Shell.Current.GoToAsync(nameof(SavedRecipes));
     }
 }
