@@ -23,7 +23,7 @@ Console.WriteLine(recipes.Count > 0 ? "Recipe ✓" : "Recipe X");
 
 // Ingredient catalog test
 var ingredientRepo = new IngredientRepository(db);
-// var entry = new IngredientCatalogEntry("chicken breast", 1234, 3.50m);
-// await ingredientRepo.SaveAsync(entry);
+var entry = new Ingredient("chicken breast", 1234, "3.50");
+await ingredientRepo.SaveAsync(entry);
 var foundEntry = await ingredientRepo.GetByNameAsync("chicken breast");
 Console.WriteLine(foundEntry is not null ? "Ingredient ✓" : "Ingredient X");
