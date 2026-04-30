@@ -2,12 +2,14 @@
 
 A .NET MAUI app that uses a local Gemma 3:4b model (via Ollama) to generate
 budget-aware, dietary-safe recipe ideas entirely on localhost.
+<img width="800" height="430" alt="b2bdemo" src="https://github.com/user-attachments/assets/5915231c-eda0-4742-80a8-f7e60dacfbba" />
+
 
 ---
 
 ## Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [.NET MAUI workload](https://learn.microsoft.com/en-us/dotnet/maui/get-started/installation)
 - [Ollama](https://ollama.com/) installed and running
 - Gemma 3:4b pulled: `ollama pull gemma3:4b`
@@ -40,16 +42,3 @@ Connects to Ollama at `http://localhost:11434` by default.
 3. Gemma generates 5 recipe concepts — violations are automatically culled
 4. User selects a recipe and gets full step-by-step cooking instructions
 
----
-
-## Project Structure
-
-```text
-Voba/
-├── AI/
-│   ├── Interpreter/
-│   └── Pipeline/Handlers/
-├── Models/
-├── Services/
-├── MainPage.xaml(.cs)
-└── MauiProgram.cs
