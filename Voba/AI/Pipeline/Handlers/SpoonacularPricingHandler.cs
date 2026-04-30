@@ -11,7 +11,7 @@ namespace Voba.AI.Pipeline.Handlers
     /// CHAIN LINK — Pricing Step.
     ///
     /// Sits between GemmaIdeationHandler and GemmaFullRecipeHandler:
-    ///   GemmaIdeationHandler → SpoonacularPricingHandler → GemmaFullRecipeHandler
+    ///   GemmaIdeationHandler > SpoonacularPricingHandler > GemmaFullRecipeHandler
     ///
     /// BEFORE: 1 search call + 1 info call per ingredient = ~16 calls per Generate.
     /// AFTER:  1 ParseIngredients call per recipe         =  2 calls per Generate.
