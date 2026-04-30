@@ -1,50 +1,119 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Voba.Pages.SignUp">
-    <VerticalStackLayout
-                     Padding="0,100,0,0"
-                     Spacing="25"
-                     BackgroundColor="#f1ebe1">
-        <Label
-                        Text="VOBA"
-                        Padding="0,0,0,25"
-                        Style="{StaticResource Headline}"
-                        CharacterSpacing="5"
-                        TextColor="#4b3621"/>
+             x:Class="Voba.Pages.SignUp"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#f1ebe1">
 
-        <Label
-                         Text="Create an Account"
-                         Padding="0,0,0,100"
-                         TextColor="#4b3621"
-                         Style="{StaticResource Headline}"
-                         SemanticProperties.HeadingLevel="Level1" />
-        <Entry
-                         x:Name="UsernameEntry"
-                         TextColor="#4b3621"   
-                         WidthRequest="500"
-                         Placeholder="Username"
-                         HorizontalOptions="Fill" />
-        <Entry
-                         x:Name="PasswordEntry"
-                         TextColor="#4b3621"
-                         WidthRequest="500"
-                         Placeholder="Password"
-                         IsPassword="True"
-                         HorizontalOptions="Fill" />
-        <Entry
-                         x:Name="ConfirmPasswordEntry"
-                         WidthRequest="500"
-                         TextColor="#4b3621"
-                         Placeholder="Confirm Password"
-                         IsPassword="True"
-                         HorizontalOptions="Fill" />
-        <Button
-                         Text="Sign Up"
-                         BackgroundColor="#8ba888"
-                         WidthRequest="500"
-                         Clicked="OnSignUpClicked"
-                         HorizontalOptions="Fill" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="36,60,36,36" Spacing="0">
+
+            <!-- Back -->
+            <Button Text="Back"
+                    BackgroundColor="Transparent"
+                    TextColor="#8ba888"
+                    FontSize="14"
+                    HorizontalOptions="Start"
+                    Padding="0"
+                    BorderWidth="0"
+                    Clicked="OnBackClicked"
+                    Margin="0,0,0,32" />
+
+            <!-- Heading -->
+            <Label Text="Create account"
+                   FontSize="34"
+                   FontAttributes="Bold"
+                   TextColor="#2e4d2c"
+                   Margin="0,0,0,6" />
+
+            <Label Text="Start cooking smarter today"
+                   FontSize="15"
+                   TextColor="#6e9e6c"
+                   Margin="0,0,0,40" />
+
+            <!-- Name -->
+            <Label Text="FULL NAME" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,20">
+                <Entry x:Name="NameEntry"
+                       Placeholder="Your name"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- Email -->
+            <Label Text="EMAIL" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,20">
+                <Entry x:Name="EmailEntry"
+                       Placeholder="you@example.com"
+                       Keyboard="Email"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- Password -->
+            <Label Text="PASSWORD" FontSize="11" FontAttributes="Bold"
+                   CharacterSpacing="1.5" TextColor="#8ba888" Margin="0,0,0,6" />
+            <Border Stroke="#c8bfb4" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="14,0" Margin="0,0,0,36">
+                <Entry x:Name="PasswordEntry"
+                       Placeholder="Create a password"
+                       IsPassword="True"
+                       BackgroundColor="Transparent"
+                       TextColor="#2e4d2c"
+                       PlaceholderColor="#b0a898"
+                       FontSize="15"
+                       HeightRequest="48" />
+            </Border>
+
+            <!-- Error -->
+            <Label x:Name="ErrorLabel"
+                   Text=""
+                   TextColor="#c0392b"
+                   FontSize="13"
+                   IsVisible="False"
+                   Margin="0,0,0,16" />
+
+            <!-- Sign up button -->
+            <Button Text="CREATE ACCOUNT"
+                    BackgroundColor="#8ba888"
+                    TextColor="#f1ebe1"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    CharacterSpacing="2"
+                    CornerRadius="10"
+                    HeightRequest="52"
+                    Clicked="OnSignUpClicked"
+                    Margin="0,0,0,20" />
+
+            <!-- Switch to login -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                <Label Text="Already have an account?"
+                       FontSize="14" TextColor="#8a8078" />
+                <Label Text="Log in"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#8ba888"
+                       TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLoginTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
-                 

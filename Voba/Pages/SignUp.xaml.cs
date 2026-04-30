@@ -1,7 +1,3 @@
-using Voba.Models;
-using Voba.Services;
-using Voba.Repositories;
-
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
@@ -11,31 +7,28 @@ public partial class SignUp : ContentPage
         InitializeComponent();
     }
 
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
+    private async void OnLoginTapped(object sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(Login));
+    }
+
     private async void OnSignUpClicked(object sender, EventArgs e)
     {
-        string username = UsernameEntry.Text;
-        string password = PasswordEntry.Text;
-        string confirmPassword = ConfirmPasswordEntry.Text;
-        if (password != confirmPassword)
+        if (string.IsNullOrWhiteSpace(NameEntry.Text) ||
+            string.IsNullOrWhiteSpace(EmailEntry.Text) ||
+            string.IsNullOrWhiteSpace(PasswordEntry.Text))
         {
-            await DisplayAlert("Error", "Passwords do not match. Please try again.", "OK");
+            ErrorLabel.Text = "Please fill in all fields.";
+            ErrorLabel.IsVisible = true;
             return;
         }
-        var hasher = new BcryptPasswordHasher();
-        var userRepo = new UserRepository();
-        var authRepo = new AuthDataRepository();
-        var JwtService = new JwtService();
-        var hasher = new AuthService();
-        var user = new AuthData(username,authRepo,,JwtService);
-        user.SetPassword(password,hasher);
-        bool isSignUpSuccessful = await CreateUser(username, password); // when method is implemented
-        if (isSignUpSuccessful)
-        {
-            await Shell.Current.GoToAsync("//Home");
-        }
-        else
-        {
-            await DisplayAlert("Sign Up Failed", "An error occurred while creating your account. Please try again.", "OK");
-        }
+
+        // TODO: wire up real sign-up logic — navigate to Home on success
+        await Shell.Current.GoToAsync(nameof(Home)); // push Home onto the current stack
     }
 }
