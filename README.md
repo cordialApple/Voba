@@ -10,7 +10,7 @@ budget-aware, dietary-safe recipe ideas entirely on localhost.
 ## Prerequisites
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-- [.NET MAUI workload](https://learn.microsoft.com/en-us/dotnet/maui/get-started/installation)
+- [.NET MAUI workload](https://learn.microsoft.com/en-us/dotnet/maui/get-started/installation?view=net-maui-9.0&tabs=visual-studio)
 - [Ollama](https://ollama.com/) installed and running
 - Gemma 3:4b pulled: `ollama pull gemma3:4b`
 
