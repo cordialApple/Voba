@@ -1,12 +1,18 @@
-using Voba.Pages;
+using Voba.Interfaces;
+using Voba.Services;
 
 namespace Voba.Pages;
 
 public partial class Login : ContentPage
 {
-    public Login()
+    private readonly IAuthService _authService;
+    private readonly ICurrentUserService _currentUser;
+
+    public Login(IAuthService authService, ICurrentUserService currentUser)
     {
         InitializeComponent();
+        _authService = authService;
+        _currentUser = currentUser;
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -25,7 +31,16 @@ public partial class Login : ContentPage
         }
         ErrorLabel.IsVisible = false;
 
-        // TODO: wire up real auth — navigate to Home on success
+        var result = await _authService.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
+
+        if (!result.Success || result.Data is null)
+        {
+            ErrorLabel.Text = result.ErrorMessage ?? "Login failed.";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
+        _currentUser.SetUser(result.Data.UserId, EmailEntry.Text.Trim());
         await Shell.Current.GoToAsync(nameof(Home));
     }
 

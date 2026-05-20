@@ -63,14 +63,15 @@ namespace Voba.Spoonacular
 
         public async Task<List<IngredientInformation>> ParseIngredientsAsync(
             string ingredientList,
-            decimal servings)
+            decimal servings,
+            bool includeNutrition = false)
         {
             try
             {
                 var result = await _recipesApi.ParseIngredientsAsync(
                     ingredientList,
                     servings,
-                    includeNutrition: false);
+                    includeNutrition: includeNutrition);
 
                 return result ?? new List<IngredientInformation>();
             }

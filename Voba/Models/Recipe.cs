@@ -20,16 +20,19 @@ namespace Voba.Models
 
         public string Instructions { get; private set; } = string.Empty;
 
+        public NutritionInfo? Nutrition { get; private set; }
+
         public DateTime SavedAt { get; private set; }
 
         public Recipe(string userId, string title, List<Ingredient> ingredients,
-            decimal estimatedCost, string instructions)
+            decimal estimatedCost, string instructions, NutritionInfo? nutrition = null)
         {
             UserId        = userId;
             Title         = title;
             Ingredients   = ingredients;
             EstimatedCost = estimatedCost;
             Instructions  = instructions;
+            Nutrition     = nutrition;
             SavedAt       = DateTime.UtcNow;
         }
     }

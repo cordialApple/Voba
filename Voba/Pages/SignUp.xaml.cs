@@ -1,10 +1,18 @@
+using Voba.Interfaces;
+using Voba.Services;
+
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
 {
-    public SignUp()
+    private readonly IAuthService _authService;
+    private readonly ICurrentUserService _currentUser;
+
+    public SignUp(IAuthService authService, ICurrentUserService currentUser)
     {
         InitializeComponent();
+        _authService = authService;
+        _currentUser = currentUser;
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -27,8 +35,19 @@ public partial class SignUp : ContentPage
             ErrorLabel.IsVisible = true;
             return;
         }
+        ErrorLabel.IsVisible = false;
 
-        // TODO: wire up real sign-up logic — navigate to Home on success
-        await Shell.Current.GoToAsync(nameof(Home)); // push Home onto the current stack
+        var result = await _authService.RegisterAsync(
+            EmailEntry.Text.Trim(), NameEntry.Text.Trim(), PasswordEntry.Text);
+
+        if (!result.Success || result.Data is null)
+        {
+            ErrorLabel.Text = result.ErrorMessage ?? "Sign-up failed.";
+            ErrorLabel.IsVisible = true;
+            return;
+        }
+
+        _currentUser.SetUser(result.Data.Id, EmailEntry.Text.Trim());
+        await Shell.Current.GoToAsync(nameof(Home));
     }
 }

@@ -8,5 +8,9 @@ namespace Voba
         public const string MongoDatabaseName = "";
         public const string JwtSecret = "";
         public const string SpoonacularApiKey = "";
+
+        // When true, recipe cost + nutrition come from the offline FakeEnrichmentService.
+        // Set to false to source them from the live Spoonacular API (requires SpoonacularApiKey).
+        public const bool UseFakeSpoonacular = true;
     }
 }

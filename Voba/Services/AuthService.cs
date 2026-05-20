@@ -56,7 +56,7 @@ namespace Voba.Services
             authData.SetRefreshToken(refreshToken, DateTime.UtcNow.AddDays(7));
             await _authDataRepository.UpdateAsync(authData);
 
-            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, refreshToken));
+            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, refreshToken, user.Id));
         }
 
         public async Task<ServiceResult<AuthTokens>> RefreshTokenAsync(string refreshToken)
@@ -74,7 +74,7 @@ namespace Voba.Services
             authData.SetRefreshToken(newRefreshToken, DateTime.UtcNow.AddDays(7));
             await _authDataRepository.UpdateAsync(authData);
 
-            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, newRefreshToken));
+            return ServiceResult<AuthTokens>.Ok(new AuthTokens(accessToken, newRefreshToken, user.Id));
         }
 
         public async Task<bool> LogoutAsync(string userId)

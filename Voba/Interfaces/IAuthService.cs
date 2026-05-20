@@ -3,7 +3,7 @@ using Voba.Services;
 
 namespace Voba.Interfaces
 {
-    public record AuthTokens(string AccessToken, string RefreshToken);
+    public record AuthTokens(string AccessToken, string RefreshToken, string UserId);
 
     public interface IAuthService
     {

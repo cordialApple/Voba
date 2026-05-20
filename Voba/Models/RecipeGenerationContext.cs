@@ -6,6 +6,7 @@ namespace Voba.Models
     {
         public string Title { get; set; } = string.Empty;
         public string Instructions { get; set; } = string.Empty;
+        public NutritionInfo? Nutrition { get; set; }
     }
 
     public class RecipeGenerationContext

@@ -77,7 +77,10 @@ Write ONLY numbered step-by-step cooking instructions.
                 Title = recipe.Name,
 
                 // Grabs the raw text from Gemma, using a safe fallback string if the AI fails to return content.
-                Instructions = response.Content ?? "Could not generate instructions."
+                Instructions = response.Content ?? "Could not generate instructions.",
+
+                // Carry forward the Spoonacular-sourced nutrition attached during the enrichment step.
+                Nutrition = recipe.Nutrition
             };
 
             // Signals to the Chain of Responsibility pipeline that this specific handler successfully finished its job.
