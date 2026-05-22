@@ -25,6 +25,11 @@ jobs:
       - name: Install MAUI workload
         run: dotnet workload install maui
 
+      # Secrets.cs is gitignored (it holds connection strings / keys). Create it
+      # from the tracked, value-free example so the project compiles in CI.
+      - name: Bootstrap Secrets.cs
+        run: Copy-Item Voba/Secrets.example Voba/Secrets.cs
+
       # Select the Windows framework with -f (not -p:TargetFrameworks, which is
       # a global property that leaks into the net8.0 SpoonacularSDK reference and
       # breaks its restore). -f is not propagated to project references.
