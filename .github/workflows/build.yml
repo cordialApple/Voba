@@ -25,5 +25,8 @@ jobs:
       - name: Install MAUI workload
         run: dotnet workload install maui-android
 
+      # Override TargetFrameworks to android-only. The csproj also declares
+      # net9.0-ios/maccatalyst; without this MSBuild's workload check demands
+      # the iOS workload (macOS-only) even when building just Android.
       - name: Build
-        run: dotnet build Voba/Voba.csproj -c Release -f net9.0-android
+        run: dotnet build Voba/Voba.csproj -c Release -p:TargetFrameworks=net9.0-android
