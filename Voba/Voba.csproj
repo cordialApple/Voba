@@ -91,6 +91,11 @@
 		<ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
 	</ItemGroup>
 
+	<!-- Platform-agnostic core (models, interfaces, interpreter, pure services) -->
+	<ItemGroup>
+		<ProjectReference Include="..\Voba.Core\Voba.Core.csproj" />
+	</ItemGroup>
+
 	<ItemGroup>
 	  <MauiXaml Update="Pages\Login.xaml">
 	    <Generator>MSBuild:Compile</Generator>

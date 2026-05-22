@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: dotnet build (net9.0-windows)
+    name: build + test (net9.0-windows)
     runs-on: windows-latest
 
     steps:
@@ -18,6 +18,11 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
+
+      # Unit tests target Voba.Core (plain net9.0) and need neither the MAUI
+      # workload nor Secrets.cs, so run them first for fast feedback.
+      - name: Test
+        run: dotnet test Voba.Core.Tests/Voba.Core.Tests.csproj -c Release
 
       # Full maui workload so the workload check is satisfied for every TFM the
       # csproj declares (iOS/MacCatalyst can't build here, but only need to be
