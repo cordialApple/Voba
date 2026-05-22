@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: dotnet build (net9.0-android)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uses the version pinned in global.json so CI matches local builds.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # The MAUI app targets net9.0-android (plus iOS/MacCatalyst, which need
+      # macOS). Android compiles all the shared C#/XAML and is the cheapest
+      # cross-check on a hosted runner.
+      - name: Install MAUI workload
+        run: dotnet workload install maui-android
+
+      - name: Build
+        run: dotnet build Voba/Voba.csproj -c Release -f net9.0-android
