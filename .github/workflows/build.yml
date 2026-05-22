@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: dotnet build (net9.0-android)
+    name: dotnet build (net9.0-windows)
     runs-on: windows-latest
 
     steps:
@@ -19,14 +19,11 @@ jobs:
         with:
           global-json-file: global.json
 
-      # The MAUI app targets net9.0-android (plus iOS/MacCatalyst, which need
-      # macOS). Android compiles all the shared C#/XAML and is the cheapest
-      # cross-check on a hosted runner.
       - name: Install MAUI workload
-        run: dotnet workload install maui-android
+        run: dotnet workload install maui
 
-      # Override TargetFrameworks to android-only. The csproj also declares
-      # net9.0-ios/maccatalyst; without this MSBuild's workload check demands
-      # the iOS workload (macOS-only) even when building just Android.
+      # Override TargetFrameworks to the Windows target only. The csproj also
+      # declares net9.0-ios/maccatalyst (macOS-only); without this MSBuild's
+      # workload check would demand those workloads even when building Windows.
       - name: Build
-        run: dotnet build Voba/Voba.csproj -c Release -p:TargetFrameworks=net9.0-android
+        run: dotnet build Voba/Voba.csproj -c Release -p:TargetFrameworks=net9.0-windows10.0.19041.0
