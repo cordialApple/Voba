@@ -3,6 +3,9 @@ using Voba.Interfaces;
 using Voba.Models;
 using Voba.Services;
 
+// Disambiguate from the Voba.Pages.Recipe ContentPage in this same namespace.
+using ModelRecipe = Voba.Models.Recipe;
+
 namespace Voba.Pages;
 
 public partial class SavedRecipes : ContentPage
@@ -41,7 +44,7 @@ public partial class SavedRecipes : ContentPage
             return;
         }
 
-        List<Recipe> recipes;
+        List<ModelRecipe> recipes;
         try
         {
             recipes = await _recipeRepository.GetByUserIdAsync(_currentUser.UserId);
@@ -63,7 +66,7 @@ public partial class SavedRecipes : ContentPage
             RecipesLayout.Add(BuildRecipeCard(recipe));
     }
 
-    private static Border BuildRecipeCard(Recipe recipe)
+    private static Border BuildRecipeCard(ModelRecipe recipe)
     {
         var stack = new VerticalStackLayout { Spacing = 4 };
 
