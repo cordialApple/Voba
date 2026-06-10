@@ -1,24 +1,72 @@
-Secrets.local.cs
-**/obj/
-**/bin/
-*.user
-diagrams/
+# ── Secrets & local config ──────────────────────────────────────────────
+# Real secrets must never be committed. Copy Secrets.example to
+# Voba/Secrets.cs and fill in values locally (CI bootstraps it from the
+# example). Any *.local.cs override file is ignored too.
+Voba/Secrets.cs
+*.local.cs
 
-#IDE and Editor Folders
-.vs/
-.vscode/
-*.suo
-*.user
+# ── Signing & provisioning (sensitive — never commit) ───────────────────
+*.pfx
+*.p12
+*.snk
+*.keystore
+*.jks
+*.cer
+*.mobileprovision
+*.provisionprofile
 
-#Build Folders
-[Oo]bj/
-[Bb]in/
+# ── Build output ────────────────────────────────────────────────────────
+**/[Bb]in/
+**/[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
 Generated Files/
 
-#OS Generated Files
+# ── MAUI / platform packaging output ────────────────────────────────────
+# (Package.appxmanifest is source and stays tracked — *.appx does not match it.)
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+*.msixupload
+*.apk
+*.aab
+*.ipa
+*.pri
+AppPackages/
+BundleArtifacts/
+
+# ── Logs & diagnostics ──────────────────────────────────────────────────
+*.binlog
+msbuild*.log
+*.tlog
+
+# ── NuGet ───────────────────────────────────────────────────────────────
+*.nupkg
+*.snupkg
+
+# ── Test results ────────────────────────────────────────────────────────
+[Tt]est[Rr]esult*/
+TestResults/
+
+# ── IDE & editor ────────────────────────────────────────────────────────
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# ── OS generated ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-#Secrets and Settings
-SpoonacularSDK/spoonacular/ApiSettings.cs
-Voba/ApiSettings.cs
+# ── Misc ────────────────────────────────────────────────────────────────
+diagrams/

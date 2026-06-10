@@ -8,9 +8,6 @@ namespace Voba.Repositories
         public static IUserRepository CreateUserRepository(IMongoDatabase db) =>
             new UserRepository(db);
 
-        public static IGroceryListRepository CreateGroceryListRepository(IMongoDatabase db) =>
-            new GroceryListRepository(db);
-
         public static IAuthDataRepository CreateAuthDataRepository(IMongoDatabase db) =>
             new AuthDataRepository(db);
 

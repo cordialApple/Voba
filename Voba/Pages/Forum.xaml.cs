@@ -7,9 +7,13 @@ public partial class Forum : ContentPage
 {
     private readonly GemmaIdeationHandler _ideationHandler;
 
-    public Forum(GemmaIdeationHandler ideationHandler)
+    public Forum(GemmaIdeationHandler ideationHandler, SpoonacularPricingHandler pricingHandler)
     {
         InitializeComponent();
+
+        // Assemble the chain: ideation produces recipes, then enrichment adds
+        // Spoonacular cost + nutrition before the user picks one.
+        ideationHandler.SetNext(pricingHandler);
         _ideationHandler = ideationHandler;
     }
 

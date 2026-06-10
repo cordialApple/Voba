@@ -1,11 +1,15 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
+using Voba.Interfaces;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.Pages;
 
 [QueryProperty(nameof(Context), "Context")]
 public partial class Recipe : ContentPage
 {
+    private readonly IRecipeRepository? _recipeRepository;
+    private readonly ICurrentUserService? _currentUser;
     private RecipeGenerationContext _context;
 
     public RecipeGenerationContext Context
@@ -17,6 +21,17 @@ public partial class Recipe : ContentPage
         }
     }
 
+    // Runtime constructor — resolved by DI when navigating to the page.
+    public Recipe(IRecipeRepository recipeRepository, ICurrentUserService currentUser)
+    {
+        InitializeComponent();
+        _recipeRepository = recipeRepository;
+        _currentUser = currentUser;
+        _context = BuildDesignTimeContext();
+        PopulatePage();
+    }
+
+    // Parameterless constructor — used by the XAML designer/previewer only.
     public Recipe()
     {
         InitializeComponent();
@@ -49,8 +64,24 @@ public partial class Recipe : ContentPage
             ? $"${_context.TargetBudget:F2}" : "—";
 
         BuildDietaryTags();
+        BuildNutrition(recipe?.Nutrition ?? option?.Nutrition);
         BuildIngredientsList(option);
         BuildInstructions(recipe?.Instructions);
+    }
+
+    private void BuildNutrition(NutritionInfo? nutrition)
+    {
+        if (nutrition is null || !nutrition.HasData)
+        {
+            NutritionPanel.IsVisible = false;
+            return;
+        }
+
+        CaloriesLabel.Text = $"{nutrition.Calories:0}";
+        ProteinLabel.Text = $"{nutrition.ProteinGrams:0.#}g";
+        FatLabel.Text = $"{nutrition.FatGrams:0.#}g";
+        CarbsLabel.Text = $"{nutrition.CarbGrams:0.#}g";
+        NutritionPanel.IsVisible = true;
     }
 
     private void BuildDietaryTags()
@@ -259,7 +290,35 @@ public partial class Recipe : ContentPage
     private async void OnSaveRecipeClicked(object sender, EventArgs e)
     {
         await AnimateButton(SaveRecipeButton);
-        await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
+
+        if (_recipeRepository is null || _currentUser is null)
+        {
+            await DisplayAlert("Unavailable", "Saving isn't available right now.", "OK");
+            return;
+        }
+
+        if (!_currentUser.IsAuthenticated || string.IsNullOrEmpty(_currentUser.UserId))
+        {
+            await DisplayAlert("Sign in required", "Please sign in to save recipes.", "OK");
+            return;
+        }
+
+        if (_context.SelectedOption is null)
+        {
+            await DisplayAlert("Nothing to save", "No recipe is loaded yet.", "OK");
+            return;
+        }
+
+        try
+        {
+            var recipe = RecipeMapper.ToRecipe(_context, _currentUser.UserId);
+            await _recipeRepository.SaveAsync(recipe);
+            await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Save failed", ex.Message, "OK");
+        }
     }
 
     private static async Task AnimateButton(Button btn)

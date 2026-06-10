@@ -138,6 +138,55 @@
             <!-- ── Ingredients (scrollable) ─────────────────────── -->
             <VerticalStackLayout Grid.Row="3" Padding="28,20,28,0" Spacing="10">
 
+                <!-- Nutrition (per serving) — sourced from Spoonacular -->
+                <VerticalStackLayout x:Name="NutritionPanel" Spacing="8" IsVisible="False">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <BoxView Grid.Column="0"
+                                 BackgroundColor="#8ba888"
+                                 WidthRequest="3" HeightRequest="16"
+                                 CornerRadius="2"
+                                 VerticalOptions="Center"
+                                 Margin="0,0,10,0" />
+                        <Label Grid.Column="1"
+                               Text="NUTRITION · PER SERVING"
+                               FontSize="9" FontAttributes="Bold"
+                               CharacterSpacing="3"
+                               TextColor="#8ba888"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="6">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                            <Label x:Name="CaloriesLabel" Text="—"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="#f1ebe1" HorizontalOptions="Center" />
+                            <Label Text="kcal" FontSize="8"
+                                   TextColor="#7aaa78" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                            <Label x:Name="ProteinLabel" Text="—"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="#f1ebe1" HorizontalOptions="Center" />
+                            <Label Text="protein" FontSize="8"
+                                   TextColor="#7aaa78" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                            <Label x:Name="FatLabel" Text="—"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="#f1ebe1" HorizontalOptions="Center" />
+                            <Label Text="fat" FontSize="8"
+                                   TextColor="#7aaa78" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
+                            <Label x:Name="CarbsLabel" Text="—"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="#f1ebe1" HorizontalOptions="Center" />
+                            <Label Text="carbs" FontSize="8"
+                                   TextColor="#7aaa78" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+
                 <Grid ColumnDefinitions="Auto,*">
                     <BoxView Grid.Column="0"
                              BackgroundColor="#8ba888"

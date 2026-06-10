@@ -1,0 +1,42 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: build + test (net9.0-windows)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uses the version pinned in global.json so CI matches local builds.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Unit tests target Voba.Core (plain net9.0) and need neither the MAUI
+      # workload nor Secrets.cs, so run them first for fast feedback.
+      - name: Test
+        run: dotnet test Voba.Core.Tests/Voba.Core.Tests.csproj -c Release
+
+      # Full maui workload so the workload check is satisfied for every TFM the
+      # csproj declares (iOS/MacCatalyst can't build here, but only need to be
+      # installed, not built).
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      # Secrets.cs is gitignored (it holds connection strings / keys). Create it
+      # from the tracked, value-free example so the project compiles in CI.
+      - name: Bootstrap Secrets.cs
+        run: Copy-Item Voba/Secrets.example Voba/Secrets.cs
+
+      # Select the Windows framework with -f (not -p:TargetFrameworks, which is
+      # a global property that leaks into the net8.0 SpoonacularSDK reference and
+      # breaks its restore). -f is not propagated to project references.
+      - name: Build
+        run: dotnet build Voba/Voba.csproj -c Release -f net9.0-windows10.0.19041.0

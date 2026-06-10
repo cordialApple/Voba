@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Voba</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- BSON attributes on the persistence models. The MAUI head pulls in the full
+       MongoDB.Driver; the platform-agnostic models only need the serialization
+       attributes, which live in MongoDB.Bson. -->
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="3.7.1" />
+  </ItemGroup>
+
+  <!-- Spoonacular local SDK (used by the live enrichment provider). -->
+  <ItemGroup>
+    <ProjectReference Include="..\SpoonacularSDK\spoonacular\spoonacular.csproj" />
+  </ItemGroup>
+
+</Project>
