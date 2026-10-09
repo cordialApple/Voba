@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Voba.Backend;
+using Voba.Client;
 using Voba.Contracts;
 using Voba.Interfaces;
 using Voba.Models;
@@ -124,20 +125,31 @@ public sealed class LiveBackendHttpTests
             await using (var host = await StartAsync(database, names, key, afterRestart))
             {
                 var http = host.Client;
-                var login = await LoginAsync(http, emailA, password);
-                Authorize(http, login.AccessToken);
-                var cached = await http.PostAsJsonAsync("/api/generation/options", request);
-                Assert.Equal(HttpStatusCode.OK, cached.StatusCode);
+                var session = new ApiSession();
+                var api = new VobaApiClient(http, session);
+                await api.LoginAsync(emailA, password);
+                var cached = await api.GetOptionsAsync(request);
+                Assert.Single(cached.Options);
                 Assert.Equal(0, afterRestart.OptionCalls);
+
+                var selected = await api.SelectAsync(cached.DraftId, cached.Options[0].OptionId);
+                var persisted = await api.SaveAsync(selected.DraftId, selected.DraftVersion);
+                Assert.Equal("Synthetic", persisted.CostSource);
+                Assert.Contains(await api.ListAsync(), recipe => recipe.Id == persisted.Id);
+                Assert.Equal(persisted.Id, (await api.GetAsync(persisted.Id)).Id);
+                await api.DeleteAsync(persisted.Id);
+                Assert.DoesNotContain(await api.ListAsync(), recipe => recipe.Id == persisted.Id);
 
                 afterRestart.FailOptions = true;
                 var failedRequest = request with { Budget = 21m };
-                Assert.Equal(HttpStatusCode.ServiceUnavailable,
-                    (await http.PostAsJsonAsync("/api/generation/options", failedRequest)).StatusCode);
+                var failure = await Assert.ThrowsAsync<VobaApiException>(() =>
+                    api.GetOptionsAsync(failedRequest));
+                Assert.Equal(HttpStatusCode.ServiceUnavailable, failure.StatusCode);
                 afterRestart.FailOptions = false;
-                Assert.Equal(HttpStatusCode.OK,
-                    (await http.PostAsJsonAsync("/api/generation/options", failedRequest)).StatusCode);
+                Assert.Single((await api.GetOptionsAsync(failedRequest)).Options);
                 Assert.Equal(2, afterRestart.OptionCalls);
+                await api.LogoutAsync();
+                Assert.False(session.IsAuthenticated);
             }
         }
         finally
