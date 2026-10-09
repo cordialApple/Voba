@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('Integration', 'Smoke', 'App')]
+    [ValidateSet('Integration', 'Smoke', 'App', 'Seed', 'Acceptance')]
     [string]$Task
 )
 
@@ -44,6 +44,12 @@ try {
         }
         'App' {
             dotnet build (Join-Path $PSScriptRoot '..\Voba\Voba.csproj') -t:Run -f net9.0-windows10.0.19041.0
+        }
+        'Seed' {
+            dotnet run --project (Join-Path $PSScriptRoot '..\Voba.Seed\Voba.Seed.csproj')
+        }
+        'Acceptance' {
+            dotnet test (Join-Path $PSScriptRoot '..\Voba.Backend.AcceptanceTests\Voba.Backend.AcceptanceTests.csproj')
         }
     }
     if ($LASTEXITCODE -ne 0) {
