@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.74.0-alpha" />
+    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <ProjectReference Include="..\Voba.Core\Voba.Core.csproj" />
+    <ProjectReference Include="..\Voba.Persistence\Voba.Persistence.csproj" />
+    <ProjectReference Include="..\Voba.Contracts\Voba.Contracts.csproj" />
+    <Compile Include="..\Voba\AI\Pipeline\RecipePipelineHandler.cs" Link="Pipeline\RecipePipelineHandler.cs" />
+    <Compile Include="..\Voba\AI\Pipeline\Handlers\GemmaIdeationHandler.cs" Link="Pipeline\GemmaIdeationHandler.cs" />
+    <Compile Include="..\Voba\AI\Pipeline\Handlers\SpoonacularPricingHandler.cs" Link="Pipeline\SpoonacularPricingHandler.cs" />
+    <Compile Include="..\Voba\AI\Pipeline\Handlers\Gemmafullrecipehandler.cs" Link="Pipeline\GemmaFullRecipeHandler.cs" />
+  </ItemGroup>
+</Project>
