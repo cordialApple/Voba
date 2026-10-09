@@ -54,8 +54,11 @@ public sealed class RecipeWorkflowService
         {
             await _generator.GenerateOptionsAsync(current, cancellationToken);
             current.ProposedOptions = RecipeGenerationPolicy.WithinBudget(
-                current.ProposedOptions, current.TargetBudget, current.ServingSize);
+                current.ProposedOptions.Where(option => DietaryCompliancePolicy.AllowsOption(
+                    option, current.DietaryRestrictions)), current.TargetBudget, current.ServingSize);
         }, cancellationToken);
+        generated.ProposedOptions = generated.ProposedOptions.Where(option =>
+            DietaryCompliancePolicy.AllowsOption(option, generated.DietaryRestrictions)).ToList();
         if (generated.ProposedOptions.Count == 0)
             throw new InvalidOperationException("No usable recipes returned.");
 
@@ -79,11 +82,23 @@ public sealed class RecipeWorkflowService
         var selected = JsonSerializer.Deserialize<RecipeGenerationContext>(
             JsonSerializer.Serialize(draft.Context))!;
         selected.SelectedOption = selected.ProposedOptions[index];
+        if (!DietaryCompliancePolicy.AllowsOption(selected.SelectedOption,
+                selected.DietaryRestrictions))
+            throw new InvalidOperationException("Recipe does not comply with dietary restrictions.");
         selected.FinalRecipe = null;
         var full = await _coordinator.GetFullRecipeAsync(selected, _minimumSource,
-            current => _generator.GenerateFullAsync(current, cancellationToken), cancellationToken);
+            async current =>
+            {
+                await _generator.GenerateFullAsync(current, cancellationToken);
+                if (!DietaryCompliancePolicy.AllowsFullRecipe(current.SelectedOption!,
+                        current.FinalRecipe?.Instructions, current.DietaryRestrictions))
+                    throw new InvalidOperationException("Recipe does not comply with dietary restrictions.");
+            }, cancellationToken);
         if (string.IsNullOrWhiteSpace(full.FinalRecipe?.Instructions))
             throw new InvalidOperationException("No cooking instructions returned.");
+        if (!DietaryCompliancePolicy.AllowsFullRecipe(full.SelectedOption!,
+                full.FinalRecipe.Instructions, full.DietaryRestrictions))
+            throw new InvalidOperationException("Recipe does not comply with dietary restrictions.");
         cancellationToken.ThrowIfCancellationRequested();
         if (!await _drafts.ReplaceAsync(draft, full, cancellationToken))
             throw new DraftConflictException();

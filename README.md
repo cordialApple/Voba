@@ -58,4 +58,7 @@ On configured Windows machine, `scripts/Invoke-VobaDemo.ps1` reads `%LOCALAPPDAT
 .\scripts\Invoke-VobaDemo.ps1 -Task Integration
 .\scripts\Invoke-VobaDemo.ps1 -Task Smoke
 .\scripts\Invoke-VobaDemo.ps1 -Task Acceptance
+.\scripts\Invoke-VobaDemo.ps1 -Task ModelAcceptance
 ```
+
+`ModelAcceptance` runs real local Gemma over HTTP with Atlas test collections. It uses synthetic cost and nutrition and makes no Spoonacular calls. It may take several minutes.

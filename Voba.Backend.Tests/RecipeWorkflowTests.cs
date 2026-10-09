@@ -3,6 +3,7 @@ using Voba.Contracts;
 using Voba.Interfaces;
 using Voba.Models;
 using Voba.Services;
+using System.Text.Json;
 using Xunit;
 
 namespace Voba.Backend.Tests;
@@ -86,6 +87,83 @@ public sealed class RecipeWorkflowTests
         Assert.Equal(0, drafts.Count);
     }
 
+    [Fact]
+    public async Task Vegan_unsafe_option_creates_no_draft_or_cache_entry()
+    {
+        var drafts = new MemoryDrafts();
+        var generator = new CountingGenerator { OptionIngredients = ["chicken breast", "rice"] };
+        var cache = new MemoryCache();
+        var workflow = NewWorkflow(drafts, generator, cache);
+        var request = new GenerationOptionsRequest(20m, 2, ["vegan"], null);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            workflow.CreateOptionsAsync("user-a", request));
+        Assert.Equal(0, drafts.Count);
+        Assert.Equal(0, cache.Count);
+
+        generator.OptionIngredients = ["tofu", "rice"];
+        var result = await workflow.CreateOptionsAsync("user-a", request);
+        Assert.Single(result.Options);
+        Assert.Equal(2, generator.OptionCalls);
+    }
+
+    [Fact]
+    public async Task Vegan_unsafe_instruction_cannot_enter_draft_or_cache()
+    {
+        var drafts = new MemoryDrafts();
+        var generator = new CountingGenerator { Instructions = "1. Add butter to the pasta." };
+        var cache = new MemoryCache();
+        var workflow = NewWorkflow(drafts, generator, cache);
+        var options = await workflow.CreateOptionsAsync("user-a",
+            new GenerationOptionsRequest(20m, 2, ["vegan"], null));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            workflow.SelectAsync("user-a", options.DraftId,
+                new SelectRecipeRequest(options.Options[0].OptionId)));
+        Assert.Null((await drafts.GetAsync(options.DraftId, "user-a"))!.Context.FinalRecipe);
+        Assert.Equal(1, cache.Count);
+
+        generator.Instructions = "1. Simmer pasta in tomato sauce.";
+        var full = await workflow.SelectAsync("user-a", options.DraftId,
+            new SelectRecipeRequest(options.Options[0].OptionId));
+        Assert.NotNull(full);
+        Assert.Equal(2, generator.FullCalls);
+    }
+
+    [Fact]
+    public async Task Cached_unsafe_vegan_option_is_not_served_or_drafted()
+    {
+        var drafts = new MemoryDrafts();
+        var generator = new CountingGenerator();
+        var cache = new MemoryCache();
+        var context = new RecipeGenerationContext
+        {
+            TargetBudget = 20m,
+            ServingSize = 2,
+            DietaryRestrictions = ["vegan"],
+            ProposedOptions = [new RecipeOption
+            {
+                Name = "Chicken dinner",
+                Ingredients = ["chicken breast"],
+                DataSource = RecipeDataSource.Synthetic,
+                EstimatedCost = 4m,
+                TotalCost = 8m
+            }]
+        };
+        var now = DateTime.UtcNow;
+        await cache.StoreAsync(new RecipeGenerationCacheEntry(
+            RecipeGenerationCacheKey.CreateOptions(context, "test-model", "test-prompt"),
+            RecipeDataSource.Synthetic, JsonSerializer.Serialize(context), now, now.AddHours(1)));
+        var workflow = NewWorkflow(drafts, generator, cache);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            workflow.CreateOptionsAsync("user-a",
+                new GenerationOptionsRequest(20m, 2, ["vegan"], null)));
+
+        Assert.Equal(0, generator.OptionCalls);
+        Assert.Equal(0, drafts.Count);
+    }
+
     private static RecipeWorkflowService NewWorkflow(MemoryDrafts drafts,
         CountingGenerator generator, MemoryCache cache) => new(
             drafts, new RecipeGenerationCoordinator(cache, TimeProvider.System,
@@ -98,6 +176,8 @@ public sealed class RecipeWorkflowTests
         public int FullCalls { get; private set; }
         public bool FailOptions { get; set; }
         public bool FailFull { get; set; }
+        public List<string> OptionIngredients { get; set; } = ["tomato", "pasta"];
+        public string Instructions { get; set; } = "1. Cook the ingredients.";
 
         public Task GenerateOptionsAsync(RecipeGenerationContext context, CancellationToken cancellationToken)
         {
@@ -107,7 +187,7 @@ public sealed class RecipeWorkflowTests
             context.ProposedOptions = [new RecipeOption
             {
                 Name = "Pasta",
-                Ingredients = ["tomato", "pasta"],
+                Ingredients = OptionIngredients,
                 EstimatedCost = 5m,
                 TotalCost = 10m,
                 DataSource = RecipeDataSource.Synthetic,
@@ -124,7 +204,7 @@ public sealed class RecipeWorkflowTests
             context.FinalRecipe = new FullRecipe
             {
                 Title = context.SelectedOption!.Name,
-                Instructions = "1. Cook the ingredients."
+                Instructions = Instructions
             };
             return Task.CompletedTask;
         }
@@ -162,6 +242,7 @@ public sealed class RecipeWorkflowTests
     private sealed class MemoryCache : IRecipeGenerationCache
     {
         private readonly Dictionary<string, RecipeGenerationCacheEntry> _entries = new();
+        public int Count => _entries.Count;
 
         public Task<RecipeGenerationCacheEntry?> GetAsync(string key,
             CancellationToken cancellationToken = default) =>
