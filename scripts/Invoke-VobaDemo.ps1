@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('Integration', 'Smoke', 'App', 'Seed', 'Acceptance', 'Backend')]
+    [ValidateSet('Integration', 'Smoke', 'App', 'Seed', 'Acceptance', 'ModelAcceptance', 'Backend')]
     [string]$Task
 )
 
@@ -9,7 +9,8 @@ $secretDirectory = Join-Path $env:LOCALAPPDATA 'Voba'
 $names = @('VOBA_MONGO_CONNECTION_STRING', 'VOBA_MONGO_DATABASE',
     'VOBA_TEST_MONGO_URI', 'VOBA_TEST_MONGO_DATABASE', 'VOBA_JWT_SECRET',
     'VOBA_SPOONACULAR_API_KEY', 'VOBA_ENRICHMENT_MODE', 'VOBA_OLLAMA_ENDPOINT',
-    'VOBA_OLLAMA_MODEL', 'VOBA_API_BASE_URL', 'ASPNETCORE_URLS')
+    'VOBA_OLLAMA_MODEL', 'VOBA_API_BASE_URL', 'ASPNETCORE_URLS',
+    'VOBA_TEST_LIVE_MODEL')
 $previous = @{}
 foreach ($name in $names) {
     $previous[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
@@ -105,7 +106,11 @@ try {
             dotnet run --project (Join-Path $PSScriptRoot '..\Voba.Seed\Voba.Seed.csproj')
         }
         'Acceptance' {
-            dotnet test (Join-Path $PSScriptRoot '..\Voba.Backend.AcceptanceTests\Voba.Backend.AcceptanceTests.csproj')
+            dotnet test (Join-Path $PSScriptRoot '..\Voba.Backend.AcceptanceTests\Voba.Backend.AcceptanceTests.csproj') --filter FullyQualifiedName~LiveBackendHttpTests
+        }
+        'ModelAcceptance' {
+            $env:VOBA_TEST_LIVE_MODEL = '1'
+            dotnet test (Join-Path $PSScriptRoot '..\Voba.Backend.AcceptanceTests\Voba.Backend.AcceptanceTests.csproj') --filter FullyQualifiedName~LiveGemmaHttpTests
         }
         'Backend' {
             dotnet run --no-launch-profile --project (Join-Path $PSScriptRoot '..\Voba.Backend\Voba.Backend.csproj')
