@@ -48,7 +48,7 @@ public partial class Recipe : ContentPage
     {
         var option = _full?.SelectedOption;
         RecipeTitleLabel.Text = _full?.Title ?? _saved?.Title ?? "Your Recipe";
-        ServingsLabel.Text = _full?.Servings.ToString() ?? "—";
+        ServingsLabel.Text = _full?.Servings.ToString() ?? _saved?.Servings?.ToString() ?? "—";
         var cost = option?.TotalCost ?? _saved?.TotalCost ?? 0m;
         CostLabel.Text = cost > 0 ? $"${cost:F2}" : "—";
         SourceLabel.Text = option is not null
@@ -58,10 +58,12 @@ public partial class Recipe : ContentPage
                 ? RecipePresentation.SourceLabel(_saved.CostSource, _saved.NutritionSource,
                     _saved.Nutrition is not null)
                 : string.Empty;
-        BudgetLabel.Text = _full?.Budget > 0 ? $"${_full.Budget:F2}" : "—";
+        var budget = _full?.Budget ?? _saved?.Budget;
+        BudgetLabel.Text = budget > 0 ? $"${budget:F2}" : "—";
         SaveRecipeButton.IsVisible = _full is not null && _saved is null;
 
-        BuildDietaryTags(_full?.CuisinePreference, _full?.DietaryRestrictions);
+        BuildDietaryTags(_full?.CuisinePreference ?? _saved?.CuisinePreference,
+            _full?.DietaryRestrictions ?? _saved?.DietaryRestrictions);
         BuildNutrition(option?.Nutrition ?? _saved?.Nutrition);
         BuildIngredientsList(option?.Ingredients ?? _saved?.Ingredients
             .Select(ingredient => ingredient.Amount > 0

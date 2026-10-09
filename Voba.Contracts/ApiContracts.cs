@@ -62,6 +62,10 @@ public sealed record SavedRecipeResponse(
     NutritionResponse? Nutrition,
     string CostSource,
     string NutritionSource,
-    DateTime SavedAtUtc);
+    DateTime SavedAtUtc,
+    int? Servings = null,
+    decimal? Budget = null,
+    IReadOnlyList<string>? DietaryRestrictions = null,
+    string? CuisinePreference = null);
 
 public sealed record ApiError(string Code, string Message);
