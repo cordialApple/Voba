@@ -1,5 +1,6 @@
 using Voba.Interfaces;
 using Voba.Services;
+using MongoDB.Driver;
 
 namespace Voba.Pages;
 
@@ -30,18 +31,34 @@ public partial class Login : ContentPage
             return;
         }
         ErrorLabel.IsVisible = false;
-
-        var result = await _authService.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
-
-        if (!result.Success || result.Data is null)
+        LoginButton.IsEnabled = false;
+        try
         {
-            ErrorLabel.Text = result.ErrorMessage ?? "Login failed.";
-            ErrorLabel.IsVisible = true;
-            return;
-        }
+            var result = await _authService.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
+            if (!result.Success || result.Data is null)
+            {
+                ErrorLabel.Text = result.ErrorMessage ?? "Login failed.";
+                ErrorLabel.IsVisible = true;
+                return;
+            }
 
-        _currentUser.SetUser(result.Data.UserId, EmailEntry.Text.Trim());
-        await Shell.Current.GoToAsync(nameof(Home));
+            _currentUser.SetUser(result.Data.UserId, EmailEntry.Text.Trim());
+            await Shell.Current.GoToAsync(nameof(Home));
+        }
+        catch (MongoException)
+        {
+            ErrorLabel.Text = "Database unavailable. Check VOBA_MONGO_CONNECTION_STRING and Atlas status.";
+            ErrorLabel.IsVisible = true;
+        }
+        catch (Exception)
+        {
+            ErrorLabel.Text = "Login unavailable. Check app configuration and try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        finally
+        {
+            LoginButton.IsEnabled = true;
+        }
     }
 
     private async void OnSignUpTapped(object sender, TappedEventArgs e)

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Voba.Models;
 using Voba.Services;
 using Xunit;
 
@@ -16,6 +17,7 @@ namespace Voba.Core.Tests
             var service = new FakeEnrichmentService();
 
             var result = await service.EnrichAsync(new[] { "a", "b", "c", "d" }, servings: 2);
+            Assert.Equal(RecipeDataSource.Synthetic, result!.Source);
 
             Assert.NotNull(result);
             Assert.Equal(5.00m, result!.TotalCostUsd);     // 4 * 1.25

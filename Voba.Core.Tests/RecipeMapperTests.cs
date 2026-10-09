@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
 using Voba.Models;
 using Voba.Services;
 using Xunit;
@@ -116,6 +117,29 @@ namespace Voba.Core.Tests
 
             Assert.Equal("Option Name", recipe.Title);
             Assert.Equal("steps", recipe.Instructions);
+        }
+
+        [Fact]
+        public void Persists_selected_cost_source()
+        {
+            var context = new RecipeGenerationContext
+            {
+                DataSource = RecipeDataSource.Estimate,
+                SelectedOption = new RecipeOption
+                {
+                    Name = "Bean stew",
+                    DataSource = RecipeDataSource.Real,
+                    NutritionSource = RecipeDataSource.Synthetic
+                }
+            };
+
+            var recipe = RecipeMapper.ToRecipe(context, "507f1f77bcf86cd799439011");
+            typeof(Recipe).GetProperty(nameof(Recipe.Id))!.SetValue(recipe, ObjectId.GenerateNewId().ToString());
+            var restored = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Recipe>(recipe.ToBson());
+
+            Assert.Equal(RecipeDataSource.Real, recipe.DataSource);
+            Assert.Equal(RecipeDataSource.Real, restored.DataSource);
+            Assert.Equal(RecipeDataSource.Synthetic, restored.NutritionSource);
         }
     }
 }

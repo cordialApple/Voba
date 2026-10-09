@@ -11,9 +11,7 @@ namespace Voba
     {
         public static MauiApp CreateMauiApp()
         {
-            // Feed the committed Spoonacular key into the SDK's settings so the live
-            // enrichment provider can authenticate. Done once at startup.
-            spoonacular.api.ApiSettings.SpoonacularApiKey = Secrets.SpoonacularApiKey;
+            spoonacular.api.ApiSettings.SpoonacularApiKey = AppConfiguration.SpoonacularApiKey;
 
             var builder = MauiApp.CreateBuilder();
             builder
@@ -25,11 +23,23 @@ namespace Voba
                 });
 
             builder.Services.AddSingleton<IMongoClient>(sp =>
-                new MongoClient(Secrets.MongoConnectionString));
+            {
+                var settings = MongoClientSettings.FromConnectionString(AppConfiguration.MongoConnectionString);
+                settings.ServerSelectionTimeout = TimeSpan.FromSeconds(5);
+                return new MongoClient(settings);
+            });
 
             builder.Services.AddSingleton<IMongoDatabase>(sp =>
                 sp.GetRequiredService<IMongoClient>()
-                  .GetDatabase(Secrets.MongoDatabaseName));
+                  .GetDatabase(AppConfiguration.MongoDatabaseName));
+
+            builder.Services.AddSingleton<IRecipeGenerationCache, MongoRecipeGenerationCache>();
+            builder.Services.AddSingleton(sp => new RecipeGenerationCoordinator(
+                sp.GetRequiredService<IRecipeGenerationCache>(),
+                TimeProvider.System,
+                TimeSpan.FromHours(24),
+                AppConfiguration.OllamaModel,
+                "recipe-prompts-v1"));
 
             builder.Services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
             builder.Services.AddSingleton<IJwtService, JwtService>();
@@ -51,18 +61,20 @@ namespace Voba
             // Spoonacular SDK wrapper used by the live enrichment provider.
             builder.Services.AddSingleton<Spoonacular.SpoonacularService>();
 
-            // Cost + nutrition provider. Defaults to the offline fake; flip
-            // Secrets.UseFakeSpoonacular to false to hit the real API.
-            if (Secrets.UseFakeSpoonacular)
+            if (AppConfiguration.UseFakeEnrichment)
                 builder.Services.AddSingleton<IRecipeEnrichmentService, FakeEnrichmentService>();
             else
+            {
+                if (string.IsNullOrWhiteSpace(AppConfiguration.SpoonacularApiKey))
+                    throw new InvalidOperationException("VOBA_SPOONACULAR_API_KEY is required in real enrichment mode.");
                 builder.Services.AddSingleton<IRecipeEnrichmentService, SpoonacularEnrichmentService>();
+            }
 
             // Gemma via Ollama for recipe ideation + instructions.
             builder.Services.AddKernel()
             .AddOllamaChatCompletion(
-                modelId: "gemma3:4b",
-                endpoint: new Uri("http://localhost:11434")
+                modelId: AppConfiguration.OllamaModel,
+                endpoint: AppConfiguration.OllamaEndpoint
             );
 
             builder.Services.AddSingleton<Services.IAiChatService, Services.SemanticKernelChatService>();

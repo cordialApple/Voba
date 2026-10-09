@@ -1,13 +1,16 @@
 ﻿using Voba.AI.Pipeline.Handlers;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.Pages;
 
 public partial class Forum : ContentPage
 {
     private readonly GemmaIdeationHandler _ideationHandler;
+    private readonly RecipeGenerationCoordinator _coordinator;
 
-    public Forum(GemmaIdeationHandler ideationHandler, SpoonacularPricingHandler pricingHandler)
+    public Forum(GemmaIdeationHandler ideationHandler, SpoonacularPricingHandler pricingHandler,
+        RecipeGenerationCoordinator coordinator)
     {
         InitializeComponent();
 
@@ -15,14 +18,15 @@ public partial class Forum : ContentPage
         // Spoonacular cost + nutrition before the user picks one.
         ideationHandler.SetNext(pricingHandler);
         _ideationHandler = ideationHandler;
+        _coordinator = coordinator;
     }
 
     private async void OnGenerateClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(BudgetInput.Text) ||
-            string.IsNullOrWhiteSpace(ServingsInput.Text))
+        if (!RecipeGenerationPolicy.TryParseInputs(BudgetInput.Text, ServingsInput.Text,
+                out var budget, out var servings))
         {
-            ErrorLabel.Text = "Please enter a budget and serving size.";
+            ErrorLabel.Text = "Enter a positive budget and serving size.";
             ErrorLabel.IsVisible = true;
             return;
         }
@@ -34,9 +38,6 @@ public partial class Forum : ContentPage
 
         try
         {
-            decimal budget = decimal.TryParse(BudgetInput.Text, out var b) ? b : 15.00m;
-            int servings = int.TryParse(ServingsInput.Text, out var s) ? s : 2;
-
             // Restrictions
             var restrictions = new List<string>();
 
@@ -74,7 +75,14 @@ public partial class Forum : ContentPage
                                            : CuisineInput.Text.Trim()
             };
 
-            await _ideationHandler.HandleAsync(context);
+            var minimumSource = AppConfiguration.UseFakeEnrichment
+                ? RecipeDataSource.Synthetic : RecipeDataSource.Real;
+            context = await _coordinator.GetOptionsAsync(context, minimumSource, async generated =>
+            {
+                await _ideationHandler.HandleAsync(generated);
+                generated.ProposedOptions = RecipeGenerationPolicy.WithinBudget(
+                    generated.ProposedOptions, generated.TargetBudget, generated.ServingSize);
+            });
 
             if (context.ProposedOptions.Count == 0)
             {

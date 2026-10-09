@@ -26,5 +26,7 @@ namespace Voba.Models
         public bool IsHandled { get; set; } = false;
 
         public string DebugPrompt { get; set; } = string.Empty;
+
+        public RecipeDataSource DataSource { get; set; } = RecipeDataSource.Estimate;
     }
 }

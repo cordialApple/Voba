@@ -24,8 +24,14 @@ namespace Voba.Models
 
         public DateTime SavedAt { get; private set; }
 
+        public RecipeDataSource DataSource { get; private set; }
+
+        public RecipeDataSource NutritionSource { get; private set; }
+
         public Recipe(string userId, string title, List<Ingredient> ingredients,
-            decimal estimatedCost, string instructions, NutritionInfo? nutrition = null)
+            decimal estimatedCost, string instructions, NutritionInfo? nutrition = null,
+            RecipeDataSource dataSource = RecipeDataSource.Estimate,
+            RecipeDataSource nutritionSource = RecipeDataSource.Estimate)
         {
             UserId        = userId;
             Title         = title;
@@ -33,6 +39,8 @@ namespace Voba.Models
             EstimatedCost = estimatedCost;
             Instructions  = instructions;
             Nutrition     = nutrition;
+            DataSource    = dataSource;
+            NutritionSource = nutritionSource;
             SavedAt       = DateTime.UtcNow;
         }
     }

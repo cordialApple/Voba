@@ -1,5 +1,6 @@
 using Voba.Interfaces;
 using Voba.Services;
+using MongoDB.Driver;
 
 namespace Voba.Pages;
 
@@ -36,18 +37,34 @@ public partial class SignUp : ContentPage
             return;
         }
         ErrorLabel.IsVisible = false;
-
-        var result = await _authService.RegisterAsync(
-            EmailEntry.Text.Trim(), NameEntry.Text.Trim(), PasswordEntry.Text);
-
-        if (!result.Success || result.Data is null)
+        SignUpButton.IsEnabled = false;
+        try
         {
-            ErrorLabel.Text = result.ErrorMessage ?? "Sign-up failed.";
-            ErrorLabel.IsVisible = true;
-            return;
-        }
+            var result = await _authService.RegisterAsync(
+                EmailEntry.Text.Trim(), NameEntry.Text.Trim(), PasswordEntry.Text);
+            if (!result.Success || result.Data is null)
+            {
+                ErrorLabel.Text = result.ErrorMessage ?? "Sign-up failed.";
+                ErrorLabel.IsVisible = true;
+                return;
+            }
 
-        _currentUser.SetUser(result.Data.Id, EmailEntry.Text.Trim());
-        await Shell.Current.GoToAsync(nameof(Home));
+            _currentUser.SetUser(result.Data.Id, EmailEntry.Text.Trim());
+            await Shell.Current.GoToAsync(nameof(Home));
+        }
+        catch (MongoException)
+        {
+            ErrorLabel.Text = "Database unavailable. Check VOBA_MONGO_CONNECTION_STRING and Atlas status.";
+            ErrorLabel.IsVisible = true;
+        }
+        catch (Exception)
+        {
+            ErrorLabel.Text = "Sign-up unavailable. Check app configuration and try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        finally
+        {
+            SignUpButton.IsEnabled = true;
+        }
     }
 }

@@ -94,6 +94,7 @@
 	<!-- Platform-agnostic core (models, interfaces, interpreter, pure services) -->
 	<ItemGroup>
 		<ProjectReference Include="..\Voba.Core\Voba.Core.csproj" />
+		<ProjectReference Include="..\Voba.Persistence\Voba.Persistence.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

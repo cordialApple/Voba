@@ -9,5 +9,7 @@ namespace Voba.Models
         public decimal EstimatedCost { get; set; }
         public decimal TotalCost { get; set; }
         public NutritionInfo? Nutrition { get; set; }
+        public RecipeDataSource DataSource { get; set; } = RecipeDataSource.Estimate;
+        public RecipeDataSource NutritionSource { get; set; } = RecipeDataSource.Estimate;
     }
 }

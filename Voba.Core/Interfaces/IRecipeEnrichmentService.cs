@@ -6,7 +6,8 @@ namespace Voba.Interfaces
     public record RecipeEnrichment(
         decimal CostPerServingUsd,
         decimal TotalCostUsd,
-        NutritionInfo Nutrition);
+        NutritionInfo Nutrition,
+        RecipeDataSource Source = RecipeDataSource.Estimate);
 
     // Sources cost and nutrition for a set of free-text ingredients.
     // Implementations: SpoonacularEnrichmentService (live API) and

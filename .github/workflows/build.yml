@@ -19,21 +19,20 @@ jobs:
         with:
           global-json-file: global.json
 
-      # Unit tests target Voba.Core (plain net9.0) and need neither the MAUI
-      # workload nor Secrets.cs, so run them first for fast feedback.
-      - name: Test
+      - name: Test core
         run: dotnet test Voba.Core.Tests/Voba.Core.Tests.csproj -c Release
+
+      - name: Test persistence
+        run: dotnet test Voba.Persistence.Tests/Voba.Persistence.Tests.csproj -c Release
+
+      - name: Test app data
+        run: dotnet test Voba.AppData.Tests/Voba.AppData.Tests.csproj -c Release
 
       # Full maui workload so the workload check is satisfied for every TFM the
       # csproj declares (iOS/MacCatalyst can't build here, but only need to be
       # installed, not built).
       - name: Install MAUI workload
         run: dotnet workload install maui
-
-      # Secrets.cs is gitignored (it holds connection strings / keys). Create it
-      # from the tracked, value-free example so the project compiles in CI.
-      - name: Bootstrap Secrets.cs
-        run: Copy-Item Voba/Secrets.example Voba/Secrets.cs
 
       # Select the Windows framework with -f (not -p:TargetFrameworks, which is
       # a global property that leaks into the net8.0 SpoonacularSDK reference and

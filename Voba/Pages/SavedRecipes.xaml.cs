@@ -36,6 +36,7 @@ public partial class SavedRecipes : ContentPage
     private async Task LoadRecipesAsync()
     {
         RecipesLayout.Children.Clear();
+        LoadErrorLabel.IsVisible = false;
 
         if (_recipeRepository is null || _currentUser is null ||
             !_currentUser.IsAuthenticated || string.IsNullOrEmpty(_currentUser.UserId))
@@ -51,7 +52,8 @@ public partial class SavedRecipes : ContentPage
         }
         catch
         {
-            EmptyState.IsVisible = true;
+            EmptyState.IsVisible = false;
+            LoadErrorLabel.IsVisible = true;
             return;
         }
 
@@ -84,6 +86,7 @@ public partial class SavedRecipes : ContentPage
         if (recipe.Nutrition is { } n && n.HasData)
             meta.Add($"{n.Calories:0} kcal");
         meta.Add($"{recipe.Ingredients.Count} ingredients");
+        meta.Add(RecipeSourceLabels.ForRecipe(recipe));
 
         stack.Add(new Label
         {

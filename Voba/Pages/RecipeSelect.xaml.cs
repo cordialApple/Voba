@@ -1,5 +1,6 @@
 ﻿using Voba.AI.Pipeline.Handlers;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.Pages;
 
@@ -7,6 +8,7 @@ namespace Voba.Pages;
 public partial class RecipeSelect : ContentPage
 {
     private readonly GemmaFullRecipeHandler _fullRecipeHandler;
+    private readonly RecipeGenerationCoordinator _coordinator;
     private RecipeGenerationContext? _context;
 
     public RecipeGenerationContext? Context
@@ -19,10 +21,12 @@ public partial class RecipeSelect : ContentPage
         }
     }
 
-    public RecipeSelect(GemmaFullRecipeHandler fullRecipeHandler)
+    public RecipeSelect(GemmaFullRecipeHandler fullRecipeHandler,
+        RecipeGenerationCoordinator coordinator)
     {
         InitializeComponent();
         _fullRecipeHandler = fullRecipeHandler;
+        _coordinator = coordinator;
     }
 
     private void PopulateCards(RecipeGenerationContext context)
@@ -48,6 +52,7 @@ public partial class RecipeSelect : ContentPage
             Card1Ingredients.Text = string.Join(", ", recipe.Ingredients);
             Card1Cost.Text = perServing;
             Card1TotalCost.Text = total;
+            Card1Source.Text = RecipeSourceLabels.ForOption(recipe);
             Card1.IsVisible = true;
         }
         else
@@ -56,6 +61,7 @@ public partial class RecipeSelect : ContentPage
             Card2Ingredients.Text = string.Join(", ", recipe.Ingredients);
             Card2Cost.Text = perServing;
             Card2TotalCost.Text = total;
+            Card2Source.Text = RecipeSourceLabels.ForOption(recipe);
             Card2.IsVisible = true;
         }
     }
@@ -86,7 +92,13 @@ public partial class RecipeSelect : ContentPage
 
         try
         {
-            await _fullRecipeHandler.HandleAsync(_context);
+            var minimumSource = AppConfiguration.UseFakeEnrichment
+                ? RecipeDataSource.Synthetic : RecipeDataSource.Real;
+            _context = await _coordinator.GetFullRecipeAsync(_context, minimumSource,
+                generated => _fullRecipeHandler.HandleAsync(generated));
+
+            if (string.IsNullOrWhiteSpace(_context.FinalRecipe?.Instructions))
+                throw new InvalidOperationException("No cooking instructions returned. Try again.");
 
             await Shell.Current.GoToAsync(nameof(Recipe),
                 new Dictionary<string, object> { ["Context"] = _context });

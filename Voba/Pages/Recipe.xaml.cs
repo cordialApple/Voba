@@ -60,6 +60,8 @@ public partial class Recipe : ContentPage
             option?.TotalCost > 0 ? $"${option.TotalCost:F2}" :
             option?.EstimatedCost > 0 ? $"${option.EstimatedCost:F2}" : "—";
 
+        SourceLabel.Text = option is null ? string.Empty : RecipeSourceLabels.ForOption(option);
+
         BudgetLabel.Text = _context.TargetBudget > 0
             ? $"${_context.TargetBudget:F2}" : "—";
 

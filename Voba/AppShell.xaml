@@ -8,9 +8,8 @@
     BackgroundColor="#f1ebe1"
     Title="Voba">
 
-    <ShellContent
+    <ShellContent x:Name="LoginShellContent"
         Title="Login"
-        ContentTemplate="{DataTemplate pages:Login}"
         Route="Login" />
 
 </Shell>

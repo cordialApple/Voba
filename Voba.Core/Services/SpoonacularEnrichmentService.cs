@@ -74,7 +74,7 @@ namespace Voba.Services
             if (totalUsd == 0 && !nutrition.HasData)
                 return null;
 
-            return new RecipeEnrichment(perServingUsd, totalUsd, nutrition);
+            return new RecipeEnrichment(perServingUsd, totalUsd, nutrition, RecipeDataSource.Real);
         }
 
         // Totals the key macros across every parsed ingredient, then reduces to per-serving.

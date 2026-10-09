@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Voba.AI.Interpreter;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.AI.Pipeline.Handlers
 {
@@ -56,6 +57,7 @@ namespace Voba.AI.Pipeline.Handlers
 
             // 4. Sends the prompt to the local Gemma model and gets the raw JSON back.
             var candidates = await CallGemmaAsync(prompt);
+            RecipeGenerationPolicy.ResetModelSources(candidates);
 
             // 5. Pulls out the exact list of banned ingredients from the rule block.
             var forbiddenPhrases = GetForbiddenPhrases(ruleBlock);

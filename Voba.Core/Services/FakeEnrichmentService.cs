@@ -38,7 +38,7 @@ namespace Voba.Services
             };
 
             return Task.FromResult<RecipeEnrichment?>(
-                new RecipeEnrichment(perServingUsd, totalUsd, nutrition));
+                new RecipeEnrichment(perServingUsd, totalUsd, nutrition, RecipeDataSource.Synthetic));
         }
     }
 }
