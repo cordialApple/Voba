@@ -59,7 +59,7 @@ public sealed class BackendPersistenceIntegrationTests
                 sessions.RotateAsync("old-hash", "new-hash-1", now, now.AddDays(1)),
                 sessions.RotateAsync("old-hash", "new-hash-2", now, now.AddDays(1)));
 
-            Assert.Single(results.Where(result => result is not null));
+            Assert.Single(results, result => result is not null);
             Assert.True(await sessions.IsActiveAsync(id, "user-id", now));
             Assert.False(await sessions.IsActiveAsync(id, "other-user", now));
             Assert.True(await sessions.RevokeAsync(id, "user-id"));
@@ -145,6 +145,10 @@ public sealed class BackendPersistenceIntegrationTests
             var recipes = new MongoUserRecipeStore(database, $"recipes_{suffix}");
             var context = new RecipeGenerationContext
             {
+                ServingSize = 3,
+                TargetBudget = 24m,
+                DietaryRestrictions = ["vegan"],
+                CuisinePreference = "Thai",
                 SelectedOption = new RecipeOption { Name = "Soup", Ingredients = ["beans"] },
                 FinalRecipe = new FullRecipe { Title = "Soup", Instructions = "1. Cook beans." }
             };
@@ -153,7 +157,12 @@ public sealed class BackendPersistenceIntegrationTests
             Assert.Null(await recipes.GetAsync(saved.Id, "507f1f77bcf86cd799439012"));
             Assert.Empty(await recipes.ListAsync("507f1f77bcf86cd799439012"));
             Assert.False(await recipes.DeleteAsync(saved.Id, "507f1f77bcf86cd799439012"));
-            Assert.Equal(saved.Id, (await recipes.GetAsync(saved.Id, "507f1f77bcf86cd799439011"))?.Id);
+            var restored = await recipes.GetAsync(saved.Id, "507f1f77bcf86cd799439011");
+            Assert.Equal(saved.Id, restored?.Id);
+            Assert.Equal(3, restored?.Servings);
+            Assert.Equal(24m, restored?.Budget);
+            Assert.Equal(["vegan"], restored?.DietaryRestrictions);
+            Assert.Equal("Thai", restored?.CuisinePreference);
             Assert.True(await recipes.DeleteAsync(saved.Id, "507f1f77bcf86cd799439011"));
         });
     }
