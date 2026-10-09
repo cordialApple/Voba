@@ -31,6 +31,9 @@ jobs:
       - name: Test backend
         run: dotnet test Voba.Backend.Tests/Voba.Backend.Tests.csproj -c Release
 
+      - name: Test client
+        run: dotnet test Voba.Client.Tests/Voba.Client.Tests.csproj -c Release
+
       - name: Test seed
         run: dotnet test Voba.Seed.Tests/Voba.Seed.Tests.csproj -c Release
 

@@ -1,24 +1,20 @@
-using Voba.Interfaces;
-using Voba.Services;
-using MongoDB.Driver;
+using Voba.Client;
 
 namespace Voba.Pages;
 
 public partial class Login : ContentPage
 {
-    private readonly IAuthService _authService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly IVobaApiClient _api;
 
-    public Login(IAuthService authService, ICurrentUserService currentUser)
+    public Login(IVobaApiClient api)
     {
         InitializeComponent();
-        _authService = authService;
-        _currentUser = currentUser;
+        _api = api;
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync("//Login");
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -34,25 +30,22 @@ public partial class Login : ContentPage
         LoginButton.IsEnabled = false;
         try
         {
-            var result = await _authService.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
-            if (!result.Success || result.Data is null)
-            {
-                ErrorLabel.Text = result.ErrorMessage ?? "Login failed.";
-                ErrorLabel.IsVisible = true;
-                return;
-            }
-
-            _currentUser.SetUser(result.Data.UserId, EmailEntry.Text.Trim());
+            await _api.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
             await Shell.Current.GoToAsync(nameof(Home));
         }
-        catch (MongoException)
+        catch (VobaApiException ex)
         {
-            ErrorLabel.Text = "Database unavailable. Check VOBA_MONGO_CONNECTION_STRING and Atlas status.";
+            ErrorLabel.Text = ex.Message;
             ErrorLabel.IsVisible = true;
         }
-        catch (Exception)
+        catch (HttpRequestException)
         {
-            ErrorLabel.Text = "Login unavailable. Check app configuration and try again.";
+            ErrorLabel.Text = "Backend unavailable. Start the Voba backend and try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        catch (TaskCanceledException)
+        {
+            ErrorLabel.Text = "Backend timed out. Try again.";
             ErrorLabel.IsVisible = true;
         }
         finally

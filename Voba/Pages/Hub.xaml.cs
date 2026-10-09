@@ -1,15 +1,15 @@
-using Voba.Services;
+using Voba.Client;
 
 namespace Voba.Pages;
 
 public partial class Hub : ContentPage
 {
-    private readonly ICurrentUserService _currentUser;
+    private readonly IVobaApiClient _api;
 
-    public Hub(ICurrentUserService currentUser)
+    public Hub(IVobaApiClient api)
     {
         InitializeComponent();
-        _currentUser = currentUser;
+        _api = api;
     }
 
     private async void OnNewRecipeClicked(object sender, EventArgs e) =>
@@ -20,7 +20,14 @@ public partial class Hub : ContentPage
 
     private async void OnSignOutTapped(object sender, TappedEventArgs e)
     {
-        _currentUser.Clear();
+        try
+        {
+            await _api.LogoutAsync();
+        }
+        catch (Exception)
+        {
+            await DisplayAlert("Sign out", "Signed out locally. Server session could not be revoked.", "OK");
+        }
         await Shell.Current.GoToAsync("//Login");
     }
 }

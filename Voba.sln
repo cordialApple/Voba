@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voba.Seed", "Voba.Seed\Voba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voba.Seed.Tests", "Voba.Seed.Tests\Voba.Seed.Tests.csproj", "{D6F9E1A3-C491-4E6C-95E8-CF07F279F679}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voba.Client", "Voba.Client\Voba.Client.csproj", "{C13D8E3D-F4CD-4B4A-BF13-D13CB2C0688C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voba.Client.Tests", "Voba.Client.Tests\Voba.Client.Tests.csproj", "{BBB28D6E-C897-4DC1-8883-47D0FF2CA8ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +96,14 @@ Global
 		{D6F9E1A3-C491-4E6C-95E8-CF07F279F679}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F9E1A3-C491-4E6C-95E8-CF07F279F679}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F9E1A3-C491-4E6C-95E8-CF07F279F679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C13D8E3D-F4CD-4B4A-BF13-D13CB2C0688C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C13D8E3D-F4CD-4B4A-BF13-D13CB2C0688C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C13D8E3D-F4CD-4B4A-BF13-D13CB2C0688C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C13D8E3D-F4CD-4B4A-BF13-D13CB2C0688C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB28D6E-C897-4DC1-8883-47D0FF2CA8ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB28D6E-C897-4DC1-8883-47D0FF2CA8ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB28D6E-C897-4DC1-8883-47D0FF2CA8ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB28D6E-C897-4DC1-8883-47D0FF2CA8ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

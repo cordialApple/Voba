@@ -1,32 +1,24 @@
-﻿using Voba.AI.Pipeline.Handlers;
-using Voba.Models;
-using Voba.Services;
+using Voba.Client;
+using Voba.Contracts;
 
 namespace Voba.Pages;
 
 public partial class Forum : ContentPage
 {
-    private readonly GemmaIdeationHandler _ideationHandler;
-    private readonly RecipeGenerationCoordinator _coordinator;
+    private readonly IVobaApiClient _api;
 
-    public Forum(GemmaIdeationHandler ideationHandler, SpoonacularPricingHandler pricingHandler,
-        RecipeGenerationCoordinator coordinator)
+    public Forum(IVobaApiClient api)
     {
         InitializeComponent();
-
-        // Assemble the chain: ideation produces recipes, then enrichment adds
-        // Spoonacular cost + nutrition before the user picks one.
-        ideationHandler.SetNext(pricingHandler);
-        _ideationHandler = ideationHandler;
-        _coordinator = coordinator;
+        _api = api;
     }
 
     private async void OnGenerateClicked(object sender, EventArgs e)
     {
-        if (!RecipeGenerationPolicy.TryParseInputs(BudgetInput.Text, ServingsInput.Text,
-                out var budget, out var servings))
+        if (!decimal.TryParse(BudgetInput.Text, out var budget) || budget is <= 0 or > 1_000_000 ||
+            !int.TryParse(ServingsInput.Text, out var servings) || servings is <= 0 or > 1000)
         {
-            ErrorLabel.Text = "Enter a positive budget and serving size.";
+            ErrorLabel.Text = "Enter a budget up to $1,000,000 and 1–1,000 servings.";
             ErrorLabel.IsVisible = true;
             return;
         }
@@ -38,53 +30,31 @@ public partial class Forum : ContentPage
 
         try
         {
-            // Restrictions
             var restrictions = new List<string>();
-
             var dietMap = new Dictionary<CheckBox, string>
             {
-                { ChkVegan,       "Vegan"       },
-                { ChkVegetarian,  "Vegetarian"  },
-                { ChkKeto,        "Keto"        },
-                { ChkPaleo,       "Paleo"       },
-                { ChkGlutenFree,  "Gluten-Free" },
-                { ChkDairyFree,   "Dairy-Free"  },
-                { ChkHalal,       "Halal"       },
-                { ChkKosher,      "Kosher"      },
+                { ChkVegan, "Vegan" },
+                { ChkVegetarian, "Vegetarian" },
+                { ChkKeto, "Keto" },
+                { ChkPaleo, "Paleo" },
+                { ChkGlutenFree, "Gluten-Free" },
+                { ChkDairyFree, "Dairy-Free" },
+                { ChkHalal, "Halal" },
+                { ChkKosher, "Kosher" }
             };
-
             foreach (var (checkbox, name) in dietMap)
-                if (checkbox.IsChecked) restrictions.Add(name);
-
+                if (checkbox.IsChecked)
+                    restrictions.Add(name);
             if (!string.IsNullOrWhiteSpace(AllergyInput.Text))
-            {
-                restrictions.AddRange(
-                    AllergyInput.Text
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(a => a.Trim())
-                        .Where(a => !string.IsNullOrWhiteSpace(a)));
-            }
-            // Pushes to recipe generation
-            var context = new RecipeGenerationContext
-            {
-                ServingSize = servings,
-                TargetBudget = budget,
-                DietaryRestrictions = restrictions,
-                CuisinePreference = string.IsNullOrWhiteSpace(CuisineInput.Text)
-                                           ? null
-                                           : CuisineInput.Text.Trim()
-            };
+                restrictions.AddRange(AllergyInput.Text
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(value => value.Trim())
+                    .Where(value => !string.IsNullOrWhiteSpace(value)));
 
-            var minimumSource = AppConfiguration.UseFakeEnrichment
-                ? RecipeDataSource.Synthetic : RecipeDataSource.Real;
-            context = await _coordinator.GetOptionsAsync(context, minimumSource, async generated =>
-            {
-                await _ideationHandler.HandleAsync(generated);
-                generated.ProposedOptions = RecipeGenerationPolicy.WithinBudget(
-                    generated.ProposedOptions, generated.TargetBudget, generated.ServingSize);
-            });
-
-            if (context.ProposedOptions.Count == 0)
+            var request = new GenerationOptionsRequest(budget, servings, restrictions,
+                string.IsNullOrWhiteSpace(CuisineInput.Text) ? null : CuisineInput.Text.Trim());
+            var options = await _api.GetOptionsAsync(request);
+            if (options.Options.Count == 0)
             {
                 ErrorLabel.Text = "No recipes returned. Try adjusting your budget or restrictions.";
                 ErrorLabel.IsVisible = true;
@@ -92,7 +62,7 @@ public partial class Forum : ContentPage
             }
 
             await Shell.Current.GoToAsync(nameof(RecipeSelect),
-                new Dictionary<string, object> { ["Context"] = context });
+                new Dictionary<string, object> { ["Options"] = options, ["Servings"] = servings });
         }
         catch (Exception ex)
         {
@@ -107,8 +77,6 @@ public partial class Forum : ContentPage
         }
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
+    private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync(nameof(Home));
-    }
 }

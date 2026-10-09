@@ -1,79 +1,78 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
-using Voba.Interfaces;
-using Voba.Models;
-using Voba.Services;
+using System.Net;
+using Voba.Client;
+using Voba.Contracts;
 
 namespace Voba.Pages;
 
-[QueryProperty(nameof(Context), "Context")]
+[QueryProperty(nameof(FullRecipe), "FullRecipe")]
+[QueryProperty(nameof(SavedRecipe), "SavedRecipe")]
 public partial class Recipe : ContentPage
 {
-    private readonly IRecipeRepository? _recipeRepository;
-    private readonly ICurrentUserService? _currentUser;
-    private RecipeGenerationContext _context;
+    private readonly IVobaApiClient? _api;
+    private FullRecipeResponse? _full;
+    private SavedRecipeResponse? _saved;
 
-    public RecipeGenerationContext Context
+    public FullRecipeResponse? FullRecipe
     {
         set
         {
-            _context = value;
+            _full = value;
+            _saved = null;
             PopulatePage();
         }
     }
 
-    // Runtime constructor — resolved by DI when navigating to the page.
-    public Recipe(IRecipeRepository recipeRepository, ICurrentUserService currentUser)
+    public SavedRecipeResponse? SavedRecipe
     {
-        InitializeComponent();
-        _recipeRepository = recipeRepository;
-        _currentUser = currentUser;
-        _context = BuildDesignTimeContext();
-        PopulatePage();
+        set
+        {
+            _saved = value;
+            _full = null;
+            PopulatePage();
+        }
     }
 
-    // Parameterless constructor — used by the XAML designer/previewer only.
+    public Recipe(IVobaApiClient api)
+    {
+        InitializeComponent();
+        _api = api;
+    }
+
     public Recipe()
     {
         InitializeComponent();
-        _context = BuildDesignTimeContext();
-        PopulatePage();
     }
 
     private void PopulatePage()
     {
-        var recipe = _context.FinalRecipe;
-        var option = _context.SelectedOption;
+        var option = _full?.SelectedOption;
+        RecipeTitleLabel.Text = _full?.Title ?? _saved?.Title ?? "Your Recipe";
+        ServingsLabel.Text = _full?.Servings.ToString() ?? "—";
+        var cost = option?.TotalCost ?? _saved?.TotalCost ?? 0m;
+        CostLabel.Text = cost > 0 ? $"${cost:F2}" : "—";
+        SourceLabel.Text = option is not null
+            ? RecipePresentation.SourceLabel(option.CostSource, option.NutritionSource,
+                option.Nutrition is not null)
+            : _saved is not null
+                ? RecipePresentation.SourceLabel(_saved.CostSource, _saved.NutritionSource,
+                    _saved.Nutrition is not null)
+                : string.Empty;
+        BudgetLabel.Text = _full?.Budget > 0 ? $"${_full.Budget:F2}" : "—";
+        SaveRecipeButton.IsVisible = _full is not null && _saved is null;
 
-        RecipeTitleLabel.Text =
-            recipe?.Title is { Length: > 0 } t ? t :
-            option?.Name is { Length: > 0 } n ? n :
-            "Your Recipe";
-
-        ServingsLabel.Text = _context.ServingSize > 0
-            ? _context.ServingSize.ToString() : "—";
-
-        // Derive TotalCost from Gemma's EstimatedCost if Spoonacular didn't price it
-        if (option != null && option.TotalCost == 0 && option.EstimatedCost > 0)
-            option.TotalCost = Math.Round(option.EstimatedCost * _context.ServingSize, 2);
-
-        CostLabel.Text =
-            option?.TotalCost > 0 ? $"${option.TotalCost:F2}" :
-            option?.EstimatedCost > 0 ? $"${option.EstimatedCost:F2}" : "—";
-
-        SourceLabel.Text = option is null ? string.Empty : RecipeSourceLabels.ForOption(option);
-
-        BudgetLabel.Text = _context.TargetBudget > 0
-            ? $"${_context.TargetBudget:F2}" : "—";
-
-        BuildDietaryTags();
-        BuildNutrition(recipe?.Nutrition ?? option?.Nutrition);
-        BuildIngredientsList(option);
-        BuildInstructions(recipe?.Instructions);
+        BuildDietaryTags(_full?.CuisinePreference, _full?.DietaryRestrictions);
+        BuildNutrition(option?.Nutrition ?? _saved?.Nutrition);
+        BuildIngredientsList(option?.Ingredients ?? _saved?.Ingredients
+            .Select(ingredient => ingredient.Amount > 0
+                ? $"{ingredient.Amount:0.##} {ingredient.Unit} {ingredient.Name}".Trim()
+                : ingredient.Name).ToArray());
+        BuildInstructions(_full?.Instructions ?? _saved?.Instructions);
     }
 
-    private void BuildNutrition(NutritionInfo? nutrition)
+    private void BuildNutrition(NutritionResponse? nutrition)
     {
-        if (nutrition is null || !nutrition.HasData)
+        if (nutrition is null)
         {
             NutritionPanel.IsVisible = false;
             return;
@@ -86,18 +85,17 @@ public partial class Recipe : ContentPage
         NutritionPanel.IsVisible = true;
     }
 
-    private void BuildDietaryTags()
+    private void BuildDietaryTags(string? cuisine, IReadOnlyList<string>? restrictions)
     {
-        bool hasContent = !string.IsNullOrWhiteSpace(_context.CuisinePreference)
-                          || _context.DietaryRestrictions?.Count > 0;
-        if (!hasContent) return;
+        DietaryTagsLayout.Children.Clear();
+        DietaryTagsLayout.IsVisible = !string.IsNullOrWhiteSpace(cuisine) || restrictions?.Count > 0;
+        if (!DietaryTagsLayout.IsVisible)
+            return;
 
-        DietaryTagsLayout.IsVisible = true;
+        if (!string.IsNullOrWhiteSpace(cuisine))
+            DietaryTagsLayout.Add(Chip(cuisine, "#d4e8d2", "#2e4d2c"));
 
-        if (!string.IsNullOrWhiteSpace(_context.CuisinePreference))
-            DietaryTagsLayout.Add(Chip(_context.CuisinePreference!, "#d4e8d2", "#2e4d2c"));
-
-        foreach (var r in _context.DietaryRestrictions ?? [])
+        foreach (var r in restrictions ?? [])
             DietaryTagsLayout.Add(Chip(r, "#f5e6d0", "#5c3d1e"));
     }
 
@@ -118,23 +116,17 @@ public partial class Recipe : ContentPage
         }
     };
 
-    private void BuildIngredientsList(RecipeOption? option)
+    private void BuildIngredientsList(IReadOnlyList<string>? ingredients)
     {
-        if (option?.Ingredients is not { Count: > 0 })
+        IngredientsLayout.Children.Clear();
+        if (ingredients is not { Count: > 0 })
         {
-            IngredientsLayout.Add(new Label
-            {
-                Text = "",
-                TextColor = Color.FromArgb("#7aaa78"),
-                FontSize = 13,
-                Padding = new Thickness(16, 12)
-            });
             return;
         }
 
-        for (int i = 0; i < option.Ingredients.Count; i++)
+        for (int i = 0; i < ingredients.Count; i++)
         {
-            bool isLast = i == option.Ingredients.Count - 1;
+            bool isLast = i == ingredients.Count - 1;
 
             var row = new Grid
             {
@@ -160,7 +152,7 @@ public partial class Recipe : ContentPage
 
             row.Add(new Label
             {
-                Text = option.Ingredients[i],
+                Text = ingredients[i],
                 TextColor = Color.FromArgb("#dff0de"),
                 FontSize = 13,
                 VerticalOptions = LayoutOptions.Center
@@ -182,7 +174,11 @@ public partial class Recipe : ContentPage
 
     private void BuildInstructions(string? raw)
     {
-        if (string.IsNullOrWhiteSpace(raw)) { ShowErrorCard(""); return; }
+        StepsLayout.Children.Clear();
+        PlainInstructionsCard.IsVisible = false;
+        StepCountBadge.IsVisible = false;
+        if (string.IsNullOrWhiteSpace(raw))
+            return;
         var steps = ParseNumberedSteps(raw);
         if (steps.Count == 0) { ShowErrorCard(raw.Trim()); return; }
 
@@ -293,33 +289,32 @@ public partial class Recipe : ContentPage
     {
         await AnimateButton(SaveRecipeButton);
 
-        if (_recipeRepository is null || _currentUser is null)
+        if (_api is null || _full is null)
         {
             await DisplayAlert("Unavailable", "Saving isn't available right now.", "OK");
             return;
         }
 
-        if (!_currentUser.IsAuthenticated || string.IsNullOrEmpty(_currentUser.UserId))
-        {
-            await DisplayAlert("Sign in required", "Please sign in to save recipes.", "OK");
-            return;
-        }
-
-        if (_context.SelectedOption is null)
-        {
-            await DisplayAlert("Nothing to save", "No recipe is loaded yet.", "OK");
-            return;
-        }
-
+        SaveRecipeButton.IsEnabled = false;
         try
         {
-            var recipe = RecipeMapper.ToRecipe(_context, _currentUser.UserId);
-            await _recipeRepository.SaveAsync(recipe);
+            _saved = await _api.SaveAsync(_full.DraftId, _full.DraftVersion);
+            _full = null;
+            PopulatePage();
             await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
+        }
+        catch (VobaApiException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+        {
+            await DisplayAlert("Selection changed", "Select the recipe again before saving.", "OK");
+            await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)
         {
             await DisplayAlert("Save failed", ex.Message, "OK");
+        }
+        finally
+        {
+            SaveRecipeButton.IsEnabled = true;
         }
     }
 
@@ -330,23 +325,4 @@ public partial class Recipe : ContentPage
         btn.Opacity = 1.0;
     }
 
-    private static RecipeGenerationContext BuildDesignTimeContext() => new()
-    {
-        ServingSize = 4,
-        TargetBudget = 25.00m,
-        CuisinePreference = "",
-        DietaryRestrictions = [""],
-        SelectedOption = new RecipeOption
-        {
-            Name = "",
-            EstimatedCost = 4.63m,
-            TotalCost = 18.50m,
-            Ingredients = []
-        },
-        FinalRecipe = new FullRecipe
-        {
-            Title = "",
-            Instructions = ""
-        }
-    };
 }
