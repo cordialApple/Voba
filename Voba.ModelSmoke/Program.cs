@@ -7,6 +7,13 @@ var model = Environment.GetEnvironmentVariable("VOBA_OLLAMA_MODEL") ?? "gemma3:4
 var endpoint = new Uri(Environment.GetEnvironmentVariable("VOBA_OLLAMA_ENDPOINT")
     ?? "http://localhost:11434");
 var kernel = Kernel.CreateBuilder().AddOllamaChatCompletion(model, endpoint).Build();
+var mongoUri = Environment.GetEnvironmentVariable("VOBA_TEST_MONGO_URI");
+if (!string.IsNullOrWhiteSpace(mongoUri))
+{
+    await LiveSmoke.RunAsync(kernel, mongoUri, model);
+    return;
+}
+
 var ideation = new GemmaIdeationHandler(kernel);
 ideation.SetNext(new SpoonacularPricingHandler(new FakeEnrichmentService()));
 var context = new RecipeGenerationContext { ServingSize = 2, TargetBudget = 100m };
