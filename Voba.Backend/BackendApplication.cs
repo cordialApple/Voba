@@ -59,7 +59,7 @@ public static class BackendApplication
         builder.Services.AddSingleton(sp => new RecipeGenerationCoordinator(
             sp.GetRequiredService<IRecipeGenerationCache>(),
             sp.GetRequiredService<TimeProvider>(), TimeSpan.FromHours(24), model,
-            "recipe-prompts-v1"));
+            RecipeGenerationCacheVersion.Current));
         if (enrichmentMode == "fake")
             builder.Services.AddSingleton<IRecipeEnrichmentService, FakeEnrichmentService>();
         else

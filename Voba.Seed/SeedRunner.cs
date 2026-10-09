@@ -67,8 +67,8 @@ public static class SeedRunner
         var model = Environment.GetEnvironmentVariable("VOBA_OLLAMA_MODEL") ?? "gemma3:4b";
         foreach (var (key, context) in new[]
         {
-            (RecipeGenerationCacheKey.CreateOptions(options, model, "recipe-prompts-v1"), options),
-            (RecipeGenerationCacheKey.CreateFull(full, model, "recipe-prompts-v1"), full)
+            (RecipeGenerationCacheKey.CreateOptions(options, model, RecipeGenerationCacheVersion.Current), options),
+            (RecipeGenerationCacheKey.CreateFull(full, model, RecipeGenerationCacheVersion.Current), full)
         })
         {
             await cache.StoreAsync(new RecipeGenerationCacheEntry(key,
