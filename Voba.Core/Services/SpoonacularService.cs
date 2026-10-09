@@ -15,14 +15,14 @@ namespace Voba.Spoonacular
         private readonly RecipesApi _recipesApi;
 
         public SpoonacularService()
+            : this(new Configuration { BasePath = "https://api.spoonacular.com" })
         {
-            var config = new Configuration
-            {
-                BasePath = "https://api.spoonacular.com"
-            };
+        }
 
-            config.ApiKey["x-api-key"] = ApiSettings.SpoonacularApiKey;
-
+        public SpoonacularService(Configuration config)
+        {
+            if (!config.ApiKey.ContainsKey("x-api-key"))
+                config.ApiKey["x-api-key"] = ApiSettings.SpoonacularApiKey;
             _ingredientsApi = new IngredientsApi(config);
             _recipesApi = new RecipesApi(config);
         }

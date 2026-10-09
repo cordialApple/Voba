@@ -1,4 +1,5 @@
 using Voba.Models;
+using System.Text.Json;
 using Voba.Interfaces;
 using Voba.Services;
 using Xunit;
@@ -142,6 +143,36 @@ public class GenerationCacheTests
 
         Assert.Equal("Real", real.ProposedOptions[0].Name);
         Assert.Equal(RecipeDataSource.Real, cache.Entry!.Source);
+    }
+
+    [Fact]
+    public async Task Old_provider_contract_cache_entry_is_not_reused()
+    {
+        var cache = new MemoryCache();
+        var request = Request();
+        var old = new RecipeGenerationContext
+        {
+            ProposedOptions = [Option("Old underpriced")]
+        };
+        var now = DateTime.UtcNow;
+        await cache.StoreAsync(new RecipeGenerationCacheEntry(
+            RecipeGenerationCacheKey.CreateOptions(request, "model", "recipe-prompts-v1"),
+            RecipeDataSource.Real, JsonSerializer.Serialize(old), now, now.AddHours(1)));
+        var coordinator = new RecipeGenerationCoordinator(cache, TimeProvider.System,
+            TimeSpan.FromHours(1), "model", RecipeGenerationCacheVersion.Current);
+        var calls = 0;
+
+        var result = await coordinator.GetOptionsAsync(request, RecipeDataSource.Real, context =>
+        {
+            calls++;
+            context.ProposedOptions = [Option("Repriced")];
+            return Task.CompletedTask;
+        });
+
+        Assert.Equal(1, calls);
+        Assert.Equal("Repriced", result.ProposedOptions[0].Name);
+        Assert.Equal(RecipeGenerationCacheKey.CreateOptions(request, "model", RecipeGenerationCacheVersion.Current),
+            cache.Entry!.Key);
     }
 
     [Fact]

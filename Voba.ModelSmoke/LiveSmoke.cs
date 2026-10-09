@@ -38,7 +38,7 @@ internal static class LiveSmoke
 
             var cache = new MongoRecipeGenerationCache(database, cacheCollection);
             var coordinator = new RecipeGenerationCoordinator(cache, TimeProvider.System,
-                TimeSpan.FromHours(1), model, "recipe-prompts-v1");
+                TimeSpan.FromHours(1), model, RecipeGenerationCacheVersion.Current);
             var ideation = new GemmaIdeationHandler(kernel);
             ideation.SetNext(new SpoonacularPricingHandler(new FakeEnrichmentService()));
             var optionCalls = 0;
