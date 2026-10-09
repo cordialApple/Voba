@@ -244,5 +244,7 @@ public static class BackendApplication
             ? new NutritionResponse(nutrition.Calories, nutrition.ProteinGrams,
                 nutrition.FatGrams, nutrition.CarbGrams)
             : null,
-        recipe.DataSource.ToString(), recipe.NutritionSource.ToString(), recipe.SavedAt);
+        recipe.DataSource.ToString(), recipe.NutritionSource.ToString(), recipe.SavedAt,
+        recipe.Servings, recipe.Budget, recipe.DietaryRestrictions,
+        recipe.CuisinePreference);
 }

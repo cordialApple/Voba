@@ -60,7 +60,7 @@ public sealed class BackendHttpOwnershipTests
             (await client.PostAsJsonAsync("/api/generation/options",
                 new GenerationOptionsRequest(20m, 2, [], new string('x', 20_000)))).StatusCode);
         var optionsResponse = await client.PostAsJsonAsync("/api/generation/options",
-            new { budget = 20m, servings = 2, dietaryRestrictions = Array.Empty<string>(),
+            new { budget = 20m, servings = 2, dietaryRestrictions = new[] { "gluten-free" },
                 cuisinePreference = "Italian", userId = UserB, costSource = "Real" });
         Assert.Equal(HttpStatusCode.OK, optionsResponse.StatusCode);
         var options = await optionsResponse.Content.ReadFromJsonAsync<GenerationOptionsResponse>();
@@ -108,6 +108,10 @@ public sealed class BackendHttpOwnershipTests
         var saved = await save.Content.ReadFromJsonAsync<SavedRecipeResponse>();
         Assert.NotNull(saved);
         Assert.Equal("Synthetic", saved.CostSource);
+        Assert.Equal(2, saved.Servings);
+        Assert.Equal(20m, saved.Budget);
+        Assert.Equal(["gluten-free"], saved.DietaryRestrictions);
+        Assert.Equal("Italian", saved.CuisinePreference);
         Assert.Equal(UserA, recipes.LastSaved?.UserId);
 
         Authorize(client, "b");
@@ -119,8 +123,13 @@ public sealed class BackendHttpOwnershipTests
         Assert.Empty(foreignList!);
 
         Authorize(client, "a");
-        Assert.Equal(HttpStatusCode.OK,
-            (await client.GetAsync($"/api/recipes/{saved.Id}")).StatusCode);
+        var reopened = await client.GetFromJsonAsync<SavedRecipeResponse>(
+            $"/api/recipes/{saved.Id}");
+        Assert.NotNull(reopened);
+        Assert.Equal(2, reopened.Servings);
+        Assert.Equal(20m, reopened.Budget);
+        Assert.Equal(["gluten-free"], reopened.DietaryRestrictions);
+        Assert.Equal("Italian", reopened.CuisinePreference);
         Assert.Equal(HttpStatusCode.NoContent,
             (await client.DeleteAsync($"/api/recipes/{saved.Id}")).StatusCode);
     }
