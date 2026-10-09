@@ -28,6 +28,18 @@ jobs:
       - name: Test app data
         run: dotnet test Voba.AppData.Tests/Voba.AppData.Tests.csproj -c Release
 
+      - name: Test backend
+        run: dotnet test Voba.Backend.Tests/Voba.Backend.Tests.csproj -c Release
+
+      - name: Test seed
+        run: dotnet test Voba.Seed.Tests/Voba.Seed.Tests.csproj -c Release
+
+      - name: Build backend acceptance
+        run: dotnet build Voba.Backend.AcceptanceTests/Voba.Backend.AcceptanceTests.csproj -c Release
+
+      - name: Build seed
+        run: dotnet build Voba.Seed/Voba.Seed.csproj -c Release
+
       - name: Build model smoke
         run: dotnet build Voba.ModelSmoke/Voba.ModelSmoke.csproj -c Release
 
