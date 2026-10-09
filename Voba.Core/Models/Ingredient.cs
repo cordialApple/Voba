@@ -29,6 +29,7 @@ namespace Voba.Models
 
         public Ingredient(string name, decimal quantity, string unit)
         {
+            Id = ObjectId.GenerateNewId().ToString();
             Name = name;
             Quantity = quantity;
             Unit = unit;

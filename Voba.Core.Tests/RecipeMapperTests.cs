@@ -141,5 +141,28 @@ namespace Voba.Core.Tests
             Assert.Equal(RecipeDataSource.Real, restored.DataSource);
             Assert.Equal(RecipeDataSource.Synthetic, restored.NutritionSource);
         }
+
+        [Fact]
+        public void Generated_ingredients_serialize_inside_saved_recipe()
+        {
+            var context = new RecipeGenerationContext
+            {
+                SelectedOption = new RecipeOption
+                {
+                    Name = "Bean stew",
+                    Ingredients = new List<string> { "beans", "tomato" }
+                }
+            };
+            var recipe = RecipeMapper.ToRecipe(context, "507f1f77bcf86cd799439011");
+            typeof(Recipe).GetProperty(nameof(Recipe.Id))!.SetValue(recipe, ObjectId.GenerateNewId().ToString());
+
+            var restored = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Recipe>(recipe.ToBson());
+
+            Assert.Equal(new[] { "beans", "tomato" },
+                restored.Ingredients.Select(ingredient => ingredient.Name));
+            Assert.All(restored.Ingredients, ingredient => Assert.True(ObjectId.TryParse(ingredient.Id, out _)));
+            Assert.Equal(recipe.Ingredients.Select(ingredient => ingredient.Id),
+                restored.Ingredients.Select(ingredient => ingredient.Id));
+        }
     }
 }

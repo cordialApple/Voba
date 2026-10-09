@@ -8,10 +8,24 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.74.0-alpha" />
+    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.17.0" />
     <ProjectReference Include="..\Voba.Core\Voba.Core.csproj" />
+    <ProjectReference Include="..\Voba.Persistence\Voba.Persistence.csproj" />
     <Compile Include="..\Voba\AI\Pipeline\RecipePipelineHandler.cs" Link="RecipePipelineHandler.cs" />
     <Compile Include="..\Voba\AI\Pipeline\Handlers\GemmaIdeationHandler.cs" Link="GemmaIdeationHandler.cs" />
     <Compile Include="..\Voba\AI\Pipeline\Handlers\SpoonacularPricingHandler.cs" Link="SpoonacularPricingHandler.cs" />
     <Compile Include="..\Voba\AI\Pipeline\Handlers\Gemmafullrecipehandler.cs" Link="GemmaFullRecipeHandler.cs" />
+    <Compile Include="..\Voba\Services\AppConfiguration.cs" Link="AppConfiguration.cs" />
+    <Compile Include="..\Voba\Services\AuthService.cs" Link="AuthService.cs" />
+    <Compile Include="..\Voba\Services\BcryptPasswordHasher.cs" Link="BcryptPasswordHasher.cs" />
+    <Compile Include="..\Voba\Services\CurrentUserService.cs" Link="CurrentUserService.cs" />
+    <Compile Include="..\Voba\Services\JwtService.cs" Link="JwtService.cs" />
+    <Compile Include="..\Voba\Repositories\UserRepository.cs" Link="UserRepository.cs" />
+    <Compile Include="..\Voba\Repositories\AuthDataRepository.cs" Link="AuthDataRepository.cs" />
+    <Compile Include="..\Voba\Repositories\RecipeRepository.cs" Link="RecipeRepository.cs" />
+    <Compile Include="..\Voba\Repositories\RepositoryIndexInitializer.cs" Link="RepositoryIndexInitializer.cs" />
   </ItemGroup>
 </Project>

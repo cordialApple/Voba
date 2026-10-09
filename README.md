@@ -41,4 +41,14 @@ dotnet build Voba/Voba.csproj -f net9.0-windows10.0.19041.0
 dotnet run --project Voba.ModelSmoke/Voba.ModelSmoke.csproj
 ```
 
-`Voba.ModelSmoke` uses local Ollama and fake enrichment through app generation handlers; no MongoDB or Spoonacular call. `Voba.Persistence.IntegrationTests` needs `VOBA_TEST_MONGO_URI`. It uses `VobaDemoTests` by default, or `VOBA_TEST_MONGO_DATABASE` when set, and creates and removes only its own GUID-named collections. Unit tests need no Mongo server or Spoonacular key. Demo generation still needs Ollama. Synthetic enrichment means local demo prices and nutrition, not real market data. Diet and allergy handling filters model output but cannot guarantee medical safety.
+Without `VOBA_TEST_MONGO_URI`, `Voba.ModelSmoke` checks local Ollama and fake enrichment without MongoDB or Spoonacular. With that variable set, it also checks live sign-up, login, generation cache, recipe save/reload, source precedence, and logout in `VOBA_TEST_MONGO_DATABASE` (default `VobaDemoTests`). It deletes its GUID user, auth data, saved recipe, and cache collection. Test collections and indexes remain.
+
+`Voba.Persistence.IntegrationTests` needs `VOBA_TEST_MONGO_URI`; it creates and removes only its own GUID-named collections in that test database. Unit tests need no Mongo server or Spoonacular key. Demo generation still needs Ollama. Synthetic enrichment means local demo prices and nutrition, not real market data. Diet and allergy handling filters model output but cannot guarantee medical safety.
+
+On configured Windows machine, `scripts/Invoke-VobaDemo.ps1` reads `%LOCALAPPDATA%\Voba\demo-credentials.dpapi`, protected for current Windows user and stored outside Git. It passes MongoDB credentials to child process through environment, then restores previous values. File must already exist from scoped Atlas access setup.
+
+```powershell
+.\scripts\Invoke-VobaDemo.ps1 -Task Integration
+.\scripts\Invoke-VobaDemo.ps1 -Task Smoke
+.\scripts\Invoke-VobaDemo.ps1 -Task App
+```
