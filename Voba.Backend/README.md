@@ -1,6 +1,6 @@
 # Voba backend
 
-Run the API on loopback with `dotnet run --project Voba.Backend/Voba.Backend.csproj -- --urls http://127.0.0.1:5058`. Set these process environment variables first:
+Run the API on loopback with `scripts/Invoke-VobaDemo.ps1 -Task Backend` on `http://127.0.0.1:5057`. For manual startup, use `dotnet run --project Voba.Backend/Voba.Backend.csproj -- --urls http://127.0.0.1:5057` and set these process environment variables first:
 
 - `VOBA_MONGO_CONNECTION_STRING`: server Mongo URI. Required.
 - `VOBA_JWT_SECRET`: stable Base64 key decoding to at least 32 bytes. Required; keep outside Git. Changing it invalidates all access tokens.
@@ -10,7 +10,7 @@ Run the API on loopback with `dotnet run --project Voba.Backend/Voba.Backend.csp
 - `VOBA_ENRICHMENT_MODE`: `fake` or `real`; defaults to `fake`.
 - `VOBA_SPOONACULAR_API_KEY`: required only for `real` mode.
 
-The desktop needs only the API base URL and user bearer tokens. Mongo URI, JWT signing key, Ollama connection, and Spoonacular key stay in the backend process.
+The desktop needs only `VOBA_API_BASE_URL` (default `http://127.0.0.1:5057`) and user bearer tokens. Use `scripts/Invoke-VobaDemo.ps1 -Task App` in another process. Mongo URI, JWT signing key, Ollama connection, and Spoonacular key stay in the backend process. Remote API URLs require HTTPS.
 
 Auth routes: `POST /api/auth/register`, `/login`, `/refresh`, `/logout`. Generation routes: `POST /api/generation/options`, then `POST /api/generation/drafts/{draftId}/select`. Recipe routes: `POST /api/recipes`, `GET /api/recipes`, `GET /api/recipes/{id}`, `DELETE /api/recipes/{id}`. Protected routes validate the access token and active Mongo session on every request. Register returns an account; call login separately for tokens. Save needs the `draftId` and `draftVersion` from the selected full recipe. Old versions return `409`.
 
