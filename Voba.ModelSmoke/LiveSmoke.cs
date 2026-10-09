@@ -53,6 +53,8 @@ internal static class LiveSmoke
             Require(options.ProposedOptions.Count > 0, "Gemma returned no usable options.");
             Require(options.ProposedOptions.All(option => option.DataSource == RecipeDataSource.Synthetic),
                 "Option source mismatch.");
+            Require(options.ProposedOptions.All(option => DietaryCompliancePolicy.AllowsOption(
+                    option, options.DietaryRestrictions)), "Dietary restriction violated by option.");
             var optionsHit = await coordinator.GetOptionsAsync(Request(), RecipeDataSource.Synthetic,
                 _ => throw new InvalidOperationException("Options cache miss."));
             Require(optionCalls == 1 && optionsHit.ProposedOptions.Count > 0,
@@ -70,6 +72,9 @@ internal static class LiveSmoke
                 });
             Require(!string.IsNullOrWhiteSpace(full.FinalRecipe?.Instructions),
                 "Gemma returned no cooking instructions.");
+            Require(DietaryCompliancePolicy.AllowsFullRecipe(full.SelectedOption!,
+                    full.FinalRecipe!.Instructions, full.DietaryRestrictions),
+                "Dietary restriction violated by instructions.");
             var fullHit = await coordinator.GetFullRecipeAsync(options, RecipeDataSource.Synthetic,
                 _ => throw new InvalidOperationException("Full recipe cache miss."));
             Require(fullCalls == 1 && fullHit.FinalRecipe?.Instructions == full.FinalRecipe!.Instructions,
@@ -121,7 +126,8 @@ internal static class LiveSmoke
     private static RecipeGenerationContext Request() => new()
     {
         ServingSize = 2,
-        TargetBudget = 100m
+        TargetBudget = 100m,
+        DietaryRestrictions = ["vegan"]
     };
 
     private static void Require(bool condition, string message)
