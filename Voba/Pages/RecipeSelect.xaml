@@ -72,6 +72,8 @@
                         </VerticalStackLayout>
                     </Grid>
 
+                    <Label x:Name="Card1Source" FontSize="11" TextColor="#6e7a6d" />
+
                     <Button Text="SELECT THIS RECIPE"
                             BackgroundColor="#8ba888"
                             TextColor="#f1ebe1"
@@ -125,6 +127,8 @@
                                    FontSize="18" FontAttributes="Bold" TextColor="#2e4d2c" />
                         </VerticalStackLayout>
                     </Grid>
+
+                    <Label x:Name="Card2Source" FontSize="11" TextColor="#6e7a6d" />
 
                     <Button Text="SELECT THIS RECIPE"
                             BackgroundColor="#8ba888"

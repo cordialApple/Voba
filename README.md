@@ -1,55 +1,44 @@
-# Voba — AI Recipe Generation
+# Voba
 
-A .NET MAUI app that uses a local Gemma 3:4b model (via Ollama) to generate
-budget-aware, dietary-safe recipe ideas entirely on localhost.
+.NET MAUI recipe demo. Gemma through local Ollama makes meal options and cooking steps. MongoDB stores users, saved recipes, and generation cache. Enrichment adds cost and nutrition from demo data or live Spoonacular.
 
----
+Original demo:
 
-## Prerequisites
+<img width="800" height="430" alt="Original Voba recipe demo" src="https://github.com/user-attachments/assets/5915231c-eda0-4742-80a8-f7e60dacfbba" />
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
-- [.NET MAUI workload](https://learn.microsoft.com/en-us/dotnet/maui/get-started/installation)
-- [Ollama](https://ollama.com/) installed and running
-- Gemma 3:4b pulled: `ollama pull gemma3:4b`
+## Run on Windows
 
----
+Need .NET 9 MAUI workload, Ollama, `gemma3:4b`, and reachable MongoDB. Atlas works; set connection string through environment. No secret belongs in Git.
 
-## Running locally
-
-```bash
-# 1. Start Ollama
-ollama serve
-
-# 2. Clone and restore
-git clone https://github.com/YOUR_USERNAME/Voba.git
-cd Voba
-dotnet restore
-
-# 3. Run
-dotnet build -t:Run -f net9.0-windows10.0.19041.0
+```powershell
+ollama pull gemma3:4b
+$env:VOBA_MONGO_CONNECTION_STRING = '<your MongoDB connection string>'
+$env:VOBA_MONGO_DATABASE = 'VobaDemo'
+$env:VOBA_ENRICHMENT_MODE = 'fake'
+dotnet build Voba/Voba.csproj -f net9.0-windows10.0.19041.0
+dotnet build Voba/Voba.csproj -t:Run -f net9.0-windows10.0.19041.0
 ```
 
-Connects to Ollama at `http://localhost:11434` by default.
+Start Ollama server if one not already running. Defaults: endpoint `http://localhost:11434`, model `gemma3:4b`, enrichment `fake`. Override with `VOBA_OLLAMA_ENDPOINT` and `VOBA_OLLAMA_MODEL`. Unknown enrichment mode fails at startup.
 
----
+For live cost and nutrition, set `VOBA_ENRICHMENT_MODE=real` and `VOBA_SPOONACULAR_API_KEY`. Live mode makes Spoonacular requests and may consume API quota. When provider fails, cost falls back to Gemma estimate and source label says so. Nutrition may be unavailable. Recipe instructions always come from Gemma.
 
-## How it works
+`VOBA_JWT_SECRET` optional for local demo. If supplied, use Base64 for at least 32 random bytes. Without it, app makes random signing key each process; old tokens fail after restart. MongoDB unavailable? Login/sign-up shows connection error. Local Mongo URI is fallback only when `VOBA_MONGO_CONNECTION_STRING` absent.
 
-1. User sets budget, serving size, lifestyle diet checkboxes, and typed allergies
-2. The Interpreter pattern translates restrictions into precise AI rule strings
-3. Gemma generates 5 recipe concepts — violations are automatically culled
-4. User selects a recipe and gets full step-by-step cooking instructions
+## Cache and flow
 
----
+Budget and servings must be positive. Options above total budget or without usable cost stay hidden. Request key includes budget, servings, cuisine, restrictions, model, and prompt version. Full recipe key also includes selected ingredients, price, and nutrition. Repeated options and selected recipe requests skip Gemma and enrichment while cache entry valid. Real source can replace demo source; demo source cannot replace real source, even after real entry expires. Live mode does not reuse demo data. Cost and nutrition source labels appear on recipe cards and saved recipes.
 
-## Project Structure
+Sign up or log in, generate options, select one, then save it. Saved recipes belong to signed-in user. Sign out clears current app session.
 
-```text
-Voba/
-├── AI/
-│   ├── Interpreter/
-│   └── Pipeline/Handlers/
-├── Models/
-├── Services/
-├── MainPage.xaml(.cs)
-└── MauiProgram.cs
+## Verify
+
+```powershell
+dotnet test Voba.Core.Tests/Voba.Core.Tests.csproj
+dotnet test Voba.Persistence.Tests/Voba.Persistence.Tests.csproj
+dotnet test Voba.AppData.Tests/Voba.AppData.Tests.csproj
+dotnet build Voba/Voba.csproj -f net9.0-windows10.0.19041.0
+dotnet run --project Voba.ModelSmoke/Voba.ModelSmoke.csproj
+```
+
+`Voba.ModelSmoke` uses local Ollama and fake enrichment through app generation handlers; no MongoDB or Spoonacular call. `Voba.Persistence.IntegrationTests` needs `VOBA_TEST_MONGO_URI`. It uses `VobaDemoTests` by default, or `VOBA_TEST_MONGO_DATABASE` when set, and creates and removes only its own GUID-named collections. Unit tests need no Mongo server or Spoonacular key. Demo generation still needs Ollama. Synthetic enrichment means local demo prices and nutrition, not real market data. Diet and allergy handling filters model output but cannot guarantee medical safety.

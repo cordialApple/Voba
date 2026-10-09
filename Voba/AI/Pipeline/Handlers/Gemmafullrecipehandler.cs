@@ -70,14 +70,18 @@ Write ONLY numbered step-by-step cooking instructions.
 
             // Sends the prompt to the local Gemma model via Semantic Kernel and waits for the generated instructions.
             var response = await _chatCompletion.GetChatMessageContentAsync(history, kernel: _kernel);
+            if (string.IsNullOrWhiteSpace(response.Content))
+                throw new InvalidOperationException("Gemma returned no cooking instructions.");
 
             // Packages the final output into the data model expected by the MAUI front-end team.
             context.FinalRecipe = new FullRecipe
             {
                 Title = recipe.Name,
 
-                // Grabs the raw text from Gemma, using a safe fallback string if the AI fails to return content.
-                Instructions = response.Content ?? "Could not generate instructions."
+                Instructions = response.Content,
+
+                // Carry forward the Spoonacular-sourced nutrition attached during the enrichment step.
+                Nutrition = recipe.Nutrition
             };
 
             // Signals to the Chain of Responsibility pipeline that this specific handler successfully finished its job.

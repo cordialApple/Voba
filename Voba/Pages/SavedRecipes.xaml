@@ -27,7 +27,8 @@
         </Grid>
 
         <!-- Empty state -->
-        <VerticalStackLayout VerticalOptions="Center"
+        <VerticalStackLayout x:Name="EmptyState"
+                             VerticalOptions="Center"
                              HorizontalOptions="Center"
                              Spacing="12"
                              Margin="0,80,0,0">
@@ -41,6 +42,13 @@
                    TextColor="#8a8078"
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
+
+        <Label x:Name="LoadErrorLabel" IsVisible="False"
+               Text="Saved recipes unavailable. Check database connection and Atlas status."
+               FontSize="14" TextColor="#c0392b" />
+
+        <!-- Saved recipe cards (built in code-behind) -->
+        <VerticalStackLayout x:Name="RecipesLayout" Spacing="12" />
 
     </VerticalStackLayout>
 

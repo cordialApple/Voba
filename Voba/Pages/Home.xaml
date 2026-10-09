@@ -18,6 +18,8 @@
                 <Label Text="Voba" FontSize="28" FontAttributes="Bold"
                        TextColor="White" FontFamily="OpenSansSemibold"/>
             </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Sign out" Clicked="OnSignOutClicked"
+                    BackgroundColor="Transparent" TextColor="White" />
 
         </Grid>
 

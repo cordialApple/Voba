@@ -1,11 +1,15 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
+using Voba.Interfaces;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.Pages;
 
 [QueryProperty(nameof(Context), "Context")]
 public partial class Recipe : ContentPage
 {
+    private readonly IRecipeRepository? _recipeRepository;
+    private readonly ICurrentUserService? _currentUser;
     private RecipeGenerationContext _context;
 
     public RecipeGenerationContext Context
@@ -17,6 +21,17 @@ public partial class Recipe : ContentPage
         }
     }
 
+    // Runtime constructor — resolved by DI when navigating to the page.
+    public Recipe(IRecipeRepository recipeRepository, ICurrentUserService currentUser)
+    {
+        InitializeComponent();
+        _recipeRepository = recipeRepository;
+        _currentUser = currentUser;
+        _context = BuildDesignTimeContext();
+        PopulatePage();
+    }
+
+    // Parameterless constructor — used by the XAML designer/previewer only.
     public Recipe()
     {
         InitializeComponent();
@@ -37,16 +52,38 @@ public partial class Recipe : ContentPage
         ServingsLabel.Text = _context.ServingSize > 0
             ? _context.ServingSize.ToString() : "—";
 
+        // Derive TotalCost from Gemma's EstimatedCost if Spoonacular didn't price it
+        if (option != null && option.TotalCost == 0 && option.EstimatedCost > 0)
+            option.TotalCost = Math.Round(option.EstimatedCost * _context.ServingSize, 2);
+
         CostLabel.Text =
             option?.TotalCost > 0 ? $"${option.TotalCost:F2}" :
             option?.EstimatedCost > 0 ? $"${option.EstimatedCost:F2}" : "—";
+
+        SourceLabel.Text = option is null ? string.Empty : RecipeSourceLabels.ForOption(option);
 
         BudgetLabel.Text = _context.TargetBudget > 0
             ? $"${_context.TargetBudget:F2}" : "—";
 
         BuildDietaryTags();
+        BuildNutrition(recipe?.Nutrition ?? option?.Nutrition);
         BuildIngredientsList(option);
         BuildInstructions(recipe?.Instructions);
+    }
+
+    private void BuildNutrition(NutritionInfo? nutrition)
+    {
+        if (nutrition is null || !nutrition.HasData)
+        {
+            NutritionPanel.IsVisible = false;
+            return;
+        }
+
+        CaloriesLabel.Text = $"{nutrition.Calories:0}";
+        ProteinLabel.Text = $"{nutrition.ProteinGrams:0.#}g";
+        FatLabel.Text = $"{nutrition.FatGrams:0.#}g";
+        CarbsLabel.Text = $"{nutrition.CarbGrams:0.#}g";
+        NutritionPanel.IsVisible = true;
     }
 
     private void BuildDietaryTags()
@@ -163,25 +200,18 @@ public partial class Recipe : ContentPage
         foreach (var line in raw.Split('\n', StringSplitOptions.RemoveEmptyEntries))
         {
             var trimmed = line.Trim();
-
             int dotIndex = trimmed.IndexOf('.');
 
             if (dotIndex > 0 && dotIndex < trimmed.Length - 1)
             {
                 string numberPart = trimmed.Substring(0, dotIndex);
 
-                if (int.TryParse(numberPart, out int num))
+                if (int.TryParse(numberPart, out int num) &&
+                    char.IsWhiteSpace(trimmed[dotIndex + 1]))
                 {
-
-                    if (char.IsWhiteSpace(trimmed[dotIndex + 1]))
-                    {
-                        string stepText = trimmed.Substring(dotIndex + 1).TrimStart();
-
-                        if (stepText.Length > 0)
-                        {
-                            result.Add((num, stepText));
-                        }
-                    }
+                    string stepText = trimmed.Substring(dotIndex + 1).TrimStart();
+                    if (stepText.Length > 0)
+                        result.Add((num, stepText));
                 }
             }
         }
@@ -250,17 +280,49 @@ public partial class Recipe : ContentPage
         return card;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) => await Shell.Current.GoToAsync($"{nameof(Home)}");
+    private async void OnBackClicked(object sender, EventArgs e) =>
+        await Shell.Current.GoToAsync(nameof(Home));
+
     private async void OnStartCookingClicked(object sender, EventArgs e)
     {
         await AnimateButton(StartCookingButton);
         await DisplayAlert("Let's Cook!", $"Starting step-by-step mode for \"{RecipeTitleLabel.Text}\".", "OK");
     }
+
     private async void OnSaveRecipeClicked(object sender, EventArgs e)
     {
         await AnimateButton(SaveRecipeButton);
-        await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
+
+        if (_recipeRepository is null || _currentUser is null)
+        {
+            await DisplayAlert("Unavailable", "Saving isn't available right now.", "OK");
+            return;
+        }
+
+        if (!_currentUser.IsAuthenticated || string.IsNullOrEmpty(_currentUser.UserId))
+        {
+            await DisplayAlert("Sign in required", "Please sign in to save recipes.", "OK");
+            return;
+        }
+
+        if (_context.SelectedOption is null)
+        {
+            await DisplayAlert("Nothing to save", "No recipe is loaded yet.", "OK");
+            return;
+        }
+
+        try
+        {
+            var recipe = RecipeMapper.ToRecipe(_context, _currentUser.UserId);
+            await _recipeRepository.SaveAsync(recipe);
+            await DisplayAlert("Saved!", "Recipe added to your saved collection.", "Great");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Save failed", ex.Message, "OK");
+        }
     }
+
     private static async Task AnimateButton(Button btn)
     {
         btn.Opacity = 0.65;
@@ -284,8 +346,7 @@ public partial class Recipe : ContentPage
         FinalRecipe = new FullRecipe
         {
             Title = "",
-            Instructions =
-                ""
+            Instructions = ""
         }
     };
 }

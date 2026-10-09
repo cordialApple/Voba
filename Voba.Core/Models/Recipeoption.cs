@@ -1,0 +1,15 @@
+using System.Collections.Generic;
+
+namespace Voba.Models
+{
+    public class RecipeOption
+    {
+        public string Name { get; set; } = string.Empty;
+        public List<string> Ingredients { get; set; } = new();
+        public decimal EstimatedCost { get; set; }
+        public decimal TotalCost { get; set; }
+        public NutritionInfo? Nutrition { get; set; }
+        public RecipeDataSource DataSource { get; set; } = RecipeDataSource.Estimate;
+        public RecipeDataSource NutritionSource { get; set; } = RecipeDataSource.Estimate;
+    }
+}
