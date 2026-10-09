@@ -145,8 +145,10 @@ public class GenerationCacheTests
         Assert.Equal(RecipeDataSource.Real, cache.Entry!.Source);
     }
 
-    [Fact]
-    public async Task Old_provider_contract_cache_entry_is_not_reused()
+    [Theory]
+    [InlineData("recipe-prompts-v1")]
+    [InlineData("recipe-prompts-v2")]
+    public async Task Old_generation_contract_cache_entry_is_not_reused(string oldVersion)
     {
         var cache = new MemoryCache();
         var request = Request();
@@ -156,7 +158,7 @@ public class GenerationCacheTests
         };
         var now = DateTime.UtcNow;
         await cache.StoreAsync(new RecipeGenerationCacheEntry(
-            RecipeGenerationCacheKey.CreateOptions(request, "model", "recipe-prompts-v1"),
+            RecipeGenerationCacheKey.CreateOptions(request, "model", oldVersion),
             RecipeDataSource.Real, JsonSerializer.Serialize(old), now, now.AddHours(1)));
         var coordinator = new RecipeGenerationCoordinator(cache, TimeProvider.System,
             TimeSpan.FromHours(1), "model", RecipeGenerationCacheVersion.Current);

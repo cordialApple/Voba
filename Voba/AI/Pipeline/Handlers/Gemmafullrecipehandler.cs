@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Voba.AI.Interpreter;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.AI.Pipeline.Handlers
 {
@@ -34,6 +35,8 @@ namespace Voba.AI.Pipeline.Handlers
                 return;
 
             var recipe = context.SelectedOption;
+            if (!DietaryCompliancePolicy.AllowsOption(recipe, context.DietaryRestrictions))
+                throw new InvalidOperationException("Recipe does not comply with dietary restrictions.");
 
             // ── Interpreter: same parse → same rules as ideation ─────────────
             IRestrictionExpression expression =
@@ -69,16 +72,26 @@ Write ONLY numbered step-by-step cooking instructions.
             history.AddUserMessage(prompt);
 
             // Sends the prompt to the local Gemma model via Semantic Kernel and waits for the generated instructions.
-            var response = await _chatCompletion.GetChatMessageContentAsync(history, kernel: _kernel);
-            if (string.IsNullOrWhiteSpace(response.Content))
-                throw new InvalidOperationException("Gemma returned no cooking instructions.");
+            string? instructions = null;
+            for (var attempt = 0; attempt < 2; attempt++)
+            {
+                var response = await _chatCompletion.GetChatMessageContentAsync(history, kernel: _kernel);
+                instructions = response.Content;
+                if (!string.IsNullOrWhiteSpace(instructions) &&
+                    DietaryCompliancePolicy.AllowsFullRecipe(recipe, instructions,
+                        context.DietaryRestrictions))
+                    break;
+                if (attempt == 1)
+                    throw new InvalidOperationException("Gemma returned no compliant cooking instructions.");
+                history.AddUserMessage("Previous instructions broke the dietary rules. Rewrite with only the chosen ingredients and no forbidden additions.");
+            }
 
             // Packages the final output into the data model expected by the MAUI front-end team.
             context.FinalRecipe = new FullRecipe
             {
                 Title = recipe.Name,
 
-                Instructions = response.Content,
+                Instructions = instructions!,
 
                 // Carry forward the Spoonacular-sourced nutrition attached during the enrichment step.
                 Nutrition = recipe.Nutrition
