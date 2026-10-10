@@ -72,7 +72,7 @@
                    Margin="0,0,0,16" />
 
             <!-- Login button -->
-            <Button Text="LOG IN"
+            <Button x:Name="LoginButton" Text="LOG IN"
                     BackgroundColor="#8ba888"
                     TextColor="#f1ebe1"
                     FontSize="15"

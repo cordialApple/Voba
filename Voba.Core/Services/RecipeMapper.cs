@@ -31,7 +31,13 @@ namespace Voba.Services
 
             NutritionInfo? nutrition = context.FinalRecipe?.Nutrition ?? option.Nutrition;
 
-            return new Recipe(userId, title, ingredients, cost, instructions, nutrition);
+            return new Recipe(userId, title, ingredients, cost, instructions, nutrition,
+                option.DataSource, option.NutritionSource,
+                context.ServingSize > 0 ? context.ServingSize : null,
+                context.TargetBudget > 0 ? context.TargetBudget : null,
+                context.DietaryRestrictions.Count > 0 ? context.DietaryRestrictions : null,
+                string.IsNullOrWhiteSpace(context.CuisinePreference)
+                    ? null : context.CuisinePreference);
         }
     }
 }

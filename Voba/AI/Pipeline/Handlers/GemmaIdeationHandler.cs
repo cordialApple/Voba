@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Voba.AI.Interpreter;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.AI.Pipeline.Handlers
 {
@@ -55,18 +56,30 @@ namespace Voba.AI.Pipeline.Handlers
             context.DebugPrompt = prompt;
 
             // 4. Sends the prompt to the local Gemma model and gets the raw JSON back.
-            var candidates = await CallGemmaAsync(prompt);
-
             // 5. Pulls out the exact list of banned ingredients from the rule block.
-            var forbiddenPhrases = GetForbiddenPhrases(ruleBlock);
+            var otherRestrictions = context.DietaryRestrictions
+                .Where(value => !value.Trim().Equals("vegan", StringComparison.OrdinalIgnoreCase) &&
+                    !value.Trim().Equals("vegetarian", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            var forbiddenPhrases = GetForbiddenPhrases(
+                RestrictionParser.Parse(otherRestrictions).Interpret());
 
             // 6. The Cull: Aggressively deletes any AI recipe that accidentally includes a forbidden ingredient.
-            var passing = candidates
-                .Where(c => !HasForbiddenIngredient(c, forbiddenPhrases)) // Keep only safe recipes
-                .GroupBy(c => c.Name) // Prevent exact duplicates from showing up
-                .Select(g => g.First())
-                .Take(2) // Takes only the first 2 safe options to display on the Voba front-end
-                .ToList();
+            var passing = new List<RecipeOption>();
+            for (var attempt = 0; attempt < 2 && passing.Count == 0; attempt++)
+            {
+                var request = attempt == 0 ? prompt :
+                    prompt + "\nPrevious suggestions broke the dietary rules. Return new compliant recipes only.";
+                var candidates = await CallGemmaAsync(request);
+                RecipeGenerationPolicy.ResetModelSources(candidates);
+                passing = candidates
+                    .Where(c => DietaryCompliancePolicy.AllowsOption(c, context.DietaryRestrictions) &&
+                        !HasForbiddenIngredient(c, forbiddenPhrases))
+                    .GroupBy(c => c.Name)
+                    .Select(g => g.First())
+                    .Take(2)
+                    .ToList();
+            }
 
             // Passes the safe recipes to the next step in the pipeline.
             context.ProposedOptions = passing;

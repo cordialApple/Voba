@@ -1,28 +1,24 @@
-﻿using Voba.AI.Pipeline.Handlers;
-using Voba.Models;
+using Voba.Client;
+using Voba.Contracts;
 
 namespace Voba.Pages;
 
 public partial class Forum : ContentPage
 {
-    private readonly GemmaIdeationHandler _ideationHandler;
+    private readonly IVobaApiClient _api;
 
-    public Forum(GemmaIdeationHandler ideationHandler, SpoonacularPricingHandler pricingHandler)
+    public Forum(IVobaApiClient api)
     {
         InitializeComponent();
-
-        // Assemble the chain: ideation produces recipes, then enrichment adds
-        // Spoonacular cost + nutrition before the user picks one.
-        ideationHandler.SetNext(pricingHandler);
-        _ideationHandler = ideationHandler;
+        _api = api;
     }
 
     private async void OnGenerateClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(BudgetInput.Text) ||
-            string.IsNullOrWhiteSpace(ServingsInput.Text))
+        if (!decimal.TryParse(BudgetInput.Text, out var budget) || budget is <= 0 or > 1_000_000 ||
+            !int.TryParse(ServingsInput.Text, out var servings) || servings is <= 0 or > 1000)
         {
-            ErrorLabel.Text = "Please enter a budget and serving size.";
+            ErrorLabel.Text = "Enter a budget up to $1,000,000 and 1–1,000 servings.";
             ErrorLabel.IsVisible = true;
             return;
         }
@@ -34,49 +30,31 @@ public partial class Forum : ContentPage
 
         try
         {
-            decimal budget = decimal.TryParse(BudgetInput.Text, out var b) ? b : 15.00m;
-            int servings = int.TryParse(ServingsInput.Text, out var s) ? s : 2;
-
-            // Restrictions
             var restrictions = new List<string>();
-
             var dietMap = new Dictionary<CheckBox, string>
             {
-                { ChkVegan,       "Vegan"       },
-                { ChkVegetarian,  "Vegetarian"  },
-                { ChkKeto,        "Keto"        },
-                { ChkPaleo,       "Paleo"       },
-                { ChkGlutenFree,  "Gluten-Free" },
-                { ChkDairyFree,   "Dairy-Free"  },
-                { ChkHalal,       "Halal"       },
-                { ChkKosher,      "Kosher"      },
+                { ChkVegan, "Vegan" },
+                { ChkVegetarian, "Vegetarian" },
+                { ChkKeto, "Keto" },
+                { ChkPaleo, "Paleo" },
+                { ChkGlutenFree, "Gluten-Free" },
+                { ChkDairyFree, "Dairy-Free" },
+                { ChkHalal, "Halal" },
+                { ChkKosher, "Kosher" }
             };
-
             foreach (var (checkbox, name) in dietMap)
-                if (checkbox.IsChecked) restrictions.Add(name);
-
+                if (checkbox.IsChecked)
+                    restrictions.Add(name);
             if (!string.IsNullOrWhiteSpace(AllergyInput.Text))
-            {
-                restrictions.AddRange(
-                    AllergyInput.Text
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(a => a.Trim())
-                        .Where(a => !string.IsNullOrWhiteSpace(a)));
-            }
-            // Pushes to recipe generation
-            var context = new RecipeGenerationContext
-            {
-                ServingSize = servings,
-                TargetBudget = budget,
-                DietaryRestrictions = restrictions,
-                CuisinePreference = string.IsNullOrWhiteSpace(CuisineInput.Text)
-                                           ? null
-                                           : CuisineInput.Text.Trim()
-            };
+                restrictions.AddRange(AllergyInput.Text
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(value => value.Trim())
+                    .Where(value => !string.IsNullOrWhiteSpace(value)));
 
-            await _ideationHandler.HandleAsync(context);
-
-            if (context.ProposedOptions.Count == 0)
+            var request = new GenerationOptionsRequest(budget, servings, restrictions,
+                string.IsNullOrWhiteSpace(CuisineInput.Text) ? null : CuisineInput.Text.Trim());
+            var options = await _api.GetOptionsAsync(request);
+            if (options.Options.Count == 0)
             {
                 ErrorLabel.Text = "No recipes returned. Try adjusting your budget or restrictions.";
                 ErrorLabel.IsVisible = true;
@@ -84,7 +62,7 @@ public partial class Forum : ContentPage
             }
 
             await Shell.Current.GoToAsync(nameof(RecipeSelect),
-                new Dictionary<string, object> { ["Context"] = context });
+                new Dictionary<string, object> { ["Options"] = options, ["Servings"] = servings });
         }
         catch (Exception ex)
         {
@@ -99,8 +77,6 @@ public partial class Forum : ContentPage
         }
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
+    private async void OnBackClicked(object sender, EventArgs e) =>
         await Shell.Current.GoToAsync(nameof(Home));
-    }
 }

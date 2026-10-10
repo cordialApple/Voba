@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="MongoDB.Driver" Version="3.7.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.17.0" />
+    <ProjectReference Include="..\Voba.Core\Voba.Core.csproj" />
+    <Compile Include="..\Voba\Repositories\UserRepository.cs" Link="UserRepository.cs" />
+    <Compile Include="..\Voba\Repositories\AuthDataRepository.cs" Link="AuthDataRepository.cs" />
+    <Compile Include="..\Voba\Repositories\RecipeRepository.cs" Link="RecipeRepository.cs" />
+    <Compile Include="..\Voba\Repositories\IngredientRepository.cs" Link="IngredientRepository.cs" />
+    <Compile Include="..\Voba\Repositories\RepositoryIndexInitializer.cs" Link="RepositoryIndexInitializer.cs" />
+    <Compile Include="..\Voba\Services\AppConfiguration.cs" Link="AppConfiguration.cs" />
+    <Compile Include="..\Voba\Services\JwtService.cs" Link="JwtService.cs" />
+    <Compile Include="..\Voba\Services\CurrentUserService.cs" Link="CurrentUserService.cs" />
+  </ItemGroup>
+</Project>

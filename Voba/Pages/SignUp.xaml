@@ -87,7 +87,7 @@
                    Margin="0,0,0,16" />
 
             <!-- Sign up button -->
-            <Button Text="CREATE ACCOUNT"
+            <Button x:Name="SignUpButton" Text="CREATE ACCOUNT"
                     BackgroundColor="#8ba888"
                     TextColor="#f1ebe1"
                     FontSize="15"

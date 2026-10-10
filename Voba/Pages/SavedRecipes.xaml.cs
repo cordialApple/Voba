@@ -1,27 +1,19 @@
 using Microsoft.Maui.Controls.Shapes;
-using Voba.Interfaces;
-using Voba.Models;
-using Voba.Services;
-
-// Disambiguate from the Voba.Pages.Recipe ContentPage in this same namespace.
-using ModelRecipe = Voba.Models.Recipe;
+using Voba.Client;
+using Voba.Contracts;
 
 namespace Voba.Pages;
 
 public partial class SavedRecipes : ContentPage
 {
-    private readonly IRecipeRepository? _recipeRepository;
-    private readonly ICurrentUserService? _currentUser;
+    private readonly IVobaApiClient? _api;
 
-    // Runtime constructor — resolved by DI when navigating to the page.
-    public SavedRecipes(IRecipeRepository recipeRepository, ICurrentUserService currentUser)
+    public SavedRecipes(IVobaApiClient api)
     {
         InitializeComponent();
-        _recipeRepository = recipeRepository;
-        _currentUser = currentUser;
+        _api = api;
     }
 
-    // Parameterless constructor — used by the XAML designer/previewer only.
     public SavedRecipes()
     {
         InitializeComponent();
@@ -35,38 +27,29 @@ public partial class SavedRecipes : ContentPage
 
     private async Task LoadRecipesAsync()
     {
-        RecipesLayout.Children.Clear();
-
-        if (_recipeRepository is null || _currentUser is null ||
-            !_currentUser.IsAuthenticated || string.IsNullOrEmpty(_currentUser.UserId))
+        if (_api is null)
         {
             EmptyState.IsVisible = true;
             return;
         }
 
-        List<ModelRecipe> recipes;
         try
         {
-            recipes = await _recipeRepository.GetByUserIdAsync(_currentUser.UserId);
+            var recipes = await _api.ListAsync();
+            RecipesLayout.Children.Clear();
+            LoadErrorLabel.IsVisible = false;
+            EmptyState.IsVisible = recipes.Count == 0;
+            foreach (var recipe in recipes)
+                RecipesLayout.Add(BuildRecipeCard(recipe));
         }
         catch
         {
-            EmptyState.IsVisible = true;
-            return;
+            EmptyState.IsVisible = false;
+            LoadErrorLabel.IsVisible = true;
         }
-
-        if (recipes.Count == 0)
-        {
-            EmptyState.IsVisible = true;
-            return;
-        }
-
-        EmptyState.IsVisible = false;
-        foreach (var recipe in recipes)
-            RecipesLayout.Add(BuildRecipeCard(recipe));
     }
 
-    private static Border BuildRecipeCard(ModelRecipe recipe)
+    private Border BuildRecipeCard(SavedRecipeResponse recipe)
     {
         var stack = new VerticalStackLayout { Spacing = 4 };
 
@@ -79,11 +62,13 @@ public partial class SavedRecipes : ContentPage
         });
 
         var meta = new List<string>();
-        if (recipe.EstimatedCost > 0)
-            meta.Add($"${recipe.EstimatedCost:F2}");
-        if (recipe.Nutrition is { } n && n.HasData)
-            meta.Add($"{n.Calories:0} kcal");
+        if (recipe.TotalCost > 0)
+            meta.Add($"${recipe.TotalCost:F2}");
+        if (recipe.Nutrition is { } nutrition)
+            meta.Add($"{nutrition.Calories:0} kcal");
         meta.Add($"{recipe.Ingredients.Count} ingredients");
+        meta.Add(RecipePresentation.SourceLabel(recipe.CostSource, recipe.NutritionSource,
+            recipe.Nutrition is not null));
 
         stack.Add(new Label
         {
@@ -92,7 +77,7 @@ public partial class SavedRecipes : ContentPage
             TextColor = Color.FromArgb("#8a8078")
         });
 
-        return new Border
+        var card = new Border
         {
             BackgroundColor = Colors.White,
             StrokeShape = new RoundRectangle { CornerRadius = 14 },
@@ -101,6 +86,29 @@ public partial class SavedRecipes : ContentPage
             Padding = new Thickness(20, 16),
             Content = stack
         };
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += async (_, _) => await OpenRecipeAsync(recipe.Id);
+        card.GestureRecognizers.Add(tap);
+        return card;
+    }
+
+    private async Task OpenRecipeAsync(string recipeId)
+    {
+        if (_api is null)
+            return;
+
+        try
+        {
+            var recipe = await _api.GetAsync(recipeId);
+            await Shell.Current.GoToAsync(nameof(Recipe), new Dictionary<string, object>
+            {
+                ["SavedRecipe"] = recipe
+            });
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Recipe unavailable", ex.Message, "OK");
+        }
     }
 
     private async void OnBackClicked(object sender, EventArgs e)

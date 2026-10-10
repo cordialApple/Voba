@@ -13,7 +13,17 @@ namespace Voba.Services
 
         public JwtService()
         {
-            var keyBytes = Convert.FromBase64String(Secrets.JwtSecret);
+            byte[] keyBytes;
+            try
+            {
+                keyBytes = Convert.FromBase64String(AppConfiguration.JwtSecret);
+            }
+            catch (FormatException error)
+            {
+                throw new InvalidOperationException("VOBA_JWT_SECRET must be Base64 encoded.", error);
+            }
+            if (keyBytes.Length < 32)
+                throw new InvalidOperationException("VOBA_JWT_SECRET must decode to at least 32 bytes.");
             _signingKey = new SymmetricSecurityKey(keyBytes);
 
             _validationParameters = new TokenValidationParameters

@@ -138,7 +138,7 @@
             <!-- ── Ingredients (scrollable) ─────────────────────── -->
             <VerticalStackLayout Grid.Row="3" Padding="28,20,28,0" Spacing="10">
 
-                <!-- Nutrition (per serving) — sourced from Spoonacular -->
+                <Label x:Name="SourceLabel" FontSize="11" TextColor="#6e7a6d" />
                 <VerticalStackLayout x:Name="NutritionPanel" Spacing="8" IsVisible="False">
                     <Grid ColumnDefinitions="Auto,*">
                         <BoxView Grid.Column="0"

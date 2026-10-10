@@ -1,18 +1,15 @@
-using Voba.Interfaces;
-using Voba.Services;
+using Voba.Client;
 
 namespace Voba.Pages;
 
 public partial class SignUp : ContentPage
 {
-    private readonly IAuthService _authService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly IVobaApiClient _api;
 
-    public SignUp(IAuthService authService, ICurrentUserService currentUser)
+    public SignUp(IVobaApiClient api)
     {
         InitializeComponent();
-        _authService = authService;
-        _currentUser = currentUser;
+        _api = api;
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
@@ -22,7 +19,7 @@ public partial class SignUp : ContentPage
 
     private async void OnLoginTapped(object sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(Login));
+        await Shell.Current.GoToAsync("..");
     }
 
     private async void OnSignUpClicked(object sender, EventArgs e)
@@ -36,18 +33,32 @@ public partial class SignUp : ContentPage
             return;
         }
         ErrorLabel.IsVisible = false;
-
-        var result = await _authService.RegisterAsync(
-            EmailEntry.Text.Trim(), NameEntry.Text.Trim(), PasswordEntry.Text);
-
-        if (!result.Success || result.Data is null)
+        SignUpButton.IsEnabled = false;
+        try
         {
-            ErrorLabel.Text = result.ErrorMessage ?? "Sign-up failed.";
-            ErrorLabel.IsVisible = true;
-            return;
+            await _api.RegisterAsync(EmailEntry.Text.Trim(), NameEntry.Text.Trim(),
+                PasswordEntry.Text);
+            await _api.LoginAsync(EmailEntry.Text.Trim(), PasswordEntry.Text);
+            await Shell.Current.GoToAsync(nameof(Home));
         }
-
-        _currentUser.SetUser(result.Data.Id, EmailEntry.Text.Trim());
-        await Shell.Current.GoToAsync(nameof(Home));
+        catch (VobaApiException ex)
+        {
+            ErrorLabel.Text = ex.Message;
+            ErrorLabel.IsVisible = true;
+        }
+        catch (HttpRequestException)
+        {
+            ErrorLabel.Text = "Backend unavailable. Start the Voba backend and try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        catch (TaskCanceledException)
+        {
+            ErrorLabel.Text = "Backend timed out. Try again.";
+            ErrorLabel.IsVisible = true;
+        }
+        finally
+        {
+            SignUpButton.IsEnabled = true;
+        }
     }
 }

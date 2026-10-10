@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Voba.Interfaces;
 using Voba.Models;
+using Voba.Services;
 
 namespace Voba.AI.Pipeline.Handlers
 {
@@ -32,33 +33,9 @@ namespace Voba.AI.Pipeline.Handlers
         public override async Task HandleAsync(RecipeGenerationContext context)
         {
             foreach (var recipe in context.ProposedOptions)
-                await EnrichSingleRecipeAsync(recipe, context.ServingSize);
+                await RecipeGenerationPolicy.EnrichAsync(recipe, context.ServingSize, _enrichment);
 
             await base.HandleAsync(context);
-        }
-
-        private async Task EnrichSingleRecipeAsync(RecipeOption recipe, int servingSize)
-        {
-            if (servingSize <= 0) servingSize = 1;
-
-            var enrichment = await _enrichment.EnrichAsync(recipe.Ingredients, servingSize);
-
-            if (enrichment != null)
-            {
-                if (enrichment.TotalCostUsd > 0)
-                {
-                    recipe.EstimatedCost = enrichment.CostPerServingUsd;
-                    recipe.TotalCost = enrichment.TotalCostUsd;
-                }
-
-                if (enrichment.Nutrition.HasData)
-                    recipe.Nutrition = enrichment.Nutrition;
-            }
-
-            // Fallback — provider gave no usable cost. Keep Gemma's EstimatedCost
-            // and derive TotalCost from it.
-            if (recipe.TotalCost == 0 && recipe.EstimatedCost > 0)
-                recipe.TotalCost = Math.Round(recipe.EstimatedCost * servingSize, 2);
         }
     }
 }

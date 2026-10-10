@@ -1,7 +1,4 @@
 # ── Secrets & local config ──────────────────────────────────────────────
-# Real secrets must never be committed. Copy Secrets.example to
-# Voba/Secrets.cs and fill in values locally (CI bootstraps it from the
-# example). Any *.local.cs override file is ignored too.
 Voba/Secrets.cs
 *.local.cs
 
@@ -53,6 +50,10 @@ msbuild*.log
 # ── Test results ────────────────────────────────────────────────────────
 [Tt]est[Rr]esult*/
 TestResults/
+Voba.Web.Tests/node_modules/
+Voba.Web.Tests/test-results/
+Voba.Web.Tests/playwright-report/
+Voba.Web.Tests/walkthrough-results/
 
 # ── IDE & editor ────────────────────────────────────────────────────────
 .vs/
