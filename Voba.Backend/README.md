@@ -2,6 +2,8 @@
 
 Run the API on loopback with `scripts/Invoke-VobaDemo.ps1 -Task Backend` on `http://127.0.0.1:5057`. For manual startup, use `dotnet run --project Voba.Backend/Voba.Backend.csproj -- --urls http://127.0.0.1:5057` and set these process environment variables first:
 
+Open `http://127.0.0.1:5057/demo` for the same-origin browser recipe workbench. It covers registration, login, generation, selection, save, saved recipe reopen, and logout. Tokens live only in browser memory. The protected helper uses `VobaDemoTests`; standalone startup defaults to `Voba` unless `VOBA_MONGO_DATABASE` is set. The API walkthrough is `npm --prefix Voba.Web.Tests run walkthrough` after `npm --prefix Voba.Web.Tests ci` while the backend runs. Browser tests use `npm --prefix Voba.Web.Tests test` and installed Edge.
+
 - `VOBA_MONGO_CONNECTION_STRING`: server Mongo URI. Required.
 - `VOBA_JWT_SECRET`: stable Base64 key decoding to at least 32 bytes. Required; keep outside Git. Changing it invalidates all access tokens.
 - `VOBA_MONGO_DATABASE`: database name; defaults to `Voba`.

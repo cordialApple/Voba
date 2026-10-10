@@ -22,6 +22,8 @@ In a second PowerShell window:
 .\scripts\Invoke-VobaDemo.ps1 -Task App
 ```
 
+For a browser walkthrough, keep the backend running and open `http://127.0.0.1:5057/demo`. Create an account, log in, set budget, servings, cuisine, and food needs, then choose, save, and reopen a recipe. The browser holds tokens in memory; refreshing the page asks for login again. To run the same journey through HTTP, use `npm --prefix Voba.Web.Tests run walkthrough`. The script prints route status codes and a success report. `npm --prefix Voba.Web.Tests test` runs the headless Edge browser journey; `npm --prefix Voba.Web.Tests run test:unit` checks browser client session races. Install its test package with `npm --prefix Voba.Web.Tests ci` first. The browser and API walkthrough create GUID-named dummy accounts in `VobaDemoTests`.
+
 The helper needs the protected Atlas credential file described below. It runs backend and app as separate processes, uses `VobaDemoTests` for seeded dummy accounts, and keeps secrets out of the desktop process. [Seed accounts and test data](Voba.Seed/README.md) list the repeatable dummy login. For a different MongoDB, set `VOBA_MONGO_CONNECTION_STRING`, `VOBA_MONGO_DATABASE`, and a stable Base64 `VOBA_JWT_SECRET` of at least 32 random bytes in the backend process, then start [the backend](Voba.Backend/README.md). Start the desktop with `VOBA_API_BASE_URL` pointing to that backend. Remote API URLs require HTTPS.
 
 Start Ollama server if one not already running. Backend defaults: endpoint `http://localhost:11434`, model `gemma3:4b`, enrichment `fake`. Override with `VOBA_OLLAMA_ENDPOINT` and `VOBA_OLLAMA_MODEL` in the backend process. Unknown enrichment mode fails at startup.
