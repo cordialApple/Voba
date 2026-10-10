@@ -87,6 +87,23 @@ public static class BackendApplication
     {
         app.Use(async (http, next) =>
         {
+            if (string.Equals(http.Request.Path.Value, "/demo", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(http.Request.Path.Value, "/index.html", StringComparison.OrdinalIgnoreCase))
+            {
+                http.Response.Headers.ContentSecurityPolicy =
+                    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
+                http.Response.Headers.CacheControl = "no-store";
+            }
+            await next(http);
+        });
+        app.UseStaticFiles();
+        app.MapGet("/", () => Results.Redirect("/demo"));
+        app.MapGet("/demo", () => Results.File(
+            Path.Combine(app.Environment.WebRootPath, "index.html"),
+            "text/html; charset=utf-8"));
+
+        app.Use(async (http, next) =>
+        {
             const long maxBodyBytes = 16_384;
             var limit = http.Features.Get<IHttpMaxRequestBodySizeFeature>();
             if (limit is { IsReadOnly: false })

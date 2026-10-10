@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voba · Recipe workbench</title>
+  <link rel="stylesheet" href="/demo.css">
+  <script type="module" src="/demo.mjs"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">V</span><span>voba</span></div>
+      <div class="masthead-note">A practical kitchen, on your budget.</div>
+      <button id="logout" class="text-button" type="button" hidden>Log out</button>
+    </header>
+
+    <main class="workbench">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="eyebrow">Recipe workbench <span class="rule" aria-hidden="true"></span> Local demo</div>
+        <h1 id="page-title">Plan dinner<span class="period">.</span></h1>
+        <p>Set your budget and food needs. Choose a meal. Keep the recipe for later.</p>
+      </section>
+
+      <div id="status" data-testid="status" role="status" aria-live="polite" class="status" hidden></div>
+
+      <div class="columns">
+        <div class="control-column">
+          <section id="auth" data-testid="auth" class="panel" aria-labelledby="auth-title">
+            <div class="panel-heading"><span class="step">01</span><h2 id="auth-title">Your kitchen</h2></div>
+            <div class="auth-switch" role="group" aria-label="Account action">
+              <button id="show-login" type="button" class="switch-button active" aria-pressed="true">Existing account</button>
+              <button id="show-register" type="button" class="switch-button" aria-pressed="false">New account</button>
+            </div>
+            <form id="auth-form">
+              <label id="name-field" class="field" hidden><span>Name</span><input id="name" name="name" autocomplete="name" maxlength="100"></label>
+              <label class="field"><span>Email</span><input id="email" name="email" type="email" autocomplete="email" required maxlength="320"></label>
+              <label class="field"><span>Password</span><input id="password" name="password" type="password" autocomplete="current-password" required minlength="8"></label>
+              <button id="auth-submit" class="primary-button" type="submit">Log in</button>
+            </form>
+          </section>
+
+          <section id="planner" class="panel" aria-labelledby="planner-title" hidden>
+            <div class="panel-heading"><span class="step">02</span><h2 id="planner-title">Set the table</h2></div>
+            <p class="panel-copy">Amounts cover every serving. Prices marked demo are sample data.</p>
+            <form id="plan-form">
+              <div class="field-pair">
+                <label class="field"><span>Budget (USD)</span><input id="budget" name="budget" type="number" value="30" min="0.01" max="1000000" step="0.01" required></label>
+                <label class="field"><span>Servings</span><input id="servings" name="servings" type="number" value="2" min="1" max="1000" step="1" required></label>
+              </div>
+              <label class="field"><span>Cuisine</span><input id="cuisine" name="cuisine" placeholder="Any cuisine" maxlength="200"></label>
+              <fieldset class="diet-options"><legend>Food preferences</legend>
+                <label><input type="checkbox" name="diet" value="vegan"><span>Vegan</span></label>
+                <label><input type="checkbox" name="diet" value="vegetarian"><span>Vegetarian</span></label>
+                <label><input type="checkbox" name="diet" value="gluten-free"><span>Gluten-free</span></label>
+                <label><input type="checkbox" name="diet" value="dairy-free"><span>Dairy-free</span></label>
+              </fieldset>
+              <label class="field"><span>Dietary restrictions</span><input id="restrictions" name="restrictions" placeholder="Other needs, separated by commas" maxlength="300"></label>
+              <button id="find-recipes" class="primary-button" type="submit">Find recipes</button>
+            </form>
+          </section>
+        </div>
+
+        <div class="result-column">
+          <section id="welcome" class="welcome panel" aria-labelledby="welcome-title">
+            <span class="welcome-icon" aria-hidden="true">✳</span>
+            <h2 id="welcome-title">Dinner starts here.</h2>
+            <p>Log in or make an account to build your first recipe.</p>
+          </section>
+
+          <section id="options" data-testid="options" class="panel" aria-labelledby="options-title" hidden>
+            <div class="panel-heading"><span class="step">03</span><h2 id="options-title">Choose a recipe</h2></div>
+            <p class="panel-copy">Prices cover your requested servings. Choose one for cooking steps.</p>
+            <div id="options-list" class="option-list"></div>
+          </section>
+
+          <section id="recipe" data-testid="recipe" class="panel" aria-labelledby="recipe-title" hidden>
+            <div class="panel-heading"><span class="step">04</span><h2 id="recipe-title">Recipe</h2></div>
+            <h3 id="recipe-name" class="recipe-name"></h3>
+            <div id="recipe-meta" class="recipe-meta"></div>
+            <h4>Ingredients</h4>
+            <ul id="recipe-ingredients" class="ingredient-list"></ul>
+            <h4>Cooking steps</h4>
+            <div id="recipe-instructions" class="instructions"></div>
+            <button id="save-recipe" class="primary-button" type="button">Save recipe</button>
+          </section>
+
+          <section id="saved-list" data-testid="saved-list" class="panel" aria-labelledby="saved-title" hidden>
+            <div class="panel-heading"><span class="step">05</span><h2 id="saved-title">Saved recipes</h2></div>
+            <p id="saved-empty" class="panel-copy">Nothing saved yet. Choose a recipe above to keep it here.</p>
+            <div id="saved-items" class="saved-items"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer>Voba makes recipes with local Gemma. Cost and nutrition labels show their own source.</footer>
+  </div>
+</body>
+</html>
