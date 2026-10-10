@@ -50,6 +50,10 @@ msbuild*.log
 # ── Test results ────────────────────────────────────────────────────────
 [Tt]est[Rr]esult*/
 TestResults/
+Voba.Web.Tests/node_modules/
+Voba.Web.Tests/test-results/
+Voba.Web.Tests/playwright-report/
+Voba.Web.Tests/walkthrough-results/
 
 # ── IDE & editor ────────────────────────────────────────────────────────
 .vs/

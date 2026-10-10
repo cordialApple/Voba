@@ -19,6 +19,25 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Voba.Web.Tests/package-lock.json
+
+      - name: Install web test dependencies
+        working-directory: Voba.Web.Tests
+        run: npm ci
+
+      - name: Test web client
+        working-directory: Voba.Web.Tests
+        run: npm run test:unit
+
+      - name: Test web interface
+        working-directory: Voba.Web.Tests
+        run: npm run test:ui
+
       - name: Test core
         run: dotnet test Voba.Core.Tests/Voba.Core.Tests.csproj -c Release
 
