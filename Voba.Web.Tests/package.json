@@ -1,0 +1,14 @@
+{
+  "name": "voba-web-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test browser.spec.mjs --output=test-results/live",
+    "test:ui": "playwright test browser.mocked.spec.mjs --output=test-results/mock",
+    "test:unit": "node --test client.test.mjs",
+    "walkthrough": "node api-walkthrough.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}
